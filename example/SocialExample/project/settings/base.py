@@ -88,6 +88,7 @@ INSTALLED_APPS = (
     'south',
     
     'utils',
+    'social',
     
 )
 
