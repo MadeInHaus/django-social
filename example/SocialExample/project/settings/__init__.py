@@ -46,7 +46,7 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'stream' : {
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'class': 'logging.StreamHandler'
         },
         'file' : {

@@ -1,22 +1,27 @@
-from . import settings
+from .. import settings
+from datetime import timedelta, datetime
 from celery.utils.log import get_task_logger
 from celery import task
 from celery.task import periodic_task
-from .facebook import FacebookUpdate
-from .twitter import TwitterUpdate
+from .facebook import FacebookUpdater
+from .twitter import TwitterUpdater
 
 
 @periodic_task(run_every=timedelta(minutes=settings.SOCIAL_FACEBOOK_INTERVAL))
-def twitter(show):
+def twitter():
     log = get_task_logger('twitter')
     log.info('[Twitter] Start')
     #update twitter
+    tw = TwitterUpdater()
+    tw.update()
     log.info('[Twitter] End')
 
 
-@periodic_task(run_every=timedelta(minutes=settings.SOCIAL_TWITTER_INTERVAL))
-def facebook(show):
+#@periodic_task(run_every=timedelta(minutes=settings.SOCIAL_TWITTER_INTERVAL))
+@periodic_task(run_every=timedelta(seconds=5))
+def facebook():
     log = get_task_logger('facebook')
     log.info('[Facebook] Start')
-    #update facebook
+    fb = FacebookUpdater()
+    fb.update()
     log.info('[Facebook] End')

@@ -34,6 +34,10 @@ djcelery.setup_loader()
 CELERY_RESULT_BACKEND = 'amqp'
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 
+# SOCIAL SETTINGS
+SOCIAL_FACEBOOK_APP_ID = '399154676843137'
+SOCIAL_FACEBOOK_APP_SECRET = '5fa53aec57af082659fe74c51a3555ca'
+
 # REDIS SETTINGS
 REDIS_HOST = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
 

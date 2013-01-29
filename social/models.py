@@ -40,7 +40,7 @@ class Social(Message):
     
 
 
-class Twitter(Social):
+class TwitterMessage(Social):
     _entities = models.TextField(max_length=1000,null=True, blank=True)
     @property
     def entities(self):
@@ -50,7 +50,11 @@ class Twitter(Social):
         super(Twitter, self).save(*args, **kwargs)
         
 
-class Facebook(Social):
+class FacebookMessage(Social):
+    facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
     def save(self, *args, **kwargs):
         self.network = 'facebook'
         super(Facebook, self).save(*args, **kwargs)
+
+class FacebookAccount(models.Model):
+    fb_id = models.CharField(max_length=300,help_text='17432988290 </br> Get Via: http://graph.facebook.com/dinopetrone')

@@ -30,6 +30,8 @@ project/settings/hosts/localhost.py# Numerous always-ignore extensions
 *.sass-cache
 *.psd
 *.css
+project/static/img/sprites/icons-*.png
+example/SocialExample/project/static/img/sprites/icons-*.png
 
 # OS or Editor folders
 .DS_Store
