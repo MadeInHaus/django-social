@@ -8,9 +8,9 @@ base_path           = "./project/static/css"
 src_path   = base_path + "/src"
 css_path    = base_path + "/"
 
-# sass execs
-exec_sass_watch   = "sass -l --watch {}:{}"
-exec_sass_compile = "sass --update --style compressed {}:{}"
+# compass execs
+exec_sass_watch   = "compass watch {}"
+exec_sass_compile = "compass compile {} --output-style compressed"
 
 
 @task
@@ -111,7 +111,7 @@ def css_watch():
         # Killing all sass --watch processes before executing a new one
         run("ps ax | grep '[s]ass.*watch' | awk '{ print $1 }' | xargs sudo kill -9")
     with cd("/var/www"):
-        run(exec_sass_watch.format(src_path, css_path))
+        run(exec_sass_watch.format(css_path))
 
 @task
 @roles('vagrant')
@@ -127,4 +127,4 @@ def freeze():
 @roles('vagrant')
 def css_compile():
     with cd("/var/www"):
-        run(exec_sass_compile.format(src_path, css_path))
+        run(exec_sass_compile.format(css_path))

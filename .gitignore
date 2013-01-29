@@ -29,6 +29,7 @@ project/settings/hosts/localhost.py# Numerous always-ignore extensions
 *~
 *.sass-cache
 *.psd
+*.css
 
 # OS or Editor folders
 .DS_Store

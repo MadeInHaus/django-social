@@ -1,0 +1,3 @@
+
+class TwitterUpdate():
+    pass

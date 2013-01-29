@@ -1,5 +1,3 @@
-@import "compass";
-
 // Core variables and mixins
 @import "variables"; // Modify this for custom colors, font-sizes, etc
 @import "fonts";
@@ -24,6 +22,7 @@
 //@import "sprites";
 
 //compass sprites 
+$icons-sprite-dimensions: true;
 @import "sprites/icons/*.png";
 @include all-icons-sprites;
 

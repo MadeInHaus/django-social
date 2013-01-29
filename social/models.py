@@ -13,6 +13,11 @@ NETWORK =       (
                     ('twitter', 'Twitter'),
                 )
 
+STATUS_LIST =   (
+                    (0, 'pending'),
+                    (1, 'approved'),
+                    (2, 'rejected'),
+                )
 
 
 class Message(models.Model):
@@ -20,6 +25,7 @@ class Message(models.Model):
     network = models.CharField(max_length=100, choices=NETWORK)
     message = models.TextField(max_length=1000)
     avatar = models.CharField(max_length=300,null=True,blank=True)
+    status = models.IntegerField(choices=STATUS_LIST, default=settings.SOCIAL_AUTO_APPROVE, null=True)
     def __unicode__(self):
         return str(self.pk)
 
@@ -31,13 +37,13 @@ class Social(Message):
     deeplink = models.URLField(null=True,blank=True)
     reply_to = models.ForeignKey('Social', related_name='reply',null=True,blank=True)
     reply_id = models.CharField(max_length=300,null=True,blank=True)
-    enabled = models.BooleanField(default=True)
+    
 
 
 class Twitter(Social):
-    entities = models.TextField(max_length=1000,null=True, blank=True)
+    _entities = models.TextField(max_length=1000,null=True, blank=True)
     @property
-    def get_entities(self):
+    def entities(self):
         return json.loads(self.entities) if self.entities else {}
     def save(self, *args, **kwargs):
         self.network = 'twitter'

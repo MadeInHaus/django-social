@@ -1,5 +1,6 @@
 from django.conf import settings
 
 
-TWITTER_AUTO_APPROVE = getattr(settings, 'TWITTER_AUTO_APPROVE', False)
-FACEBOOK_AUTO_APPROVE = getattr(settings, 'FACEBOOK_AUTO_APPROVE', False)
+SOCIAL_AUTO_APPROVE = getattr(settings, 'SOCIAL_TWITTER_AUTO_APPROVE', 1)
+SOCIAL_FACEBOOK_INTERVAL = getattr(settings, 'SOCIAL_FACEBOOK_INTERVAL', 15)
+SOCIAL_TWITTER_INTERVAL = getattr(settings, 'SOCIAL_TWITTER_INTERVAL', 15)
