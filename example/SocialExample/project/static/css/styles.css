@@ -1,0 +1,58 @@
+/*
+Syntax error: File to import not found or unreadable: compass.
+              Load paths:
+                /var/www
+                /var/www/project/static/css/src
+        on line 1 of ./project/static/css/src/styles.scss
+
+1: @import "compass";
+2: 
+3: // Core variables and mixins
+4: @import "variables"; // Modify this for custom colors, font-sizes, etc
+5: @import "fonts";
+6: @import "mixins";
+
+Backtrace:
+./project/static/css/src/styles.scss:1
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/import_node.rb:67:in `import'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/import_node.rb:28:in `imported_file'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/import_node.rb:37:in `css_import?'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/perform.rb:215:in `visit_import'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/base.rb:37:in `send'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/base.rb:37:in `visit'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/perform.rb:98:in `visit'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/base.rb:53:in `visit_children'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/base.rb:53:in `map'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/base.rb:53:in `visit_children'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/perform.rb:107:in `visit_children'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/perform.rb:119:in `with_environment'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/perform.rb:106:in `visit_children'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/base.rb:37:in `visit'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/perform.rb:126:in `visit_root'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/base.rb:37:in `send'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/base.rb:37:in `visit'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/perform.rb:98:in `visit'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/perform.rb:7:in `send'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/visitors/perform.rb:7:in `visit'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/tree/root_node.rb:20:in `render'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/engine.rb:315:in `_render'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/engine.rb:262:in `render'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/plugin/compiler.rb:341:in `update_stylesheet'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/plugin/compiler.rb:203:in `update_stylesheets'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/plugin/compiler.rb:201:in `each'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/plugin/compiler.rb:201:in `update_stylesheets'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/plugin/compiler.rb:235:in `watch'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/plugin.rb:107:in `send'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/plugin.rb:107:in `method_missing'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/exec.rb:444:in `watch_or_update'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/exec.rb:307:in `process_result'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/exec.rb:41:in `parse'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/../lib/sass/../sass/exec.rb:21:in `parse!'
+/opt/vagrant_ruby/lib/ruby/gems/1.8/gems/sass-3.2.5/bin/sass:8
+/opt/vagrant_ruby/bin/sass:19:in `load'
+/opt/vagrant_ruby/bin/sass:19
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Syntax error: File to import not found or unreadable: compass.\A               Load paths:\A                 /var/www\A                 /var/www/project/static/css/src\A         on line 1 of ./project/static/css/src/styles.scss\A \A 1: @import \"compass\";\A 2: \A 3: // Core variables and mixins\A 4: @import \"variables\"; // Modify this for custom colors, font-sizes, etc\A 5: @import \"fonts\";\A 6: @import \"mixins\";"; }
