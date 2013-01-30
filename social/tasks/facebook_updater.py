@@ -7,7 +7,7 @@ class FacebookUpdater():
         self._access_token = None
         self._app_id = settings.SOCIAL_FACEBOOK_APP_ID
         self._app_secret = settings.SOCIAL_FACEBOOK_APP_SECRET
-        # TODO add logic to only update this token if needed
+        # TODO save this in DB and refresh only if needed
         self._get_access_token()
 
     def _get_access_token(self):
@@ -27,4 +27,6 @@ class FacebookUpdater():
                                         .format(account.fb_id, self._access_token, 0)
             
             r = requests.get(url)
-            FacebookMessage.create_from_json(r.json)
+            messages = r.json.get('data',None)
+            for message in messages:
+                FacebookMessage.create_from_json(message)

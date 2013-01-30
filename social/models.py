@@ -67,7 +67,7 @@ class FacebookMessage(Social):
     def from_json(json):
         fb = FacebookMessage()
         # TODO parse this data!!!!
-        print(json)
+        print('hi')
         return fb
 
     @classmethod

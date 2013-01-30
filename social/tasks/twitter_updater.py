@@ -12,8 +12,6 @@ class TwitterUpdater():
             app_secret=settings.SOCIAL_TWITTER_CONSUMER_SECRET)
         
         auth_props = self.t.get_authentication_tokens()
-        print(auth_props)
-        
 
 
     def update(self):
