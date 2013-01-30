@@ -47,7 +47,7 @@ class TwitterMessage(Social):
         return json.loads(self.entities) if self.entities else {}
     def save(self, *args, **kwargs):
         self.network = 'twitter'
-        super(Twitter, self).save(*args, **kwargs)
+        super(TwitterMessage, self).save(*args, **kwargs)
         
 
 class FacebookMessage(Social):

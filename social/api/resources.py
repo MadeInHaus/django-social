@@ -1,7 +1,7 @@
 from tastypie.resources import ModelResource
 from tastypie.serializers import Serializer
 
-from social.models import Message, Social, Twitter, Facebook
+from social.models import Message, Social, TwitterMessage, FacebookMessage
 
 class MessageResource(ModelResource):
     
@@ -23,7 +23,7 @@ class TwitterResource(ModelResource):
     
     class Meta:
         include_resource_uri = False
-        queryset = Twitter.objects.all()
+        queryset = TwitterMessage.objects.all()
         resource_name = 'twitter'
         serializer = Serializer(["json"])
 
@@ -31,6 +31,6 @@ class FacebookResource(ModelResource):
     
     class Meta:
         include_resource_uri = False
-        queryset = Facebook.objects.all()
+        queryset = FacebookMessage.objects.all()
         resource_name = 'facebook'
         serializer = Serializer(["json"])

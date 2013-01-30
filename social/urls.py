@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import include, patterns
 
 from tastypie.api import Api
-from social.api.resources import MessageResource, SocialResource, TwitterResource, FacebookResource
+from .api.resources import MessageResource, SocialResource, TwitterResource, FacebookResource
 
 v1_api = Api(api_name='v1')
 v1_api.register(MessageResource())
