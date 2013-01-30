@@ -57,7 +57,7 @@ def celery():
         # FOR SOME REASON IF THE PROCESS WASN'T ENDED CORRECTLY, THIS WILL KILL IT
         run("ps ax | grep [w]orker | awk '{ print $1 }' | xargs kill -9")
     with cd("/var/www"):
-        run('python manage.py celery worker --loglevel=INFO')
+        run('python manage.py celery worker -E --loglevel=INFO')
 
 
 @task
