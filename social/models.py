@@ -25,7 +25,7 @@ class Message(models.Model):
     network = models.CharField(max_length=100, choices=NETWORK)
     message = models.TextField(max_length=1000)
     avatar = models.CharField(max_length=300,null=True,blank=True)
-    status = models.IntegerField(choices=STATUS_LIST, default=settings.SOCIAL_AUTO_APPROVE, null=True)
+    status = models.IntegerField(choices=STATUS_LIST)
     def __unicode__(self):
         return str(self.pk)
 
@@ -47,6 +47,8 @@ class TwitterMessage(Social):
         return json.loads(self.entities) if self.entities else {}
     def save(self, *args, **kwargs):
         self.network = 'twitter'
+        if not self.status:
+            self.status = 1 if settings.SOCIAL_TWITTER_AUTO_APPROVE else 0
         super(TwitterMessage, self).save(*args, **kwargs)
 
 class TwitterAccount(models.Model):
@@ -57,6 +59,8 @@ class FacebookMessage(Social):
     facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
     def save(self, *args, **kwargs):
         self.network = 'facebook'
+        if not self.status:
+            self.status = 1 if settings.SOCIAL_FACEBOOK_AUTO_APPROVE else 0
         super(FacebookMessage, self).save(*args, **kwargs)
     
     @staticmethod
