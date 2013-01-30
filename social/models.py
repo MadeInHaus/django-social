@@ -54,7 +54,24 @@ class FacebookMessage(Social):
     facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
     def save(self, *args, **kwargs):
         self.network = 'facebook'
-        super(Facebook, self).save(*args, **kwargs)
+        super(FacebookMessage, self).save(*args, **kwargs)
+    
+    @staticmethod
+    def from_json(json):
+        fb = FacebookMessage()
+        # TODO parse this data!!!!
+        print(json)
+        return fb
+
+    @classmethod
+    def create_from_json(cls,json):
+        instance = cls.from_json(json)
+        # TODO once you're done, uncomment this
+        #instance.save()
+        return instance
 
 class FacebookAccount(models.Model):
-    fb_id = models.CharField(max_length=300,help_text='17432988290 </br> Get Via: http://graph.facebook.com/dinopetrone')
+    fb_id = models.CharField(max_length=300,
+        help_text='11936081183 </br> Get Via: http://graph.facebook.com/nakedjuice')
+    def __unicode__(self):
+        return self.fb_id
