@@ -37,14 +37,30 @@ class Social(Message):
     deeplink = models.URLField(null=True,blank=True)
     reply_to = models.ForeignKey('Social', related_name='reply',null=True,blank=True)
     reply_id = models.CharField(max_length=300,null=True,blank=True)
-    
+
 
 
 class TwitterMessage(Social):
-    _entities = models.TextField(max_length=1000,null=True, blank=True)
+    text = models.CharField(max_length=140)
+    in_reply_to_status_id = models.BigIntegerField(null=True)
+    tweet_id = models.BigIntegerField()
+    source = models.CharField(max_length=100)
+    retweeted = models.BooleanField(default=False)
+    _entities = models.TextField(null=True, blank=True)
+    in_reply_to_screen_name = models.CharField(max_length=100, null=True)
+    in_reply_to_user_id = models.BigIntegerField(null=True)
+    retweet_count = models.IntegerField()
+    favorited = models.BooleanField(default=False)
+    created_at = models.DateTimeField()
+
     @property
     def entities(self):
-        return json.loads(self.entities) if self.entities else {}
+        return json.loads(self._entities) if self._entities else {}
+
+    @entities.setter
+    def set_entities(self, entities):
+        self._entities = json.dumps(entities)
+
     def save(self, *args, **kwargs):
         self.network = 'twitter'
         if not self.status:
@@ -52,8 +68,26 @@ class TwitterMessage(Social):
         super(TwitterMessage, self).save(*args, **kwargs)
 
 class TwitterAccount(models.Model):
-    search_field = models.CharField(max_length=100)
-        
+    user_id = models.BigIntegerField()
+    description = models.CharField(max_length=160, blank=True)
+    verified = models.BooleanField(default=False)
+    entities = models.TextField()
+    profile_image_url_https = models.URLField(blank=True)
+    followers_count = models.IntegerField(default=0)
+    protected = models.BooleanField(default=False)
+    profile_background_image_url_https = models.URLField(blank=True)
+    profile_background_image_url = models.URLField(blank=True)
+    name = models.CharField(max_length=100)
+    screen_name = models.CharField(max_length=100)
+    url = models.URLField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    location = models.CharField(max_length=100)
+    oauth_token = models.CharField(max_length=255, blank=True)
+    oauth_secret = models.CharField(max_length=255, blank=True)
+
+    def __unicode__(self):
+        return self.screen_name
+
 
 class FacebookMessage(Social):
     facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
@@ -62,7 +96,7 @@ class FacebookMessage(Social):
         if not self.status:
             self.status = 1 if settings.SOCIAL_FACEBOOK_AUTO_APPROVE else 0
         super(FacebookMessage, self).save(*args, **kwargs)
-    
+
     @staticmethod
     def from_json(json):
         fb = FacebookMessage()
