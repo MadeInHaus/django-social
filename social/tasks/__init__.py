@@ -7,18 +7,17 @@ from .facebook import FacebookUpdater
 from .twitter import TwitterUpdater
 
 
-@periodic_task(run_every=timedelta(minutes=settings.SOCIAL_FACEBOOK_INTERVAL))
+#@periodic_task(run_every=timedelta(minutes=settings.SOCIAL_FACEBOOK_INTERVAL))
+@periodic_task(run_every=timedelta(seconds=5))
 def twitter():
     log = get_task_logger('twitter')
     log.info('[Twitter] Start')
-    #update twitter
     tw = TwitterUpdater()
     tw.update()
     log.info('[Twitter] End')
 
 
-#@periodic_task(run_every=timedelta(minutes=settings.SOCIAL_TWITTER_INTERVAL))
-@periodic_task(run_every=timedelta(seconds=5))
+@periodic_task(run_every=timedelta(minutes=settings.SOCIAL_TWITTER_INTERVAL))
 def facebook():
     log = get_task_logger('facebook')
     log.info('[Facebook] Start')

@@ -48,6 +48,9 @@ class TwitterMessage(Social):
     def save(self, *args, **kwargs):
         self.network = 'twitter'
         super(TwitterMessage, self).save(*args, **kwargs)
+
+class TwitterAccount(models.Model):
+    search_field = models.CharField(max_length=100)
         
 
 class FacebookMessage(Social):
