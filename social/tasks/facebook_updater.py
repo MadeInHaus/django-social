@@ -32,8 +32,6 @@ class FacebookUpdater():
             self.step(account,url)
 
 
-            
-    
     def step(self, account, url):
         log = get_task_logger('facebook')
         r = requests.get(url)
