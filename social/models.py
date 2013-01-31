@@ -27,6 +27,7 @@ class Message(models.Model):
     message_type = models.CharField(max_length=100, choices=MESSAGE_TYPE)
     network = models.CharField(max_length=100, choices=NETWORK)
     message = models.TextField(max_length=1000)
+    blob = models.TextField(max_length=10000)
     avatar = models.CharField(max_length=300,null=True,blank=True)
     status = models.IntegerField(choices=STATUS_LIST)
     def __unicode__(self):
@@ -127,18 +128,18 @@ class FacebookMessage(Social):
             fb_message.message_id = json['id']
             temparr = json['id'].split('_')
             fb_message.deeplink = 'https://www.facebook.com/{0}/posts/{1}'.format(temparr[0],temparr[1])
+            fb_message.blob = json
             fb_message.save()
             #print(json)
             #fb_message.reply_to
             #fb_message.reply_id
         return fb_message
-        # TODO once you're done, uncomment this
         
 
 class FacebookAccount(models.Model):
     fb_id = models.CharField(max_length=300,
         help_text='11936081183 </br> Get Via: http://graph.facebook.com/nakedjuice')
-    last_poll_time = models.IntegerField(default=0,editable=False)
+    last_poll_time = models.IntegerField(default=int(time.time()))
     def __unicode__(self):
         return self.fb_id
 
