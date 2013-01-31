@@ -1,7 +1,10 @@
 from . import settings
 import json
+import time
+from time import mktime
+from datetime import datetime
 from django.db import models
-
+from django.utils.timezone import utc
 
 MESSAGE_TYPE =  (
                     ('post', 'Post'),
@@ -91,28 +94,56 @@ class TwitterAccount(models.Model):
 
 class FacebookMessage(Social):
     facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
+    def __unicode__(self):
+        return self.message
     def save(self, *args, **kwargs):
         self.network = 'facebook'
         if not self.status:
             self.status = 1 if settings.SOCIAL_FACEBOOK_AUTO_APPROVE else 0
         super(FacebookMessage, self).save(*args, **kwargs)
 
-    @staticmethod
-    def from_json(json):
-        fb = FacebookMessage()
-        # TODO parse this data!!!!
-        print('hi')
-        return fb
 
-    @classmethod
-    def create_from_json(cls,json):
-        instance = cls.from_json(json)
+    @staticmethod
+    def create_from_json(account,json):
+        fb_message = FacebookMessage()
+        
+        # already created, need to update?
+        saved_message = FacebookMessage.objects.filter(message_id=json['id'])
+        if saved_message:
+            return saved_message[0]
+
+        # create a status 
+        if json.get('type', False) == 'status' :
+            fb_message.facebook_account = account
+            fb_message.message_type = 'post'
+            fb_message.message = json.get('message','')
+            # NEED TO DECIDE IF THIS IS BEST LOGIC!
+            if fb_message.message == '': return
+            fb_message.avatar = 'https://graph.facebook.com/{0}/picture'.format(json['from']['id'])
+            fb_message.user_id = json['from']['id']
+            fb_message.user_name = json['from']['name']
+            time_struct = time.strptime(json['created_time'], '%Y-%m-%dT%H:%M:%S+0000')
+            fb_message.date = datetime.utcfromtimestamp(mktime(time_struct)).replace(tzinfo=utc)
+            fb_message.message_id = json['id']
+            temparr = json['id'].split('_')
+            fb_message.deeplink = 'https://www.facebook.com/{0}/posts/{1}'.format(temparr[0],temparr[1])
+            fb_message.save()
+            #print(json)
+            #fb_message.reply_to
+            #fb_message.reply_id
+        return fb_message
         # TODO once you're done, uncomment this
-        #instance.save()
-        return instance
+        
 
 class FacebookAccount(models.Model):
     fb_id = models.CharField(max_length=300,
         help_text='11936081183 </br> Get Via: http://graph.facebook.com/nakedjuice')
+    last_poll_time = models.IntegerField(default=0,editable=False)
     def __unicode__(self):
         return self.fb_id
+
+
+
+
+
+

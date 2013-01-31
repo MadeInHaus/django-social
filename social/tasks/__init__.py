@@ -18,7 +18,7 @@ def twitter():
 
 
 #@periodic_task(run_every=timedelta(minutes=settings.SOCIAL_FACEBOOK_INTERVAL))
-@periodic_task(run_every=timedelta(seconds=15))
+@periodic_task(run_every=timedelta(seconds=5))
 def facebook():
     log = get_task_logger('facebook')
     log.info('[Facebook] Start')

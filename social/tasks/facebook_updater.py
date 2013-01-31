@@ -1,3 +1,4 @@
+import time
 from .. import settings
 import requests
 from ..models import FacebookAccount, FacebookMessage
@@ -22,11 +23,17 @@ class FacebookUpdater():
     def update(self):
         facebookAccounts = FacebookAccount.objects.all()
         for account in facebookAccounts:
-            # TODO add in this 'since' variable, (add to model after sucessful response)
+            
+            #FacebookMessage.objects.get()
+
             url = "https://graph.facebook.com/{0}/feed?access_token={1}&filter=2&since={2}"\
-                                        .format(account.fb_id, self._access_token, 0)
+                                        .format(account.fb_id, self._access_token, account.last_poll_time)
             
             r = requests.get(url)
+            print(r.json)
             messages = r.json.get('data',None)
+            #account.last_poll_time = int(time.time())
+            account.save()
             for message in messages:
-                FacebookMessage.create_from_json(message)
+                FacebookMessage.create_from_json(account,message)
+                
