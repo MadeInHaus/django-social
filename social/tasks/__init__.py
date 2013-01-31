@@ -5,10 +5,11 @@ from celery import task
 from celery.task import periodic_task
 from .facebook_updater import FacebookUpdater
 from .twitter_updater import TwitterUpdater
+from .rss_updater import RSSUpdater
 
 
 
-@periodic_task(run_every=timedelta(minutes=settings.SOCIAL_FACEBOOK_INTERVAL))
+@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_TWITTER_INTERVAL))
 def twitter():
     log = get_task_logger('twitter')
     log.info('[Twitter] Start')
@@ -17,11 +18,19 @@ def twitter():
     log.info('[Twitter] End')
 
 
-#@periodic_task(run_every=timedelta(minutes=settings.SOCIAL_FACEBOOK_INTERVAL))
-@periodic_task(run_every=timedelta(seconds=5))
+@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_FACEBOOK_INTERVAL))
 def facebook():
     log = get_task_logger('facebook')
     log.info('[Facebook] Start')
     fb = FacebookUpdater()
     fb.update()
     log.info('[Facebook] End')
+
+@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_FACEBOOK_INTERVAL))
+def rss_update():
+    log = get_task_logger('rss')
+    log.info('[RSS] Start')
+    rss = RSSUpdater()
+    rss.update()
+    log.info('[RSS] End')
+    

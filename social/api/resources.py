@@ -10,6 +10,7 @@ class MessageResource(ModelResource):
         queryset = Message.objects.all()
         resource_name = 'message'
         serializer = Serializer(["json"])
+        ordering = ['date',]
 
 class SocialResource(ModelResource):
     
@@ -18,6 +19,7 @@ class SocialResource(ModelResource):
         queryset = Social.objects.all()
         resource_name = 'social'
         serializer = Serializer(["json"])
+        ordering = ['date',]
 
 class TwitterResource(ModelResource):
     
@@ -26,6 +28,7 @@ class TwitterResource(ModelResource):
         queryset = TwitterMessage.objects.all()
         resource_name = 'twitter'
         serializer = Serializer(["json"])
+        ordering = ['date',]
 
 class FacebookResource(ModelResource):
     
@@ -34,3 +37,4 @@ class FacebookResource(ModelResource):
         queryset = FacebookMessage.objects.all()
         resource_name = 'facebook'
         serializer = Serializer(["json"])
+        ordering = ['date',]

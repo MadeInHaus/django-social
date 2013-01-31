@@ -27,6 +27,9 @@ class Message(models.Model):
     message_type = models.CharField(max_length=100, choices=MESSAGE_TYPE)
     network = models.CharField(max_length=100, choices=NETWORK)
     message = models.TextField(max_length=1000)
+    date = models.DateTimeField()
+    message_id = models.CharField(max_length=200, null=True,blank=True)
+    deeplink = models.URLField(null=True,blank=True)
     blob = models.TextField(max_length=10000)
     avatar = models.CharField(max_length=300,null=True,blank=True)
     status = models.IntegerField(choices=STATUS_LIST)
@@ -36,9 +39,6 @@ class Message(models.Model):
 class Social(Message):
     user_id = models.CharField(max_length=300)
     user_name = models.CharField(max_length=300)
-    date = models.DateTimeField()
-    message_id = models.CharField(max_length=200, null=True,blank=True)
-    deeplink = models.URLField(null=True,blank=True)
     reply_to = models.ForeignKey('Social', related_name='reply',null=True,blank=True)
     reply_id = models.CharField(max_length=300,null=True,blank=True)
 

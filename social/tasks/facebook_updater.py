@@ -3,6 +3,10 @@ from .. import settings
 import requests
 from ..models import FacebookAccount, FacebookMessage
 from celery.utils.log import get_task_logger
+from urlparse import urlparse, parse_qs
+
+log = get_task_logger('facebook')
+
 
 class FacebookUpdater():
     def __init__(self):
@@ -27,19 +31,21 @@ class FacebookUpdater():
             url = "https://graph.facebook.com/{0}/feed?access_token={1}&filter=2&since={2}"\
                                         .format(account.fb_id, self._access_token, account.last_poll_time)
             
+            after = account.last_poll_time
             account.last_poll_time = int(time.time())
             account.save()
-            self.step(account,url)
+            self.step(account,url,after)
 
 
-    def step(self, account, url):
-        log = get_task_logger('facebook')
+    def step(self, account, url, after):
         r = requests.get(url)
         messages = r.json.get('data',[])
         next_url = r.json.get('paging',{}).get('next')
         for message in messages:
             FacebookMessage.create_from_json(account,message)
         if next_url:
-            self.step(account,next_url)
+            until = int(parse_qs(urlparse(next_url).query).get('until',[0])[0])
+            if until > after:
+                self.step(account,next_url, after)
         
 
