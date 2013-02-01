@@ -16,8 +16,14 @@ class TwitterUpdater():
         pass
 
     def update(self):
-        for account in TwitterAccount.objects.all():
-            log.error("account: {}".format(account.__dict__))
-            twitter = Twython(app_key=SOCIAL_TWITTER_CONSUMER_KEY, app_secret=SOCIAL_TWITTER_CONSUMER_SECRET, oauth_token=account.oauth_token, oauth_token_secret=account.oauth_secret)
-            timeline = twitter.getUserTimeline()
-            log.error("user timeline: {}".format(timeline))
+        account = TwitterAccount.get_next_up()
+        if not account:
+            return 
+        print(account)
+        print(account.poll_count)
+        twitter = Twython(  app_key=SOCIAL_TWITTER_CONSUMER_KEY, 
+                            app_secret=SOCIAL_TWITTER_CONSUMER_SECRET, 
+                            oauth_token=account.oauth_token, 
+                            oauth_token_secret=account.oauth_secret)
+        tweets = twitter.search(q='python')
+        #log.error("user timeline: {}".format(tweets))

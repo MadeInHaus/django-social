@@ -5,6 +5,8 @@ from time import mktime
 from datetime import datetime
 from django.db import models
 from django.utils.timezone import utc
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 MESSAGE_TYPE =  (
                     ('post', 'Post'),
@@ -88,10 +90,23 @@ class TwitterAccount(models.Model):
     location = models.CharField(max_length=100)
     oauth_token = models.CharField(max_length=255, blank=True)
     oauth_secret = models.CharField(max_length=255, blank=True)
+    poll_count = models.IntegerField(default=0,editable=False)
 
     def __unicode__(self):
         return self.screen_name
 
+    @classmethod
+    def get_next_up(cls):
+        try:
+            account = cls.objects.all().order_by("poll_count")[0]
+        except:
+            return
+        account.poll_count += 1
+        account.save()
+        return account
+
+class TwitterSearch(models.Model):
+    search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')
 
 class FacebookMessage(Social):
     facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
@@ -130,9 +145,6 @@ class FacebookMessage(Social):
             fb_message.deeplink = 'https://www.facebook.com/{0}/posts/{1}'.format(temparr[0],temparr[1])
             fb_message.blob = json
             fb_message.save()
-            #print(json)
-            #fb_message.reply_to
-            #fb_message.reply_id
         return fb_message
         
 
@@ -145,6 +157,7 @@ class FacebookAccount(models.Model):
 
 
 
-
-
-
+@receiver(post_save, sender=TwitterAccount)
+def search_nearby_schools(sender, instance, created, raw, **kwargs):
+    if created == True:
+        accounts = sender.objects.all().update(poll_count=0)

@@ -9,7 +9,8 @@ from .rss_updater import RSSUpdater
 
 
 
-@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_TWITTER_INTERVAL))
+#@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_TWITTER_INTERVAL))
+@periodic_task(run_every=timedelta(seconds=5))
 def twitter():
     log = get_task_logger('twitter')
     log.info('[Twitter] Start')
@@ -26,7 +27,7 @@ def facebook():
     fb.update()
     log.info('[Facebook] End')
 
-@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_FACEBOOK_INTERVAL))
+@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_RSS_INTERVAL))
 def rss_update():
     log = get_task_logger('rss')
     log.info('[RSS] Start')
