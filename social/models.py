@@ -155,6 +155,15 @@ class FacebookAccount(models.Model):
     def __unicode__(self):
         return self.fb_id
 
+class RSSAccount(models.Model):
+    feed_name = models.CharField(max_length=300, blank=True)
+    feed_url = models.URLField()
+    
+    def __unicode__(self):
+        return self.feed_name if self.feed_name else self.feed_url
+
+class RSSMessage(Social):
+    pass
 
 
 @receiver(post_save, sender=TwitterAccount)

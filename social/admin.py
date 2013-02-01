@@ -1,16 +1,17 @@
 from django.contrib import admin
-from .models import FacebookAccount, FacebookMessage, TwitterAccount, TwitterMessage
 
 from django.template.response import TemplateResponse
 
+from .models import FacebookAccount, FacebookMessage, TwitterAccount, TwitterMessage, RSSAccount, RSSMessage
 from .settings import SOCIAL_TWITTER_CONSUMER_KEY, SOCIAL_TWITTER_CONSUMER_SECRET
+from .views import begin_auth
 
 from logging import getLogger
 from django.http import HttpResponseRedirect
 import traceback
 from twython.twython import Twython
 from django.core.urlresolvers import reverse
-from social.views import begin_auth
+
 log = getLogger("social.admin")
 
 admin.site.register(FacebookAccount)
@@ -28,3 +29,6 @@ class TwitterAccountAdmin(admin.ModelAdmin):
 
 admin.site.register(TwitterAccount, TwitterAccountAdmin)
 admin.site.register(TwitterMessage)
+
+admin.site.register(RSSAccount)
+admin.site.register(RSSMessage)
