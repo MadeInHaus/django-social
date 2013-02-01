@@ -26,7 +26,7 @@ def facebook():
     fb.update()
     log.info('[Facebook] End')
 
-@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_FACEBOOK_INTERVAL))
+@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_RSS_INTERVAL))
 def rss_update():
     log = get_task_logger('rss')
     log.info('[RSS] Start')

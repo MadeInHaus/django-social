@@ -20,4 +20,5 @@ class TwitterUpdater():
             log.error("account: {}".format(account.__dict__))
             twitter = Twython(app_key=SOCIAL_TWITTER_CONSUMER_KEY, app_secret=SOCIAL_TWITTER_CONSUMER_SECRET, oauth_token=account.oauth_token, oauth_token_secret=account.oauth_secret)
             timeline = twitter.getUserTimeline()
-            log.error("user timeline: {}".format(timeline))
+            for o in timeline:
+                log.error("user timeline.: {}".format(o))
