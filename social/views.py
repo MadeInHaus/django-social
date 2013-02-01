@@ -27,6 +27,7 @@ def begin_auth(request):
         log.error(traceback.format_stack())
     
     request.session['request_token'] = auth_props
+    
     return HttpResponseRedirect(auth_props['auth_url'])
 
 def thanks(request, redirect_url='/admin/social/twitteraccount/'):
