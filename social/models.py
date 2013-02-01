@@ -72,7 +72,7 @@ class TwitterMessage(Social):
         super(TwitterMessage, self).save(*args, **kwargs)
 
 class TwitterAccount(models.Model):
-    user_id = models.BigIntegerField()
+    twitter_id = models.BigIntegerField()
     description = models.CharField(max_length=160, blank=True)
     verified = models.BooleanField(default=False)
     entities = models.TextField()

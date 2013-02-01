@@ -1,59 +1,65 @@
+import sys
+import traceback
+
+from twython import Twython
+from django.core.urlresolvers import reverse
+
+from logging import getLogger
+from django.http import HttpResponseRedirect
 
 
+from .settings import SOCIAL_TWITTER_CONSUMER_KEY, SOCIAL_TWITTER_CONSUMER_SECRET
+from .models import TwitterAccount
 
+log = getLogger('social.views')
 
 def begin_auth(request):
     twitter = Twython(
-        twitter_token = settings.TWITTER_KEY,
-        twitter_secret = settings.TWITTER_SECRET,
-        callback_url = request.build_absolute_uri(reverse('twitter_oauth.views.thanks'))
+        twitter_token = SOCIAL_TWITTER_CONSUMER_KEY,
+        twitter_secret = SOCIAL_TWITTER_CONSUMER_SECRET,
+        callback_url = request.build_absolute_uri(reverse('social.views.thanks'))
     )
 
     try:
         auth_props = twitter.get_authentication_tokens()
     except:
-        print sys.exc_info()
-        traceback.print_exc()
-        pass
+        log.error(traceback.format_exc())
+        log.error(traceback.format_stack())
     
     request.session['request_token'] = auth_props
     return HttpResponseRedirect(auth_props['auth_url'])
 
-def thanks(request, redirect_url=settings.LOGIN_REDIRECT_URL):
+def thanks(request, redirect_url='/admin/social/twitteraccount/'):
     twitter = Twython(
-        twitter_token = settings.TWITTER_KEY,
-        twitter_secret = settings.TWITTER_SECRET,
+        twitter_token = SOCIAL_TWITTER_CONSUMER_KEY,
+        twitter_secret = SOCIAL_TWITTER_CONSUMER_SECRET,
         oauth_token = request.session['request_token']['oauth_token'],
         oauth_token_secret = request.session['request_token']['oauth_token_secret'],
     )
 
     authorized_tokens = twitter.get_authorized_tokens()
+    log.error("authorized_tokens: {}".format(authorized_tokens))
+    
     try:
-        user = User.objects.get(username = authorized_tokens['screen_name'])
-        user.set_password(authorized_tokens['oauth_token_secret'])
-        user.save()
-    except User.DoesNotExist:
-        user = User.objects.create_user(authorized_tokens['screen_name'], "", authorized_tokens['oauth_token_secret'])
-        profile_info = twitter.showUser(screen_name=authorized_tokens['screen_name'])
-        profile = TwitterProfile()
-        profile.user                    = user
-        profile.twitter_id              = profile_info['id']
-        profile.screen_name             = profile_info['screen_name']
-        profile.name                    = profile_info['name']
-        profile.location                = profile_info['location']
-        profile.profile_image_url       = profile_info['profile_image_url']
-        profile.profile_image_url_https = profile_info['profile_image_url_https']
-        profile.verified                = profile_info['verified']
-        profile.friends_count           = profile_info['friends_count']
-        profile.statuses_count          = profile_info['statuses_count']
-        profile.oauth_token             = authorized_tokens['oauth_token']
-        profile.oauth_secret            = authorized_tokens['oauth_token_secret']
-        profile.save()
+        account = TwitterAccount.objects.get(screen_name=authorized_tokens['screen_name'])
+        account.oauth_token             = authorized_tokens['oauth_token']
+        account.oauth_secret            = authorized_tokens['oauth_token_secret']
+        account.save()
+    except TwitterAccount.DoesNotExist:
+        account = TwitterAccount()
+        account_info = twitter.showUser(screen_name=authorized_tokens['screen_name'])
+        account.user_id                 = unicode(account_info['id'])
+        account.twitter_id              = account_info['id']
+        account.screen_name             = account_info['screen_name']
+        account.user_name               = account_info['name']
+        account.location                = account_info['location']
+        account.avatar                  = account_info['profile_image_url']
+        account.profile_image_url_https = account_info['profile_image_url_https']
+        account.verified                = account_info['verified']
+        account.friends_count           = account_info['friends_count']
+        account.statuses_count          = account_info['statuses_count']
+        account.oauth_token             = authorized_tokens['oauth_token']
+        account.oauth_secret            = authorized_tokens['oauth_token_secret']
+        account.save()
 
-    user = authenticate(
-        username = authorized_tokens['screen_name'],
-        password = authorized_tokens['oauth_token_secret']
-    )
-    # user.backend = 'django.contrib.auth.backends.ModelBackend'
-    login(request, user)
     return HttpResponseRedirect(redirect_url)
