@@ -32,6 +32,6 @@ python-dateutil==1.5
 python-memcached==1.48
 pytz==2012h
 redis==2.6.2
-requests==0.14.2
+requests==1.1.0
 -e git://github.com/MadeInHaus/twython#egg=twython
 wsgiref==0.1.2
