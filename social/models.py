@@ -47,17 +47,19 @@ class Social(Message):
 
 
 class TwitterMessage(Social):
-    text = models.CharField(max_length=140)
+    #text = models.CharField(max_length=140)
     in_reply_to_status_id = models.BigIntegerField(null=True)
-    tweet_id = models.BigIntegerField()
-    source = models.CharField(max_length=100)
+    #removing this, using message_id
+    #tweet_id = models.BigIntegerField()
+    source = models.CharField(max_length=200)
     retweeted = models.BooleanField(default=False)
     _entities = models.TextField(null=True, blank=True)
-    in_reply_to_screen_name = models.CharField(max_length=100, null=True)
+    in_reply_to_screen_name = models.CharField(max_length=200, null=True)
     in_reply_to_user_id = models.BigIntegerField(null=True)
-    retweet_count = models.IntegerField()
+    retweet_count = models.IntegerField(default=0)
     favorited = models.BooleanField(default=False)
-    created_at = models.DateTimeField()
+    twitter_search = models.ManyToManyField('TwitterSearch',null=True,blank=True)
+    #created_at = models.DateTimeField()
 
     @property
     def entities(self):
@@ -74,36 +76,45 @@ class TwitterMessage(Social):
         super(TwitterMessage, self).save(*args, **kwargs)
 
     @classmethod
-    def create_from_json(term,json):
-        message = TwitterMessage()
-        # TODO dino work here!!!!
-        # self.text = 
-        # self.in_reply_to_status_id = 
-        # self.tweet_id = 
-        # self.source = 
-        # self.retweeted = 
-        # self._entities = 
-        # self.in_reply_to_screen_name = 
-        # self.in_reply_to_user_id = 
-        # self.retweet_count = 
-        # self.favorited = 
-        # self.created_at = 
-        # self.user_id = 
-        # self.user_name = 
-        # self.reply_to = 
-        # self.reply_id = 
-        # self.message_type = 
-        # self.network = 
-        # self.message = 
-        # self.date = 
-        # self.message_id = 
-        # self.deeplink = 
-        # self.blob = 
-        # self.avatar = 
-        # self.status = 
+    def create_from_json(term,obj,search=None):
+        saved_message = TwitterMessage.objects.filter(message_id=obj.get('id_str',0))
+        if saved_message:
+            tmp_message = saved_message.filter(twitter_search__search_term=search.search_term)
+            if tmp_message:
+                # already exists, dont' add it, and throw error
+                raise Exception("Tweet already exists in DB")
+                return
+            saved_message.twitter_search.add(search)
+            saved_message.save()
+            return saved_message
+            
 
-        
-        
+        message = TwitterMessage()
+        message.in_reply_to_status_id = obj.get('in_reply_to_status_id',0)
+        message.source = obj.get('source','')
+        message.retweeted = obj.get('retweeted','False')
+        message._entities = obj.get('entities','')
+        message.in_reply_to_screen_name = obj.get('in_reply_to_screen_name','')
+        message.in_reply_to_user_id = obj.get('in_reply_to_user_id','')
+        message.retweet_count = obj.get('retweet_count',0)
+        message.favorited = obj.get('favorited',False)
+        message.user_id = obj.get('id_str')
+        message.user_name = obj.get('user').get('screen_name')
+        if obj.get('in_reply_to_screen_name',None) == None:
+            message.message_type = 'post'
+        else:
+            message.message_type = 'reply'
+        message.message = obj.get('text','')
+        time_struct = time.strptime(obj['created_at'], '%a %b %d %H:%M:%S +0000 %Y')
+        message.date = datetime.utcfromtimestamp(mktime(time_struct)).replace(tzinfo=utc)
+        message.message_id = obj.get('id_str',0)
+        message.deeplink = 'https://twitter.com/{0}/status/{1}'.format(message.user_name, message.message_id)
+        message.blob = json.dumps(obj)
+        message.avatar = obj.get('user',{}).get('profile_image_url_https','')
+        message.save()
+        message.twitter_search.add(search)
+        message.save()
+        return message
 
 
 class TwitterAccount(models.Model):
@@ -116,11 +127,11 @@ class TwitterAccount(models.Model):
     protected = models.BooleanField(default=False)
     profile_background_image_url_https = models.URLField(blank=True)
     profile_background_image_url = models.URLField(blank=True)
-    name = models.CharField(max_length=100)
-    screen_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=200)
+    screen_name = models.CharField(max_length=200)
     url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    location = models.CharField(max_length=100)
+    location = models.CharField(max_length=200)
     oauth_token = models.CharField(max_length=255, blank=True)
     oauth_secret = models.CharField(max_length=255, blank=True)
     poll_count = models.IntegerField(default=0,editable=False)
@@ -140,7 +151,7 @@ class TwitterAccount(models.Model):
 
 class TwitterSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')
-    last_poll_time = models.IntegerField(default=int(time.time()))
+    search_until = models.IntegerField(default=int(time.time()))
     def __unicode__(self):
         return self.search_term
 
@@ -162,7 +173,9 @@ class FacebookMessage(Social):
         # already created, need to update?
         saved_message = FacebookMessage.objects.filter(message_id=json['id'])
         if saved_message:
+            #raise Exception("Post already exists in DB")
             return saved_message[0]
+
 
         # create a status 
         if json.get('type', False) == 'status' :

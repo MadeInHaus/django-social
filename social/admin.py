@@ -27,8 +27,11 @@ class TwitterAccountAdmin(admin.ModelAdmin):
 
         return begin_auth(request)
 
+class TwitterMessageAdmin(admin.ModelAdmin):
+    list_display = ('id','message')
+
 admin.site.register(TwitterAccount, TwitterAccountAdmin)
-admin.site.register(TwitterMessage)
+admin.site.register(TwitterMessage, TwitterMessageAdmin)
 admin.site.register(TwitterSearch)
 
 admin.site.register(RSSAccount)
