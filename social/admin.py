@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from django.template.response import TemplateResponse
 
-from .models import FacebookAccount, FacebookMessage, TwitterAccount, TwitterMessage, RSSAccount, RSSMessage
+from .models import FacebookAccount, FacebookMessage, TwitterAccount, TwitterMessage, TwitterSearch, RSSAccount, RSSMessage
 from .settings import SOCIAL_TWITTER_CONSUMER_KEY, SOCIAL_TWITTER_CONSUMER_SECRET
 from .views import begin_auth
 
@@ -29,6 +29,7 @@ class TwitterAccountAdmin(admin.ModelAdmin):
 
 admin.site.register(TwitterAccount, TwitterAccountAdmin)
 admin.site.register(TwitterMessage)
+admin.site.register(TwitterSearch)
 
 admin.site.register(RSSAccount)
 admin.site.register(RSSMessage)

@@ -73,6 +73,39 @@ class TwitterMessage(Social):
             self.status = 1 if settings.SOCIAL_TWITTER_AUTO_APPROVE else 0
         super(TwitterMessage, self).save(*args, **kwargs)
 
+    @classmethod
+    def create_from_json(term,json):
+        message = TwitterMessage()
+        # TODO dino work here!!!!
+        # self.text = 
+        # self.in_reply_to_status_id = 
+        # self.tweet_id = 
+        # self.source = 
+        # self.retweeted = 
+        # self._entities = 
+        # self.in_reply_to_screen_name = 
+        # self.in_reply_to_user_id = 
+        # self.retweet_count = 
+        # self.favorited = 
+        # self.created_at = 
+        # self.user_id = 
+        # self.user_name = 
+        # self.reply_to = 
+        # self.reply_id = 
+        # self.message_type = 
+        # self.network = 
+        # self.message = 
+        # self.date = 
+        # self.message_id = 
+        # self.deeplink = 
+        # self.blob = 
+        # self.avatar = 
+        # self.status = 
+
+        
+        
+
+
 class TwitterAccount(models.Model):
     twitter_id = models.BigIntegerField()
     description = models.CharField(max_length=160, blank=True)
@@ -107,6 +140,9 @@ class TwitterAccount(models.Model):
 
 class TwitterSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')
+    last_poll_time = models.IntegerField(default=int(time.time()))
+    def __unicode__(self):
+        return self.search_term
 
 class FacebookMessage(Social):
     facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
