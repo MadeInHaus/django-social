@@ -75,6 +75,7 @@ class TwitterMessage(Social):
             self.status = 1 if settings.SOCIAL_TWITTER_AUTO_APPROVE else 0
         super(TwitterMessage, self).save(*args, **kwargs)
 
+    # create tweet and make sure it's unique based on id_str and search term
     @classmethod
     def create_from_json(term,obj,search=None):
         saved_message = TwitterMessage.objects.filter(message_id=obj.get('id_str',0))
@@ -82,7 +83,7 @@ class TwitterMessage(Social):
             tmp_message = saved_message.filter(twitter_search__search_term=search.search_term)
             if tmp_message:
                 # already exists, dont' add it, and throw error
-                raise Exception("Tweet already exists in DB")
+                raise TweetExistsError
                 return
             saved_message.twitter_search.add(search)
             saved_message.save()
@@ -149,6 +150,18 @@ class TwitterAccount(models.Model):
         account.save()
         return account
 
+    @property
+    def valid(self):
+        try:
+            return self._valid
+        except AttributeError:
+            self._valid = True
+            return self._valid
+
+    @valid.setter
+    def valid(self, value):
+        self._valid = value
+
 class TwitterSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')
     search_until = models.IntegerField(default=int(time.time()))
@@ -214,6 +227,8 @@ class RSSAccount(models.Model):
 class RSSMessage(Social):
     pass
 
+class TweetExistsError(Exception):
+    pass
 
 @receiver(post_save, sender=TwitterAccount)
 def search_nearby_schools(sender, instance, created, raw, **kwargs):
