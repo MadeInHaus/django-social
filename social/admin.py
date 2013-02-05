@@ -34,5 +34,9 @@ admin.site.register(TwitterAccount, TwitterAccountAdmin)
 admin.site.register(TwitterMessage, TwitterMessageAdmin)
 admin.site.register(TwitterSearch)
 
+
+class RSSMessageAdmin(admin.ModelAdmin):
+    list_display = ('id','message')
+
 admin.site.register(RSSAccount)
-admin.site.register(RSSMessage)
+admin.site.register(RSSMessage, RSSMessageAdmin)

@@ -16,6 +16,7 @@ MESSAGE_TYPE =  (
 NETWORK =       (
                     ('facebook', 'Facebook'),
                     ('twitter', 'Twitter'),
+                    ('rss', 'Rich Site Summary'),
                 )
 
 STATUS_LIST =   (
@@ -35,18 +36,16 @@ class Message(models.Model):
     blob = models.TextField(max_length=10000)
     avatar = models.CharField(max_length=300,null=True,blank=True)
     status = models.IntegerField(choices=STATUS_LIST)
+    user_id = models.CharField(max_length=300, blank=True)
+    user_name = models.CharField(max_length=300, blank=True)
+    reply_to = models.ForeignKey('Message', related_name='reply',null=True,blank=True)
+    reply_id = models.CharField(max_length=300,null=True,blank=True)
+    
     def __unicode__(self):
         return str(self.pk)
 
-class Social(Message):
-    user_id = models.CharField(max_length=300)
-    user_name = models.CharField(max_length=300)
-    reply_to = models.ForeignKey('Social', related_name='reply',null=True,blank=True)
-    reply_id = models.CharField(max_length=300,null=True,blank=True)
 
-
-
-class TwitterMessage(Social):
+class TwitterMessage(Message):
     #text = models.CharField(max_length=140)
     in_reply_to_status_id = models.BigIntegerField(null=True)
     #removing this, using message_id
@@ -155,7 +154,7 @@ class TwitterSearch(models.Model):
     def __unicode__(self):
         return self.search_term
 
-class FacebookMessage(Social):
+class FacebookMessage(Message):
     facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
     def __unicode__(self):
         return self.message
@@ -211,8 +210,13 @@ class RSSAccount(models.Model):
     def __unicode__(self):
         return self.feed_name if self.feed_name else self.feed_url
 
-class RSSMessage(Social):
-    pass
+class RSSMessage(Message):
+
+    def save(self, *args, **kwargs):
+        self.network = 'rss'
+        if not self.status:
+            self.status = 1 if settings.SOCIAL_RSS_AUTO_APPROVE else 0
+        super(RSSMessage, self).save(*args, **kwargs)
 
 
 @receiver(post_save, sender=TwitterAccount)
