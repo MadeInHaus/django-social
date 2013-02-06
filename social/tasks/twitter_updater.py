@@ -27,7 +27,7 @@ log = logging.getLogger(__name__)
 class TwitterUpdater():
     def __init__(self):
         self.accounts = self._accounts_generator()
-        self.q = JoinableQueue()
+        
     
     def _accounts_generator(self):
         accounts = cycle(TwitterAccount.objects.all())
@@ -41,11 +41,7 @@ class TwitterUpdater():
 
                 accounts = cycle(accounts)
                 continue
-            twitter = Twython(  app_key=SOCIAL_TWITTER_CONSUMER_KEY, 
-                                app_secret=SOCIAL_TWITTER_CONSUMER_SECRET, 
-                                oauth_token=a.oauth_token, 
-                                oauth_token_secret=a.oauth_secret)
-            yield twitter
+            yield a
 
     def update(self):
         #now = int(time.time())
@@ -61,9 +57,14 @@ class TwitterUpdater():
     def _step(self, term, max_id=0):
         
         try:
-            twitter = self.accounts.next()
+            account = self.accounts.next()
+            twitter = Twython(  app_key=SOCIAL_TWITTER_CONSUMER_KEY, 
+                                app_secret=SOCIAL_TWITTER_CONSUMER_SECRET, 
+                                oauth_token=account.oauth_token, 
+                                oauth_token_secret=account.oauth_secret)
+            
         except:
-            # no accounts, or they are alld ead
+            # no accounts, or they are all dead
             return
 
         try:
@@ -71,9 +72,20 @@ class TwitterUpdater():
             log.warning('[twitter] max_id:%s', max_id)
             response = twitter.search(q=term.search_term, count='100', max_id=max_id)
             #gevent.sleep(0)
-        except TwythonError:
-            log.error('[twython error] hit twitter too much!')
+        except TwythonRateLimitError:
+            log.error('[twython error] hit twitter too much!  Switching accounts')
+            account.valid = False
+            self._step(term,max_id)
             return
+        except TwythonAuthError:
+            account.valid = False
+            log.error('[twython error] account had some issues!')
+            self._step(term,max_id)
+            return
+        except TwythonError as e:
+            log.error('[twython error] %s', e)
+            return
+            
         tweets = response.get('statuses',None)
 
         if len(tweets) == 0:
