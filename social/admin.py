@@ -28,6 +28,7 @@ class TwitterAccountAdmin(admin.ModelAdmin):
 
 class TwitterMessageAdmin(admin.ModelAdmin):
     list_display = ('id','message')
+    list_filter = ('twitter_search__search_term', )
 
 class MessageAdmin(admin.ModelAdmin):
     list_display = ('id','message')

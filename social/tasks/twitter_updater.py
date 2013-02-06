@@ -5,7 +5,7 @@ import Queue
 import requests
 import logging
 from itertools import cycle
-from twython import Twython, TwythonError
+from twython import Twython, TwythonError, TwythonRateLimitError, TwythonAuthError
 from urlparse import urlparse, parse_qs
 import gevent
 import gevent.monkey
@@ -100,7 +100,8 @@ class TwitterUpdater():
                 log.warning('[twitter] kicking out (tweet exists)')
                 return
             except Exception as e:
-                log(e)
+                log.error('something went really wrong')
+                log.error(e)
                 return
             epoch = int(time.mktime(dj_tweet.date.timetuple()))
             
