@@ -62,9 +62,9 @@ class TwitterUpdater():
                                 app_secret=SOCIAL_TWITTER_CONSUMER_SECRET, 
                                 oauth_token=account.oauth_token, 
                                 oauth_token_secret=account.oauth_secret)
-            
         except:
             # no accounts, or they are all dead
+            log.error('[twitter] no valid twitter accounts to use')
             return
 
         try:
