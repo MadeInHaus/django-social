@@ -8,9 +8,6 @@ from itertools import cycle
 from twython import Twython, TwythonError, TwythonRateLimitError, TwythonAuthError
 from urlparse import urlparse, parse_qs
 import gevent
-import gevent.monkey
-gevent.monkey.patch_socket()
-gevent.monkey.patch_ssl()
 
 
 from .. import settings
@@ -45,14 +42,13 @@ class TwitterUpdater():
 
     def update(self):
         #now = int(time.time())
+        import gevent.monkey
+        gevent.monkey.patch_ssl()
         threads = []
         for term in TwitterSearch.objects.all():
             threads.append(gevent.spawn(self._step, term))
         gevent.joinall(threads)
         log.debug("ALL DONE!")
-
-        # for term in TwitterSearch.objects.all():
-        #     self._step(term)
     
     def _step(self, term, max_id=0):
         
@@ -68,6 +64,7 @@ class TwitterUpdater():
             return
 
         try:
+            log.warning('[twitter] account-screenname:%s', account.screen_name)
             log.warning('[twitter] search_term:%s', term.search_term)
             log.warning('[twitter] max_id:%s', max_id)
             response = twitter.search(q=term.search_term, count='100', max_id=max_id)
@@ -83,7 +80,12 @@ class TwitterUpdater():
             self._step(term,max_id)
             return
         except TwythonError as e:
+            account.valid = False
+            log.error('[twitter] account-screenname:%s', account.screen_name)
+            log.error('[twitter] search_term:%s', term.search_term)
+            log.error('[twitter] max_id:%s', max_id)
             log.error('[twython error] %s', e)
+            self._step(term,max_id)
             return
             
         tweets = response.get('statuses',None)
@@ -107,6 +109,8 @@ class TwitterUpdater():
             
             if epoch < term.search_until:
                 # tweet was created before your limit, stop
+                log.warning('[twitter] epoch: %s', epoch)
+                log.warning('[twitter] search_until: %s', term.search_until)
                 log.warning('[twitter] kicking out (tweet is too old)')
                 return
             
@@ -114,11 +118,17 @@ class TwitterUpdater():
         # print(response.get('search_metadata'))
         # sometimes the max_id_str was coming back empty... had to get it here instead
         try:
-            max_id = parse_qs(urlparse(response.get('search_metadata').get('next_results')).query).get('max_id')
+            search_meta = response.get('search_metadata', {})
+            max_id = self._get_max_id(search_meta)
         except:
-            log.warning('issues with twitter: %s', response.get('search_metadata'))
+            log.warning('[twitter] issues with twitter: %s', response.get('search_metadata'))
             return
         self._step(term,max_id=max_id)
 
-    
+    def _get_max_id(self,search_metadata):
+        try:
+            max_id = parse_qs(urlparse(search_metadata.get('next_results')).query).get('max_id')
+            return max_id
+        except:
+            raise Exception
 

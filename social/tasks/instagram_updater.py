@@ -1,7 +1,6 @@
 import time
 from .. import settings
 
-#from ..models import FacebookAccount, FacebookMessage
 from celery.utils.log import get_task_logger
 from instagram.client import InstagramAPI
 

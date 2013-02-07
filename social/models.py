@@ -84,6 +84,7 @@ class TwitterMessage(Message):
                 # already exists, dont' add it, and throw error
                 raise TweetExistsError
                 return
+            saved_message = saved_message[0]
             saved_message.twitter_search.add(search)
             saved_message.save()
             return saved_message
