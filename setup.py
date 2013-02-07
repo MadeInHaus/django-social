@@ -9,7 +9,8 @@ setup(
     url='https://github.com/MadeInHaus/django-social',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=['git+ssh://git@github.com/MadeInHaus/twython.git','gevent==0.13.8'],
+    dependency_links=['git+ssh://git@github.com/MadeInHaus/twython.git'],
+    install_requires=['gevent==0.13.8'],
     zip_safe=False,
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
