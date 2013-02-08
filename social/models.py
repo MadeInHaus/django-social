@@ -1,12 +1,16 @@
 from . import settings
 import json
 import time
+import logging
 from time import mktime
 from datetime import datetime
 from django.db import models
 from django.utils.timezone import utc
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger(__name__)
 
 MESSAGE_TYPE =  (
                     ('post', 'Post'),
@@ -58,6 +62,7 @@ class TwitterMessage(Message):
     retweet_count = models.IntegerField(default=0)
     favorited = models.BooleanField(default=False)
     twitter_search = models.ManyToManyField('TwitterSearch',null=True,blank=True)
+    twitter_account = models.ForeignKey('TwitterAccount',null=True,blank=True)
     #created_at = models.DateTimeField()
 
     @property
@@ -75,10 +80,10 @@ class TwitterMessage(Message):
         super(TwitterMessage, self).save(*args, **kwargs)
 
     # create tweet and make sure it's unique based on id_str and search term
-    @classmethod
-    def create_from_json(term,obj,search=None):
+    @staticmethod
+    def create_from_json(obj,search=None,account=None):
         saved_message = TwitterMessage.objects.filter(message_id=obj.get('id_str',0))
-        if saved_message:
+        if saved_message and search:
             tmp_message = saved_message.filter(twitter_search__search_term=search.search_term)
             if tmp_message:
                 # already exists, dont' add it, and throw error
@@ -88,7 +93,10 @@ class TwitterMessage(Message):
             saved_message.twitter_search.add(search)
             saved_message.save()
             return saved_message
-            
+        elif saved_message:
+            log.debug('[twitter create debug] duplicate ids attempted to be added')
+            raise TweetExistsError
+            return
 
         message = TwitterMessage()
         message.in_reply_to_status_id = obj.get('in_reply_to_status_id',0)
@@ -113,7 +121,10 @@ class TwitterMessage(Message):
         message.blob = json.dumps(obj)
         message.avatar = obj.get('user',{}).get('profile_image_url_https','')
         message.save()
-        message.twitter_search.add(search)
+        if search:
+            message.twitter_search.add(search)
+        if account:
+            message.twitter_account = account
         message.save()
         return message
 
@@ -122,20 +133,21 @@ class TwitterAccount(models.Model):
     twitter_id = models.BigIntegerField()
     description = models.CharField(max_length=160, blank=True)
     verified = models.BooleanField(default=False)
-    entities = models.TextField()
+    entities = models.TextField(blank=True)
     profile_image_url_https = models.URLField(blank=True)
     followers_count = models.IntegerField(default=0)
     protected = models.BooleanField(default=False)
     profile_background_image_url_https = models.URLField(blank=True)
     profile_background_image_url = models.URLField(blank=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200,blank=True)
     screen_name = models.CharField(max_length=200)
     url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    location = models.CharField(max_length=200)
+    location = models.CharField(max_length=200,blank=True)
     oauth_token = models.CharField(max_length=255, blank=True)
     oauth_secret = models.CharField(max_length=255, blank=True)
     poll_count = models.IntegerField(default=0,editable=False)
+    parse_timeline_tweets = models.BooleanField(default=settings.SOCIAL_TWITTER_FOLLOW_ACCOUNTS)
 
     def __unicode__(self):
         return self.screen_name

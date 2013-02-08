@@ -19,15 +19,14 @@ logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 
-
-
 class TwitterUpdater():
     def __init__(self):
+        self.all_accounts = TwitterAccount.objects.all()
         self.accounts = self._accounts_generator()
         
     
     def _accounts_generator(self):
-        accounts = cycle(TwitterAccount.objects.all())
+        accounts = cycle(self.all_accounts)
         while True:
             a = next(accounts)
             if not a.valid:
@@ -41,15 +40,69 @@ class TwitterUpdater():
             yield a
 
     def update(self):
-        #now = int(time.time())
+        
         import gevent.monkey
         gevent.monkey.patch_ssl()
+
+        self._update_account_timelines()
+        #self._update_search_terms()
+
+        
+    def _update_account_timelines(self):
+        threads = []
+        for account in self.all_accounts:
+            if account.parse_timeline_tweets:
+                threads.append(gevent.spawn(self._step_account, account))
+        gevent.joinall(threads)
+
+    def _update_search_terms(self):
         threads = []
         for term in TwitterSearch.objects.all():
             threads.append(gevent.spawn(self._step, term))
         gevent.joinall(threads)
-        log.debug("ALL DONE!")
     
+    def _step_account(self,account, page=0):
+        twitter = Twython(  app_key=SOCIAL_TWITTER_CONSUMER_KEY, 
+                                app_secret=SOCIAL_TWITTER_CONSUMER_SECRET, 
+                                oauth_token=account.oauth_token, 
+                                oauth_token_secret=account.oauth_secret)
+        try:
+            log.warning('[twython account] ping account %s', account.screen_name)
+            log.warning('[twython account] page %s', page)
+            tweets = twitter.getUserTimeline(page=page,include_entities=True)
+        except TwythonRateLimitError:
+            log.error('[twython account error] hit twitter too much!  Switching accounts')
+            return
+        except TwythonAuthError:
+            log.error('[twython account error] account had some issues!')
+            return
+        except TwythonError as e:
+            log.error('[twitter account error] account-screenname:%s', account.screen_name)
+            log.error('[twitter account error] page:%s', page)
+            log.error('[twython account error] %s', e)
+            return
+        if len(tweets) == 0:
+            log.warning('[twitter account] no tweets for account %s on page %i',account.screen_name,page)
+            return
+        for tweet in tweets:
+            try:
+                # create tweet and make sure it's unique based on id_str and search term
+                dj_tweet = TwitterMessage.create_from_json(tweet,account=account)
+            except TweetExistsError:
+                # item already exists, stop reading
+                log.warning('[twitter account] kicking out (tweet exists)')
+                return
+            except Exception as e:
+                log.error('[twitter account] something went really wrong')
+                log.error(e)
+                return
+        
+        self._step_account(account,page+1)
+
+    
+
+
+
     def _step(self, term, max_id=0):
         
         try:
