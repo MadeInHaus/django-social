@@ -10,8 +10,7 @@ from .rss_updater import RSSUpdater
 
 
 
-#@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_TWITTER_INTERVAL))
-@periodic_task(run_every=timedelta(seconds=20))
+@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_TWITTER_INTERVAL))
 def twitter_update():
     log = get_task_logger('twitter')
     log.info('[Twitter] Start')
