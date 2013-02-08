@@ -2,14 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='social',
-    version='0.0.3',
+    version='0.0.4',
     description='Django app for easily including a social content api.',
     author='MadeinHaus',
     author_email='cms-admin@madeinhaus.com',
     url='https://github.com/MadeInHaus/django-social',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=['twython','gevent==0.13.8'],
+    install_requires=['twython','gevent==0.13.8', 'celery==3.0.12', 'django-celery==3.0.11','feedparser==5.1.3'],
     zip_safe=False,
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
