@@ -237,7 +237,7 @@ class RSSAccount(models.Model):
         return self.feed_name if self.feed_name else self.feed_url
 
 class RSSMessage(Message):
-
+    rss_account = models.ForeignKey('RSSAccount')
     def save(self, *args, **kwargs):
         self.network = 'rss'
         if not self.status:

@@ -46,6 +46,7 @@ class RSSUpdater():
                 new_entry.avatar = self.avatar(entry)
                 new_entry.user_id = self.user_id(entry)
                 new_entry.user_name = self.user_name(entry)
+                new_entry.rss_account = account
                 new_entry.save()
                 log.warning("{} {}".format(entry['id'], entry['published']))
 

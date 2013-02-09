@@ -43,6 +43,7 @@ admin.site.register(Message, MessageAdmin)
 
 class RSSMessageAdmin(admin.ModelAdmin):
     list_display = ('id','message')
+    list_filter = ('rss_account__feed_name', )
 
 admin.site.register(RSSAccount)
 admin.site.register(RSSMessage, RSSMessageAdmin)
