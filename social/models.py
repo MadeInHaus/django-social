@@ -238,6 +238,8 @@ class RSSAccount(models.Model):
 
 class RSSMessage(Message):
     rss_account = models.ForeignKey('RSSAccount')
+    title = models.CharField(max_length=500)
+
     def save(self, *args, **kwargs):
         self.network = 'rss'
         if not self.status:

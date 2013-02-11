@@ -13,8 +13,16 @@ from ..models import RSSMessage, RSSAccount
 
 
 from logging import getLogger
-log = getLogger('rss.updater')
+log = getLogger(__name__)
 
+class JSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if hasattr(obj, 'isoformat'): #handles both date and datetime objects
+            return obj.isoformat()
+        elif type(obj) == time.struct_time:
+            return datetime.fromtimestamp(time.mktime(obj)).isoformat()
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 class RSSUpdater():
     def __init__(self):
@@ -34,10 +42,12 @@ class RSSUpdater():
  
             for entry in d.entries:
                 old_entry = RSSMessage.objects.filter(message_id=entry.id)
+                
                 if old_entry:
                     continue
                 new_entry = RSSMessage()
                 new_entry.message_type = 'post'
+                new_entry.title = self.title(entry)
                 new_entry.message = self.message(entry)
                 new_entry.date = self.date(entry)
                 new_entry.message_id = entry.id
@@ -60,9 +70,15 @@ class RSSUpdater():
             return dt
         return None
 
-    def message(self, entry):
+    def title(self, entry):
         if 'title' in entry:
             return entry.title
+        
+        return None
+
+    def message(self, entry):
+        if 'summary' in entry:
+            return entry.summary
         
         return None
 
@@ -79,6 +95,6 @@ class RSSUpdater():
         return entry.get('posterous_displayname')
     
     def blob(self, entry):
-        return entry.summary if 'summary' in entry else json.dumps(entry)
+        return json.dumps(entry, cls=JSONEncoder)
         
     
