@@ -70,7 +70,7 @@ class TwitterMessage(Message):
         return json.loads(self._entities) if self._entities else {}
 
     @entities.setter
-    def set_entities(self, entities):
+    def entities(self, entities):
         self._entities = json.dumps(entities)
 
     def save(self, *args, **kwargs):
@@ -239,12 +239,33 @@ class RSSAccount(models.Model):
 class RSSMessage(Message):
     rss_account = models.ForeignKey('RSSAccount')
     title = models.CharField(max_length=500)
+    _links = models.TextField(max_length=1000, blank=True)
+    _images = models.TextField(max_length=1000, blank=True)
 
     def save(self, *args, **kwargs):
         self.network = 'rss'
         if not self.status:
             self.status = 1 if settings.SOCIAL_RSS_AUTO_APPROVE else 0
         super(RSSMessage, self).save(*args, **kwargs)
+
+    @property
+    def links(self):
+        return json.loads(self._links) if self._links else []
+
+    @links.setter
+    def links(self, links):
+        self._links = json.dumps(links)
+    
+    @property
+    def images(self):
+        return json.loads(self._images) if self._images else []
+
+    @images.setter
+    def images(self, images):
+        self._images = json.dumps(images)
+    
+
+    
 
 class TweetExistsError(Exception):
     pass

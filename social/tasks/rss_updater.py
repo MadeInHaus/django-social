@@ -13,6 +13,7 @@ from ..models import RSSMessage, RSSAccount
 
 
 from logging import getLogger
+from bs4 import BeautifulSoup
 log = getLogger(__name__)
 
 class JSONEncoder(json.JSONEncoder):
@@ -57,6 +58,10 @@ class RSSUpdater():
                 new_entry.user_id = self.user_id(entry)
                 new_entry.user_name = self.user_name(entry)
                 new_entry.rss_account = account
+                if new_entry.message:
+                    new_entry.links = self.parse_links(new_entry.message)
+                if new_entry.message:
+                    new_entry.images = self.parse_images(new_entry.message)
                 new_entry.save()
                 log.warning("{} {}".format(entry['id'], entry['published']))
 
@@ -96,5 +101,26 @@ class RSSUpdater():
     
     def blob(self, entry):
         return json.dumps(entry, cls=JSONEncoder)
-        
+    
+    def parse_links(self, message):
+        try:
+            soup = BeautifulSoup(message)
+            links = soup.find_all('a')
+            links = [s.prettify() for s in links]
+        except:
+            log.error("error parsing links: %s %s %s", *sys.exc_info())
+            links = []
+            
+        return links
+    
+    def parse_images(self, message):
+        try:
+            soup = BeautifulSoup(message)
+            images = soup.find_all('img')
+            images = [s.prettify() for s in images]
+        except:
+            log.error("error parsing images: %s %s %s", *sys.exc_info())
+            images = []
+            
+        return images
     
