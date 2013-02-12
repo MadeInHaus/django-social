@@ -117,7 +117,7 @@ class RSSUpdater():
         try:
             soup = BeautifulSoup(message)
             images = soup.find_all('img')
-            images = [s.prettify() for s in images]
+            images = [{'src': s['src'], 'alt': s.get('alt',''), 'width': s.get('width', None), 'height': s.get('height', None)} for s in images]
         except:
             log.error("error parsing images: %s %s %s", *sys.exc_info())
             images = []
