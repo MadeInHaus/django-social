@@ -1,27 +1,63 @@
-import time
-from .. import settings
 
+import time
+import gevent
+from urlparse import urlparse, parse_qs
+from .. import settings
+from ..models import InstagramSearch, InstagramMessage, IGMediaExistsError
+from ..services.InstagramService import InstagramAPI
 from celery.utils.log import get_task_logger
-from instagram.client import InstagramAPI
 
 log = get_task_logger(__name__)
 
 
+
+
+
+
 class InstagramUpdater():
     def __init__(self):
-        self._access_token = None
-        self._app_id = settings.SOCIAL_INSTAGRAM_CLIENT_ID
-        self._app_secret = settings.SOCIAL_INSTAGRAM_CLIENT_SECRET
-        
-        # self.api = InstagramAPI(client_id=settings.SOCIAL_INSTAGRAM_CLIENT_ID,
-        #                         client_secret=settings.SOCIAL_INSTAGRAM_CLIENT_SECRET,
-        #                         redirect_uri='http://127.0.0.1:8000')
-        # token, user = api.exchange_code_for_access_token(code)
-
+        self.api = InstagramAPI(client_id=settings.SOCIAL_INSTAGRAM_CLIENT_ID,
+                                client_secret=settings.SOCIAL_INSTAGRAM_CLIENT_SECRET,
+                                redirect_uri='http://127.0.0.1:8000')
 
 
     def update(self):
-        pass
-        # response = self.api.tag_search('#face')
-        # print(response)
+        import gevent.monkey
+        gevent.monkey.patch_ssl()
+        threads = []
+        terms = InstagramSearch.objects.all()
+
+        for term in terms:
+            max_id = InstagramMessage.objects.filter(instagram_search__search_term=term.search_term)
+            max_id = max_id[0] if len(max_id) else 0;
+            threads.append(gevent.spawn(self._step, term))
+        gevent.joinall(threads)
+
+    def _step(self, term, max_id=0):
+        try:
+            log.warning('[instagram] term %s', term.search_term)
+            log.warning('[instagram] max_id %s', max_id)
+            response = self.api.tag_recent_media(term.search_term,max_id)
+        except:
+            log.error('crap')
+            return
+        max_id = response.get('pagination',{}).get('next_max_tag_id',0)
+        medias = response.get('data',{})
+        if(len(medias) == 0):
+            log.warning('[instagram] no media for term %s with max_id %s',term.search_term, max_id)
         
+        for media in medias:
+            try:
+                ig_media = InstagramMessage.create_from_json(media,term)
+            except IGMediaExistsError:
+                log.warning('[instagram] item already exists')
+                return
+            except Exception as e:
+                log.error('[instagram ERROR] something went really wrong while saving')
+                log.error(e)
+                return
+
+        # step through next page(s)
+        self._step(term, max_id)
+        
+

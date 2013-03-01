@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from django.template.response import TemplateResponse
 
-from .models import FacebookAccount, FacebookMessage, TwitterAccount, TwitterMessage, TwitterSearch, RSSAccount, RSSMessage, Message
+from .models import FacebookAccount, FacebookMessage, TwitterAccount, TwitterMessage,\
+                    TwitterSearch, RSSAccount, RSSMessage, Message, InstagramSearch, InstagramMessage
 from .settings import SOCIAL_TWITTER_CONSUMER_KEY, SOCIAL_TWITTER_CONSUMER_SECRET
 from .views import begin_auth
 
@@ -14,8 +15,27 @@ from django.core.urlresolvers import reverse
 
 log = getLogger(__name__)
 
-admin.site.register(FacebookAccount)
-admin.site.register(FacebookMessage)
+
+def approve_message(modeladmin, request, queryset):
+    for item in queryset:
+        item.status = 1
+        item.save()
+approve_message.short_description = "Mark As Approved"
+
+def rejected_message(modeladmin, request, queryset):
+    for item in queryset:
+        item.status = 2
+        item.save()
+rejected_message.short_description = "Mark As Rejected"
+
+def favorite_message(modeladmin, request, queryset):
+    for item in queryset:
+        item.status = 5
+        item.save()
+favorite_message.short_description = "Mark As Favorite"
+
+class MessageAdmin(admin.ModelAdmin):
+    actions = [approve_message, rejected_message, favorite_message]
 
 class TwitterAccountAdmin(admin.ModelAdmin):
     list_display = ( 'screen_name',)
@@ -26,17 +46,25 @@ class TwitterAccountAdmin(admin.ModelAdmin):
         log.debug("extra_context: %s", extra_context)
         return begin_auth(request)
 
-class TwitterMessageAdmin(admin.ModelAdmin):
-    list_display = ('id','message')
+class TwitterMessageAdmin(MessageAdmin):
+    list_display = ('id','message', 'status')
     list_filter = ('twitter_search__search_term', 'twitter_account__screen_name')
 
-class MessageAdmin(admin.ModelAdmin):
-    list_display = ('id','message')
+class MessageAdmin(MessageAdmin):
+    list_display = ('id','message', 'status')
     list_filter = ('network', )
 
+class InstagramMessageAdmin(MessageAdmin):
+    list_display = ('id','admin_image_low','message', 'status')
+
+
+admin.site.register(FacebookAccount)
+admin.site.register(FacebookMessage, MessageAdmin)
 admin.site.register(TwitterAccount, TwitterAccountAdmin)
 admin.site.register(TwitterMessage, TwitterMessageAdmin)
 admin.site.register(TwitterSearch)
+admin.site.register(InstagramSearch)
+admin.site.register(InstagramMessage, InstagramMessageAdmin)
 admin.site.register(Message, MessageAdmin)
 
 

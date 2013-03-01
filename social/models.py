@@ -27,6 +27,7 @@ STATUS_LIST =   (
                     (0, 'pending'),
                     (1, 'approved'),
                     (2, 'rejected'),
+                    (5, 'favorited'),
                 )
 
 
@@ -264,10 +265,76 @@ class RSSMessage(Message):
     def images(self, images):
         self._images = json.dumps(images)
     
+class InstagramSearch(models.Model):
+    search_term = models.CharField(max_length=160, blank=True, help_text='dont prefix with #')
+    def __unicode__(self):
+        return self.search_term
+
+class InstagramMessage(Message):
+    instagram_search = models.ManyToManyField('InstagramSearch',null=True,blank=True)
+    comments = models.TextField(max_length=10000)
+    images = models.TextField(max_length=10000)
+
+
+    @staticmethod
+    def create_from_json(media,search=None):
+        saved_message = InstagramMessage.objects.filter(message_id=media.get('id'))
+        if saved_message:
+            tmp_message = saved_message.filter(instagram_search__search_term=search.search_term)
+            if tmp_message:
+                raise IGMediaExistsError("Post already exists in DB")
+                return saved_message[0]
+            saved_message = saved_message[0]
+            saved_message.instagram_search.add(search)
+            saved_message.save()
+            return
+        ig_media = InstagramMessage()
+        ig_media.date = datetime.utcfromtimestamp(float(media.get('created_time',0))).replace(tzinfo=utc)
+        ig_media.comments = json.dumps(media.get('comments',{}).get('data',[]))
+        ig_media.images = json.dumps(media.get('images',{}))
+        ig_media.message_id = media.get('id','')
+        ig_media.deeplink = media.get('link','')
+        ig_media.message_type = 'post'
+        ig_media.message = json.dumps(media.get('caption',{}).get('text',''))
+        ig_media.avatar = media.get('user',{}).get('profile_picture','')
+        ig_media.blob = json.dumps(media)
+        ig_media.user_id = media.get('user',{}).get('id','0')
+        ig_media.user_name = media.get('user',{}).get('username','')
+        ig_media.save()
+        if search:
+            ig_media.instagram_search.add(search)
+            ig_media.save()
+        return ig_media
+
+    
+    def get_image_low(self):
+        return json.loads(self.images).get('low_resolution').get('url')
+
+    def admin_image_low(self):
+        return u'<img height=200 width=200 src="%s" />' % json.loads(self.images).get('low_resolution').get('url')
+    admin_image_low.short_description = 'Image'
+    admin_image_low.allow_tags = True
 
     
 
+
+
+    # def get_image_thumb(self):
+    #     return self.images['thumbnail']['url']
+
+    # def get_image_standard(self):
+    #     return self.images['standard_resolution']['url']
+
+    def save(self, *args, **kwargs):
+        self.network = 'instagram'
+        if not self.status:
+            self.status = 1 if settings.SOCIAL_INSTAGRAM_AUTO_APPROVE else 0
+        super(InstagramMessage, self).save(*args, **kwargs)
+
 class TweetExistsError(Exception):
+    pass
+
+class IGMediaExistsError(Exception):
     pass
 
 @receiver(post_save, sender=TwitterAccount)
