@@ -51,7 +51,7 @@ class TwitterMessageAdmin(MessageAdmin):
     list_filter = ('twitter_search__search_term', 'twitter_account__screen_name')
 
 class MessageAdmin(MessageAdmin):
-    list_display = ('id','message', 'status')
+    list_display = ('id','message', 'status', 'network')
     list_filter = ('network', )
 
 class InstagramMessageAdmin(MessageAdmin):

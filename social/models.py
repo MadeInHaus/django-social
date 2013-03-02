@@ -21,6 +21,7 @@ NETWORK =       (
                     ('facebook', 'Facebook'),
                     ('twitter', 'Twitter'),
                     ('rss', 'Rich Site Summary'),
+                    ('instagram', 'Instagram'),
                 )
 
 STATUS_LIST =   (
@@ -278,7 +279,7 @@ class InstagramMessage(Message):
 
     @staticmethod
     def create_from_json(media,search=None):
-        saved_message = InstagramMessage.objects.filter(message_id=media.get('id'))
+        saved_message = InstagramMessage.objects.filter(message_id=media.get('id','none'))
         if saved_message:
             tmp_message = saved_message.filter(instagram_search__search_term=search.search_term)
             if tmp_message:
@@ -315,15 +316,11 @@ class InstagramMessage(Message):
     admin_image_low.short_description = 'Image'
     admin_image_low.allow_tags = True
 
-    
+    def get_image_thumb(self):
+        return json.loads(self.images).get('thumbnail').get('url')
 
-
-
-    # def get_image_thumb(self):
-    #     return self.images['thumbnail']['url']
-
-    # def get_image_standard(self):
-    #     return self.images['standard_resolution']['url']
+    def get_image_standard(self):
+        return json.loads(self.images).get('standard_resolution').get('url')
 
     def save(self, *args, **kwargs):
         self.network = 'instagram'
