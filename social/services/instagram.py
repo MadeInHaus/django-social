@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from instagram.oauth2 import OAuth2API
 from instagram.models import Media
 from instagram.bind import bind_method

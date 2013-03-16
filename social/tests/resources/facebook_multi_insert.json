@@ -1,0 +1,1033 @@
+{
+   "paging":{
+      "next":"https://graph.facebook.com/11936081183/feed?filter=2&access_token=399154676843137|30g6w5pRnQ4SrsAJ2Rlw6O0An-8&limit=25&until=1363269489",
+      "previous":"https://graph.facebook.com/11936081183/feed?since=1363461288&filter=2&access_token=399154676843137|30g6w5pRnQ4SrsAJ2Rlw6O0An-8&limit=25&__previous=1"
+   },
+   "data":[
+      {
+         "from":{
+            "name":"Christopher O'Brien",
+            "id":"100000353104206"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-16T19:14:48+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T19:14:48+0000",
+         "message":"I love your green machine!!! It really helps me for when I do juice cleanses :) ",
+         "type":"status",
+         "id":"11936081183_10151256245821184"
+      },
+      {
+         "from":{
+            "name":"Erica Blossoming",
+            "id":"1641666644"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":4,
+            "data":[
+               {
+                  "created_time":"2013-03-16T18:03:31+0000",
+                  "message":"Thanks for sharing. I compare it to my taste buds. While I recognize that it may not be as authentic as we would like, considering it is a commercial beverage, I do still enjoy the taste of t he drink. And that was my point. I'm not necessarily looking for any commercial it to deliver what making it myself would deliver.",
+                  "from":{
+                     "name":"Erica Blossoming",
+                     "id":"1641666644"
+                  },
+                  "id":"11936081183_10151256152051184_24997199"
+               },
+               {
+                  "created_time":"2013-03-16T18:46:38+0000",
+                  "message":"I boycott Naked for spending over a million dollars to stop our right to know if GMOs are in our food, I will spread the word about Naked , any company that needs to dumb down & impose ignorance in order to control people gets my attention. \nI appreciate all the people who have the sense of vision to stop GMos from ruining the food supply & destroying nature around the world . \nnaked is a comercial product & they care more about fullfilling greed for stock holders than providing informed healthy choices , in fact they thrive on ignorance.",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151256152051184_24997598"
+               }
+            ]
+         },
+         "updated_time":"2013-03-16T18:46:38+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T17:48:05+0000",
+         "message":"The green machine is the best!\n",
+         "type":"status",
+         "id":"11936081183_10151256152051184"
+      },
+      {
+         "from":{
+            "name":"John Ruiz",
+            "id":"1439272070"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-16T16:48:56+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T16:48:56+0000",
+         "message":"Flippin love this stuff!!!! now if it were only cheaper...lol my military wallet would have a huge smile every time I took a sip too :D",
+         "type":"status",
+         "id":"11936081183_10151256081386184"
+      },
+      {
+         "application":{
+            "namespace":"fbiphone",
+            "name":"Facebook for iPhone",
+            "id":"6628568379"
+         },
+         "from":{
+            "name":"Clint Gill",
+            "id":"1265368078"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":1,
+            "data":[
+               {
+                  "created_time":"2013-03-16T17:53:47+0000",
+                  "message":"who can answer? pepsi naked imposes ignorance to the thousands who ask , What is pepsi naked hiding by ignoring these health questions, Is Pepsi & Naked an honest company?",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151256078051184_24997111"
+               }
+            ]
+         },
+         "updated_time":"2013-03-16T17:53:47+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T16:44:53+0000",
+         "message":"What is naked's stance on GMO?",
+         "type":"status",
+         "id":"11936081183_10151256078051184"
+      },
+      {
+         "from":{
+            "name":"Edward Hale",
+            "id":"1283757158"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":1,
+            "data":[
+               {
+                  "created_time":"2013-03-16T15:50:05+0000",
+                  "message":"perhaps the model of trusting a benevolent dictator mega giant food company to be honest is finally pimpled into a nasty sore that can't be ignored The problem isnt so much the toxic sludge we are being fed it is the cultural shaping society away from asking questions & being responsible & instead giving complete submission to corporate control & domination. \nSow may we honor the diversity of a weedy garden patch & recognise the folk medicines in weeds & plants & cultivate our commuity by being the restorers of abundance gardening as a way of transformation imagine vast local sustainable abundance , We get to make this up as we go along the key is to listen to creation & thirst & hunger for truth & integrity",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151256006901184_24996105"
+               }
+            ]
+         },
+         "updated_time":"2013-03-16T15:50:05+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T15:31:59+0000",
+         "message":"Does pepsi pay people to play dumb To help coax society  to play dumb & ignorant. \nMay we develop wisdom to direct questions to soarce of authority when faced with the darkness of imposed corporate greed",
+         "type":"status",
+         "id":"11936081183_10151256006901184"
+      },
+      {
+         "application":{
+            "namespace":"fbandroid",
+            "name":"Facebook for Android",
+            "id":"350685531728"
+         },
+         "from":{
+            "name":"Nicole Denise",
+            "id":"755839094"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-16T15:13:52+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T15:13:52+0000",
+         "message":"I have a serious question...has there always been ginger root in the green machine? I am allergic to ginger and have been drinking this juice for years with no problems.",
+         "type":"status",
+         "id":"11936081183_10151255982991184"
+      },
+      {
+         "from":{
+            "name":"Eddie J Mason",
+            "id":"773827158"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":1,
+            "data":[
+               {
+                  "created_time":"2013-03-16T16:00:18+0000",
+                  "message":"what island are you on Eddie?  have your local governments considered the dangers of GMOs synthetics in the drinks?\nHow ironic to be in that paradise of garden abundance with true mangos & delicious natural things & to work hard for money only to trade it in for a Pepsi - Product / naked that uses synthetic chemicals & cheap apple juice , how unfortunate if this gets popular in the caribbean. Naked paid a huge fortune to hide Genteticly Modified organisims  from concerned  californians . iWe in californis have felt the stinging of the the power of money pepsi paid to flood the campaign with scare tactics & lies. Naked gmo pepsi one this  round\n , has kept us from having the right to question chemical & Geneticly modified junk being sold as a \"natural \" Food product. let us reason together. Does this company care about your health or covering truth in ignorance and taking a greedy fortune to further erodr rights to question oppression.",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151255931481184_24996199"
+               }
+            ]
+         },
+         "updated_time":"2013-03-16T16:00:18+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T14:30:07+0000",
+         "message":"Any time that u are looking for a retailer in the caribbean let me know...I would be honored to be associated with your procducts.",
+         "type":"status",
+         "id":"11936081183_10151255931481184"
+      },
+      {
+         "from":{
+            "name":"Bill Tracy",
+            "id":"100000361912186"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":2,
+            "data":[
+               {
+                  "created_time":"2013-03-16T16:08:30+0000",
+                  "message":"bill where do you live? Many of us who became aware of the GMO & synthetic rubbish pepsi puts into its Naked juice product have taken up learning to juice & blend our own drinks at home where we can do it much much less expensive. I either use a blender or a juice extractor. Have faith in the abundance of creation & nature will support you with help of others. we want to share our home made boycott beverages freely our community is capable & resistant to the lies & greed of Naked Fraud. \nLet me share a link to green smoothie recipes.",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151255875256184_24996255"
+               },
+               {
+                  "created_time":"2013-03-16T16:13:45+0000",
+                  "message":"I love juicing beets & carrots greens this way, sometimes I add one apple to sweeten it , I like to keep the juice as vegetable based as i can, i feel so wonderful when i am drinking that pure home made green juice. I am thirsty for truth & this responsibility opens my horizons & i enjoy inviting others to taste truth eye to eye soul to soul \nask a friend does naked juice use GMOs?\nhttps://www.facebook.com/#!/GreenSmoothieRecipe?fref=tsaking juice at home for my family & friends",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151255875256184_24996290"
+               }
+            ]
+         },
+         "updated_time":"2013-03-16T16:13:45+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T13:30:53+0000",
+         "message":"Only if i could afford to buy tons of ur juice i proly would but iam not made of money and therfore i'll die an unhealthy bastard lol",
+         "type":"status",
+         "id":"11936081183_10151255875256184"
+      },
+      {
+         "application":{
+            "namespace":"fbiphone",
+            "name":"Facebook for iPhone",
+            "id":"6628568379"
+         },
+         "from":{
+            "name":"Shannon Jordan Dodge",
+            "id":"1358670619"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-16T12:04:37+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "likes":{
+            "count":1,
+            "data":[
+               {
+                  "name":"Edward Hale",
+                  "id":"1283757158"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T12:04:37+0000",
+         "message":"My kids love your juice. As of today, they will no longer have your 'healthy' juice. Hidden GMOs? Not ok. Also since you're owned by Pepsi, I assume your fruits and veggies are laden with pesticides. Not for my family.",
+         "type":"status",
+         "id":"11936081183_10151255805761184"
+      },
+      {
+         "from":{
+            "name":"Go Cha",
+            "id":"1431382804"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-16T11:52:02+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T11:52:02+0000",
+         "message":"Naked antioxidant-ohh my fav :D",
+         "type":"status",
+         "id":"11936081183_10151255798956184"
+      },
+      {
+         "from":{
+            "name":"Ashlie O'hern",
+            "id":"1044928247"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-16T06:19:06+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T06:19:06+0000",
+         "message":"mmm",
+         "type":"status",
+         "id":"11936081183_10151255559651184"
+      },
+      {
+         "from":{
+            "name":"Amy McHugh Winstel",
+            "id":"1390722815"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":1,
+            "data":[
+               {
+                  "created_time":"2013-03-16T16:10:33+0000",
+                  "message":"are you aware of where the fiber in mighty mago comes from?\n naked is the fibrsol from a chemical plant? Is the fiber non-digestible synthetic? Why is it labeled natural?",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151255512251184_24996270"
+               }
+            ]
+         },
+         "updated_time":"2013-03-16T16:10:33+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T04:55:14+0000",
+         "message":"Hi Naked Juice,\n\nMy teenage daughter loves Mighty Mango. It's pretty much her sole 'healthy' food choice. But we never see it on sale or coupons at my local grocery- Kroger at Beechmont/5 mile. Do you have coupons that you would be willing to send my way? If so, I would be happy to Tweet/Facebook, etc. about how much I love your products! ",
+         "type":"status",
+         "id":"11936081183_10151255512251184"
+      },
+      {
+         "application":{
+            "namespace":"fbiphone",
+            "name":"Facebook for iPhone",
+            "id":"6628568379"
+         },
+         "from":{
+            "name":"Matthew Silva",
+            "id":"100001037024123"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":1,
+            "data":[
+               {
+                  "created_time":"2013-03-16T00:59:40+0000",
+                  "message":"Mathew you do know that naked is made by pepsi, its the same Greedy hoaxster at the top. Keep questioning but let us reach out side to side & garden the space between one another to sustain abundance in our local communites. keep the  positive vision bright\nhttps://www.facebook.com/HomelessGardenProject",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151255231746184_24991522"
+               }
+            ]
+         },
+         "updated_time":"2013-03-16T00:59:40+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "likes":{
+            "count":1,
+            "data":[
+               {
+                  "name":"Edward Hale",
+                  "id":"1283757158"
+               }
+            ]
+         },
+         "created_time":"2013-03-16T00:01:21+0000",
+         "message":"What's the deal is this stuff good for u or not? I see your getting sued for making up stuff. I pay $3.64 every day,I sure hope your not bs people like big corps like Pepsi do all the time. People want to eat and drink healthy,do make a real health drink and stop trying to take my hard earned $ during this hard economic time if these drinks really don't have what they say they have in them.",
+         "type":"status",
+         "id":"11936081183_10151255231746184"
+      },
+      {
+         "from":{
+            "name":"Corey Li",
+            "id":"100000590975702"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-15T23:10:33+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-15T23:10:33+0000",
+         "message":"Do you stock Blue Machine in Canada? As in Southern Ontario..",
+         "type":"status",
+         "id":"11936081183_10151255187301184"
+      },
+      {
+         "from":{
+            "name":"Demia Mcclarty",
+            "id":"100004456119379"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-15T21:45:50+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-15T21:45:50+0000",
+         "message":"Do u sell to the public like homes if ask to buy & how much & how many. thnk u :) be safe be bless'd",
+         "type":"status",
+         "id":"11936081183_10151255091571184"
+      },
+      {
+         "from":{
+            "name":"Delvys Goa",
+            "id":"100001077819964"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":3,
+            "data":[
+               {
+                  "created_time":"2013-03-15T22:57:16+0000",
+                  "message":"perhaps the model of trusting a benevolent dictator mega giant food company to be honest is finally pimpled into a nasty sore that can't be ignored The problem isnt so much the toxic sludge we are being fed it is the cultural shaping society away from asking questions &  being responsible & instead giving complete submission to corporate control & domination. \nSow may we honor the diversity of a weedy garden patch & recognise the folk medicines in weeds & plants & cultivate our commuity by being the restorers of abundance gardening as a way of transformation imagine vast local sustainable abundance , We get to make this up as we go along the key is to listen to creation & thirst & hunger for truth & integrity",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151255085111184_24990500"
+               },
+               {
+                  "created_time":"2013-03-15T22:57:32+0000",
+                  "message":"Well said mate",
+                  "from":{
+                     "name":"Delvys Goa",
+                     "id":"100001077819964"
+                  },
+                  "id":"11936081183_10151255085111184_24990506"
+               },
+               {
+                  "created_time":"2013-03-15T23:16:40+0000",
+                  "message":"http://www.naturalnews.com/038750_boycott_Naked_Juice_Odwalla.html",
+                  "from":{
+                     "name":"Amliv Sotomayor",
+                     "id":"100002211177405"
+                  },
+                  "id":"11936081183_10151255085111184_24990781",
+                  "likes":1
+               }
+            ]
+         },
+         "updated_time":"2013-03-15T23:16:40+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "likes":{
+            "count":7,
+            "data":[
+               {
+                  "name":"Ciera Sanchez",
+                  "id":"100005280456050"
+               },
+               {
+                  "name":"Wendi Cee",
+                  "id":"1211411049"
+               },
+               {
+                  "name":"Shannon Jordan Dodge",
+                  "id":"1358670619"
+               },
+               {
+                  "name":"Benjamin Steineman",
+                  "id":"645033899"
+               }
+            ]
+         },
+         "created_time":"2013-03-15T21:40:05+0000",
+         "message":"You guys should stop lying with the whole organic labeling. We all know theres gmo's in naked. Your making it hard for those of us who want to eat healthy to trust brands & labeling",
+         "type":"status",
+         "id":"11936081183_10151255085111184"
+      },
+      {
+         "story":"Mike Eberle posted an event to Naked Juice's timeline.",
+         "from":{
+            "name":"Mike Eberle",
+            "id":"1797145120"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-15T21:15:11+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "link":"http://www.facebook.com/events/426622244085999/",
+         "story_tags":{
+            "0":[
+               {
+                  "length":11,
+                  "offset":0,
+                  "type":"user",
+                  "id":"1797145120",
+                  "name":"Mike Eberle"
+               }
+            ],
+            "31":[
+               {
+                  "length":11,
+                  "offset":31,
+                  "type":"page",
+                  "id":"11936081183",
+                  "name":"Naked Juice"
+               }
+            ]
+         },
+         "created_time":"2013-03-15T21:15:11+0000",
+         "message":"If you live in WA, and want to learn more about the GMOs used in so many of the products Naked Juice, and/or their parent company, produces...consider attending this.",
+         "type":"link",
+         "id":"11936081183_487008658014357"
+      },
+      {
+         "from":{
+            "name":"Edward Hale",
+            "id":"1283757158"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":2,
+            "data":[
+               {
+                  "created_time":"2013-03-15T14:44:14+0000",
+                  "message":"So how is it Pepsi/Naked  solution is natural again with fibersol being manufactured in a chemical plant? Is that merely one of the many layers of deception lying fraud practiced by lawyers twisted by Pepsi greed?",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151254548226184_24985900"
+               },
+               {
+                  "created_time":"2013-03-15T15:49:12+0000",
+                  "message":"How important by  volume is  Fibersol2(registered trademark} ,does the amount of Fibersol2 exeed other ingredients such as  fruit juice. \nI wonder would a naked bottle completely  full of fibersol 100% without fruit but just fibersol nondigestible synthetic chemical plant product , Using the standards & laywerese applied to Naked solutions can you also label the chemical product all natural?\nIt seems you would not , so why if it really is a major ingredient from a chemical plant does Pepsi Naked label it as natural in a food product?  When is naked go to court about this sort of confusion?",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151254548226184_24986305"
+               }
+            ]
+         },
+         "updated_time":"2013-03-15T15:49:12+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-15T14:35:37+0000",
+         "message":"Naked can you share how different or similar is your chemical labratory ingredient fibersol from other non digestible stuff chemical labratory made junk, like pinesol or silicon caulking?",
+         "type":"status",
+         "id":"11936081183_10151254548226184"
+      },
+      {
+         "story":"\"We've just introduced most of...\" on Carla Cornwell Humphrey's post on Naked Juice's wall.",
+         "from":{
+            "category":"Food/beverages",
+            "name":"Naked Juice",
+            "id":"11936081183"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-15T14:24:10+0000",
+         "story_tags":{
+            "38":[
+               {
+                  "length":23,
+                  "offset":38,
+                  "type":"user",
+                  "id":"776736578",
+                  "name":"Carla Cornwell Humphrey"
+               }
+            ]
+         },
+         "created_time":"2013-03-15T14:24:10+0000",
+         "type":"status",
+         "id":"11936081183_10151254531956184"
+      },
+      {
+         "from":{
+            "name":"Carla Cornwell Humphrey",
+            "id":"776736578"
+         },
+         "privacy":{
+            "value":""
+         },
+         "message_tags":{
+            "0":[
+               {
+                  "length":11,
+                  "offset":0,
+                  "type":"page",
+                  "id":"11936081183",
+                  "name":"Naked Juice"
+               }
+            ]
+         },
+         "comments":{
+            "count":2,
+            "data":[
+               {
+                  "created_time":"2013-03-15T14:24:09+0000",
+                  "message":"We've just introduced most of the Power Garden line, so we're not yet able to provide a list of stores on our website.  Sorry.\n\nYou might be able to find the Berry Veggie flavor on the store locator (http://www.nakedjuice.com/locator/#) if you just look at \"Berry Veggie\" and ignore the \"Power Garden\" part. (This product used to be called Berry Veggie Machine.)\n\nAnd don't be shy about talking to the store managers. If they know you're excited to try these new products, they may see if they can get them in for you. \n\nHope this helps, Carla!",
+                  "from":{
+                     "category":"Food/beverages",
+                     "name":"Naked Juice",
+                     "id":"11936081183"
+                  },
+                  "id":"11936081183_10151254510001184_24985764",
+                  "likes":1
+               },
+               {
+                  "created_time":"2013-03-15T14:26:14+0000",
+                  "message":"I just looked up Berry Veggie and it is located at my local store! :) THANKS!",
+                  "from":{
+                     "name":"Carla Cornwell Humphrey",
+                     "id":"776736578"
+                  },
+                  "id":"11936081183_10151254510001184_24985776"
+               }
+            ]
+         },
+         "updated_time":"2013-03-15T14:26:14+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               },
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-15T14:02:29+0000",
+         "message":"Naked Juice, where can I purchase Power Garden. I tried looking it up on the website, but it isn't listed on the where to buy link. I live in Hays, Kansas, 67601.",
+         "type":"status",
+         "id":"11936081183_10151254510001184"
+      },
+      {
+         "from":{
+            "name":"Ovedia Parker-Copeland",
+            "id":"100000476375127"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":1,
+            "data":[
+               {
+                  "created_time":"2013-03-15T21:25:48+0000",
+                  "message":"Here's some love right back.",
+                  "from":{
+                     "category":"Food/beverages",
+                     "name":"Naked Juice",
+                     "id":"11936081183"
+                  },
+                  "id":"11936081183_10151254443091184_24989562",
+                  "likes":1
+               }
+            ]
+         },
+         "updated_time":"2013-03-15T21:25:48+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-15T12:55:57+0000",
+         "message":"I LOVEEEEEE This stuff...",
+         "type":"status",
+         "id":"11936081183_10151254443091184"
+      },
+      {
+         "picture":"http://photos-c.ak.fbcdn.net/hphotos-ak-ash4/481081_10151253409811184_1906440082_s.jpg",
+         "likes":{
+            "count":439,
+            "data":[
+               {
+                  "name":"Michelle Raber",
+                  "id":"1332862150"
+               },
+               {
+                  "name":"Crystal R Powell",
+                  "id":"1232498249"
+               },
+               {
+                  "name":"Sharon Richardson",
+                  "id":"100001221611999"
+               },
+               {
+                  "name":"Leanna Ortiz Bosquez",
+                  "id":"100002221622137"
+               }
+            ]
+         },
+         "from":{
+            "category":"Food/beverages",
+            "name":"Naked Juice",
+            "id":"11936081183"
+         },
+         "comments":{
+            "count":30,
+            "data":[
+               {
+                  "created_time":"2013-03-16T16:42:57+0000",
+                  "message":"How come I can't use this for the 64oz. I start my day with one a day. ",
+                  "from":{
+                     "name":"Ross Burns",
+                     "id":"640022051"
+                  },
+                  "id":"11936081183_10151253409841184_8241807"
+               },
+               {
+                  "created_time":"2013-03-16T16:53:53+0000",
+                  "message":"If you have a strong intuition, spirtual guidance may have picked up on the fraud of Naked s synthetics & GMOs Go with your conscience Ciera",
+                  "from":{
+                     "name":"Edward Hale",
+                     "id":"1283757158"
+                  },
+                  "id":"11936081183_10151253409841184_8241863"
+               }
+            ]
+         },
+         "privacy":{
+            "value":""
+         },
+         "object_id":"10151253409811184",
+         "updated_time":"2013-03-16T16:53:53+0000",
+         "link":"http://www.facebook.com/photo.php?fbid=10151253409811184&set=a.103189721183.101057.11936081183&type=1&relevant_count=1",
+         "shares":{
+            "count":113
+         },
+         "created_time":"2013-03-14T21:38:32+0000",
+         "message":"Look at the goodness you've helped spread. We're not done yet. Help us reach our goal of 150,000 lbs of produce.* Go to www.nakedjuice.com/gooddeeds to download a $1 off coupon to any 15.2 oz. bottle of Naked and help us do good deeds.",
+         "type":"photo",
+         "id":"11936081183_10151253409841184",
+         "status_type":"added_photos",
+         "icon":"http://static.ak.fbcdn.net/rsrc.php/v2/yz/r/StEh3RhPvjk.gif"
+      },
+      {
+         "from":{
+            "category":"Monarch",
+            "name":"Little Barefoot Princess - etsy.com/shop/barefootprincessita",
+            "id":"246287615409062"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-14T19:18:54+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-14T19:18:54+0000",
+         "message":"Dear Naked, I just had the chocolate / banana smoothie today.  It was so delicious!  I had to let you know.  Thank you very much.",
+         "type":"status",
+         "id":"11936081183_10151253270521184"
+      },
+      {
+         "picture":"http://external.ak.fbcdn.net/safe_image.php?d=AQBZ2nuSzcm0W3sP&w=154&h=154&url=https%3A%2F%2Fs3.amazonaws.com%2Ffooddemocracynow%2Fimages%2Fpepsi_betrays_democracy_beyonce.jpg",
+         "from":{
+            "category":"Radio station",
+            "name":"The Garage Door",
+            "id":"187401131290143"
+         },
+         "name":"Pepsi Betrays Democracy: last year Pepsi donated $2.48 million to defeat Prop 37 to label GMOs. Join",
+         "caption":"action.fooddemocracynow.org",
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-14T17:40:13+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "link":"http://action.fooddemocracynow.org/sign/pepsi_betrays_democracy/",
+         "created_time":"2013-03-14T17:40:13+0000",
+         "message":"Pepsi owns Naked Juice. Pepsi joined Monsanto to Defeat GMO Labeling - Boycott Pepsi Now!",
+         "icon":"http://static.ak.fbcdn.net/rsrc.php/v2/yD/r/aS8ecmYRys0.gif",
+         "type":"link",
+         "id":"11936081183_501251059912572",
+         "description":"Last year several major food companies made a fatal brand error by betting against the American people. During the 2012 election, major food and pesticide companies donated more than $46 million to run a ruthlessly deceptive campaign to defeat Prop 37, a ballot initiative to label genetically engine..."
+      },
+      {
+         "story":"\"You should start seeing our...\" on their own link.",
+         "from":{
+            "category":"Food/beverages",
+            "name":"Naked Juice",
+            "id":"11936081183"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-14T13:58:10+0000",
+         "created_time":"2013-03-14T13:58:10+0000",
+         "type":"status",
+         "id":"11936081183_10151252955056184"
+      },
+      {
+         "from":{
+            "category":"Monarch",
+            "name":"Little Barefoot Princess - etsy.com/shop/barefootprincessita",
+            "id":"246287615409062"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-14T19:18:54+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-14T19:18:54+0000",
+         "message":"Dear Naked, I just had the chocolate / banana smoothie today.  It was so delicious!  I had to let you know.  Thank you very much.",
+         "type":"status",
+         "id":"11936081183_10151253270521184"
+      },
+       {
+         "from":{
+            "category":"Monarch",
+            "name":"Little Barefoot Princess - etsy.com/shop/barefootprincessita",
+            "id":"246287615409062"
+         },
+         "privacy":{
+            "value":""
+         },
+         "comments":{
+            "count":0
+         },
+         "updated_time":"2013-03-14T19:18:54+0000",
+         "to":{
+            "data":[
+               {
+                  "category":"Food/beverages",
+                  "name":"Naked Juice",
+                  "id":"11936081183"
+               }
+            ]
+         },
+         "created_time":"2013-03-14T19:18:54+0000",
+         "message":"Dear Naked, I just had the chocolate / banana smoothie today.  It was so delicious!  I had to let you know.  Thank you very much.",
+         "type":"status",
+         "id":"11936081183_10151253270521184"
+      }
+   ]
+}

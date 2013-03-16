@@ -4,7 +4,7 @@ import gevent
 from urlparse import urlparse, parse_qs
 from .. import settings
 from ..models import InstagramSearch, InstagramMessage, IGMediaExistsError
-from ..services.InstagramService import InstagramAPI
+from ..services.instagram import InstagramAPI
 from celery.utils.log import get_task_logger
 
 log = get_task_logger(__name__)

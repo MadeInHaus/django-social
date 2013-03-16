@@ -1,4 +1,5 @@
 from .. import settings
+from ..services.facebook import FacebookAPI
 from datetime import timedelta, datetime
 from celery.utils.log import get_task_logger
 from celery import task
@@ -23,7 +24,10 @@ def twitter_update():
 def facebook_update():
     log = get_task_logger('facebook')
     log.info('[Facebook] Start')
-    fb = FacebookUpdater()
+    fbapi = FacebookAPI(
+            settings.SOCIAL_FACEBOOK_APP_ID,
+            settings.SOCIAL_FACEBOOK_APP_SECRET)
+    fb = FacebookUpdater(fbapi)
     fb.update()
     log.info('[Facebook] End')
 
