@@ -129,3 +129,10 @@ def freeze():
 def css_compile():
     with cd("/var/www"):
         run(exec_sass_compile.format(css_path))
+
+@task
+@roles('vagrant')
+def test():
+    with cd("/var/www"):
+        run('./manage.py test social')
+

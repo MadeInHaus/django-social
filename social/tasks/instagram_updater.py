@@ -30,6 +30,7 @@ class InstagramUpdater():
         for term in terms:
             max_id = InstagramMessage.objects.filter(instagram_search__search_term=term.search_term)
             max_id = max_id[0] if len(max_id) else 0;
+            print(max_id)
             threads.append(gevent.spawn(self._step, term))
         gevent.joinall(threads)
 
