@@ -6,14 +6,17 @@ from .. import settings
 from ..tasks.facebook_updater import FacebookUpdater
 from .facebook_mock_api import FacebookAPISingleInsert, FacebookAPIMultiInstert
 from ..models import FacebookAccount, FacebookMessage
+from ..services.facebook import FacebookAPI
 
 from django.test import TestCase
-
+import logging
 
 
 class FacebookTest(TestCase):
     
     def setUp(self):
+        logger = logging.getLogger('')
+        logger.setLevel(logging.INFO)
         fba = FacebookAccount()
         fba.fb_id = 'asdf'
         fba.save()
@@ -59,3 +62,5 @@ class FacebookTest(TestCase):
 
         messages = list(FacebookMessage.objects.all())
         self.assertEqual(len(messages),20)
+
+    

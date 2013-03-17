@@ -1,1 +1,1 @@
-from .facebook import FacebookTest
+from .test_facebook import FacebookTest
