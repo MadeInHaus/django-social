@@ -178,7 +178,6 @@ class TwitterAccount(models.Model):
         account.screen_name             = obj['screen_name']
         account.profile_image_url_https = obj['profile_image_url_https']
         account.verified                = obj['verified']
-        account.statuses_count          = obj['statuses_count']
         account.oauth_token             = oauth_token
         account.oauth_secret            = oauth_token_secret
         account.save()
