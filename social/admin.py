@@ -10,7 +10,6 @@ from .views import begin_auth
 from logging import getLogger
 from django.http import HttpResponseRedirect
 import traceback
-from twython.twython import Twython
 from django.core.urlresolvers import reverse
 
 log = getLogger(__name__)

@@ -154,16 +154,6 @@ class TwitterAccount(models.Model):
     def __unicode__(self):
         return self.screen_name
 
-    @classmethod
-    def get_next_up(cls):
-        try:
-            account = cls.objects.all().order_by("poll_count")[0]
-        except:
-            return
-        account.poll_count += 1
-        account.save()
-        return account
-
     @property
     def valid(self):
         try:
@@ -175,6 +165,23 @@ class TwitterAccount(models.Model):
     @valid.setter
     def valid(self, value):
         self._valid = value
+
+    def update_credentials(self,authorized_tokens):
+        self.oauth_token = authorized_tokens['oauth_token']
+        self.oauth_secret = authorized_tokens['oauth_token_secret']
+        self.save()
+
+    @staticmethod
+    def create_from_obj(obj, oauth_token, oauth_token_secret):
+        account = TwitterAccount()
+        account.twitter_id              = obj['id']
+        account.screen_name             = obj['screen_name']
+        account.profile_image_url_https = obj['profile_image_url_https']
+        account.verified                = obj['verified']
+        account.statuses_count          = obj['statuses_count']
+        account.oauth_token             = oauth_token
+        account.oauth_secret            = oauth_token_secret
+        account.save()
 
 class TwitterSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')

@@ -9,14 +9,12 @@ from ..models import FacebookAccount, FacebookMessage
 from ..services.facebook import FacebookAPI
 
 from django.test import TestCase
-import logging
 
 
 class FacebookTest(TestCase):
     
     def setUp(self):
-        logger = logging.getLogger('')
-        logger.setLevel(logging.INFO)
+        
         fba = FacebookAccount()
         fba.fb_id = 'asdf'
         fba.save()

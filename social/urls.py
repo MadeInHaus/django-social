@@ -5,15 +5,16 @@ from .api.resources import MessageResource, TwitterResource, FacebookResource, R
 from social.views import thanks
 from django.conf.urls import url
 
-v1_api = Api(api_name='v1')
-v1_api.register(MessageResource())
-v1_api.register(TwitterResource())
-v1_api.register(FacebookResource())
-v1_api.register(RSSResource())
+# v1_api = Api(api_name='v1')
+# v1_api.register(MessageResource())
+# v1_api.register(TwitterResource())
+# v1_api.register(FacebookResource())
+# v1_api.register(RSSResource())
 
 urlpatterns = patterns('',
     # API
-    (r'^', include(v1_api.urls)),
+    #(r'^', include(v1_api.urls)),
     
     url(r'^thanks/', thanks, name="twitter_callback"),
 )
+

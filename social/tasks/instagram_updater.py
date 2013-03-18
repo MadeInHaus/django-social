@@ -15,10 +15,8 @@ log = get_task_logger(__name__)
 
 
 class InstagramUpdater():
-    def __init__(self):
-        self.api = InstagramAPI(client_id=settings.SOCIAL_INSTAGRAM_CLIENT_ID,
-                                client_secret=settings.SOCIAL_INSTAGRAM_CLIENT_SECRET,
-                                redirect_uri='http://127.0.0.1:8000')
+    def __init__(self, api):
+        self.api = api
 
 
     def update(self):
