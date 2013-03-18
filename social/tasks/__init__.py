@@ -15,10 +15,9 @@ from .instagram_updater import InstagramUpdater
 def twitter_update():
     log = get_task_logger('twitter')
     log.info('[Twitter] Start')
-    # tw = TwitterUpdater()
-    # tw.update()
+    tw = TwitterUpdater()
+    tw.update()
     log.info('[Twitter] End')
-
 
 @periodic_task(run_every=timedelta(seconds=settings.SOCIAL_FACEBOOK_INTERVAL))
 def facebook_update():
@@ -43,6 +42,6 @@ def rss_update():
 def instagram_update():
     log = get_task_logger('instagram')
     log.info('[Instagram] Start')
-    instagram = InstagramUpdater()
-    instagram.update()
+    # instagram = InstagramUpdater()
+    # instagram.update()
     log.info('[Instagram] End')

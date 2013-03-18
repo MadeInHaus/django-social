@@ -96,7 +96,9 @@ class TwitterMessage(Message):
             saved_message.save()
             return saved_message
         elif saved_message:
-            log.debug('[twitter create debug] duplicate ids attempted to be added')
+            
+            mid = str(saved_message[0].message_id)
+            log.debug('[twitter create debug] duplicate ids attempted to be added: {}'.format(mid))
             raise TweetExistsError
             return
 

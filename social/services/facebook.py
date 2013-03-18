@@ -10,7 +10,6 @@ class FacebookAPI(object):
 
     def _get_data_for_url(self,url):
         data = requests.get(url)
-        print(json.dumps(data.json))
         return data.json
 
     def _get_access_token(self):
