@@ -183,6 +183,7 @@ class TwitterAccount(models.Model):
         account.oauth_token             = oauth_token
         account.oauth_secret            = oauth_token_secret
         account.save()
+        return account
 
 class TwitterSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')
