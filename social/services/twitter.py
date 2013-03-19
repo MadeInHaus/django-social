@@ -87,7 +87,7 @@ class TwitterAPI():
             raise
         return account_info
 
-    def get_user_timeline(self, screen_name, max_count = 0):
+    def get_user_timeline(self, screen_name, max_count = 100):
         url = 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={}&count={}'\
         .format(screen_name,max_count)
         tweets = self._get_obj_for_request(url)
@@ -106,7 +106,7 @@ class TwitterAPI():
             tweets = self._get_obj_for_request(page_url)
             
 
-    def search(self, search_term, max_count=0, max_id=None):
+    def search(self, search_term, max_count=100, max_id=None):
         search_term = urllib.quote(search_term)
         url = 'https://api.twitter.com/1.1/search/tweets.json?count=100&result_type=mixed&q={}'.format(search_term)
         response = self._get_obj_for_request(url)
@@ -120,12 +120,11 @@ class TwitterAPI():
                 if(max_count != 0 and total_sent > max_count):
                     raise StopIteration
                 yield tweet
-            max_id = str(tweet['id_str'])
+            max_id = str(tweet['id'] - 1)
             
             page_url = url + '&max_id=' + max_id
             response = self._get_obj_for_request(page_url, max_id=max_id)
             tweets = response.get('statuses', [])
             #twitter responds back including the item 'max_id' have to pop it out
-            tweets.pop(0)
             
 

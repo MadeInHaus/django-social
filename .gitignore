@@ -32,7 +32,7 @@ project/settings/hosts/localhost.py# Numerous always-ignore extensions
 *.css
 project/static/img/sprites/icons-*.png
 example/SocialExample/project/static/img/sprites/icons-*.png
-
+config.ini
 # OS or Editor folders
 .DS_Store
 Thumbs.db
