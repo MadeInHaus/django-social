@@ -73,7 +73,7 @@ class TwitterUpdater():
     def _update_account_timeline(self,account):
         
         twapi = self._api_from_account(account)
-        tweets = twapi.get_user_timeline(account.screen_name)
+        tweets = twapi.get_user_timeline(account.screen_name, max_count=0)
         log.warning('[twitter account] ping account: %s', account.screen_name)
         try:
             for tweet in tweets:
@@ -90,7 +90,7 @@ class TwitterUpdater():
     def _update_search_term(self, term, max_id=None):
         account = self.accounts.next()
         twapi = self._api_from_account(account)
-        tweets = twapi.search(term.search_term)
+        tweets = twapi.search(term.search_term, max_count=0)
         tweet_duplicate = 0
         try:
             for tweet in tweets:

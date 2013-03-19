@@ -31,7 +31,11 @@ def begin_auth(request):
     return HttpResponseRedirect(auth_props['auth_url'])
 
 def thanks(request,  redirect_url='/admin/social/twitteraccount/'):
-
+    try:
+        request.session['auth_props']['resource_owner_key']
+    except:
+        log.error('wrong domain, your auth_props are not stored in session')
+        raise Exception()
     twitter = TwitterAPI(
         client_key = SOCIAL_TWITTER_CONSUMER_KEY,
         client_secret = SOCIAL_TWITTER_CONSUMER_SECRET,
