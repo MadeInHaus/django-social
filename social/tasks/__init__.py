@@ -42,6 +42,6 @@ def rss_update():
 def instagram_update():
     log = get_task_logger('instagram')
     log.info('[Instagram] Start')
-    # instagram = InstagramUpdater()
-    # instagram.update()
+    instagram = InstagramUpdater()
+    instagram.update()
     log.info('[Instagram] End')

@@ -1,26 +1,52 @@
-from __future__ import absolute_import
-from instagram.oauth2 import OAuth2API
-from instagram.models import Media
-from instagram.bind import bind_method
+import requests
+import json
+import requests_oauthlib
+
 
 MEDIA_ACCEPT_PARAMETERS = ["count", "max_id"]
 
-class InstagramAPI(OAuth2API):
-    host = "api.instagram.com"
-    base_path = "/v1"
-    access_token_field = "access_token"
-    authorize_url = "https://api.instagram.com/oauth/authorize"
-    access_token_url = "https://api.instagram.com/oauth/access_token"
-    protocol = "https"
-    api_name = "Instagram"
-    format = 'json'
+class InstagramAPI(object):
     
-    _tag_recent_media = bind_method(
-            path="/tags/{tag_name}/media/recent",
-            accepts_parameters=MEDIA_ACCEPT_PARAMETERS + ['tag_name'],
-            root_class=Media,
-            paginates=True,
-            objectify_response=False)
+    
 
-    def tag_recent_media(self,tag,max_id):
-        return self._tag_recent_media(tag_name=tag,max_id=max_id,count=100)[0]
+    def __init__(self, app_id=None):
+        self._app_id = app_id
+        
+
+    def _get_data_for_url(self,url, params=None):
+        if not params:
+            params = {}
+        params['client_id'] = self._app_id
+        resp = requests.get(url, params=params)
+        return json.loads(resp.content)
+    
+
+    def tag_recent_media(self, tag, count=100):
+        url = 'https://api.instagram.com/v1/tags/{}/media/recent'.format(tag)
+        resp = self._get_data_for_url(url)
+        total_sent = 0
+        # if no meta or code isn't 200
+        if not resp.get('meta',False) or resp.get('meta').get('code') != 200:
+            raise Exception
+            return
+
+        while 1:
+            messages = resp.get('data',[])
+            if len(messages) == 0:
+                raise StopIteration
+
+            for message in messages:
+                yield message
+                total_sent += 1
+                if total_sent >= count:
+                    raise StopIteration
+                
+            try:
+                pagination = resp.get('pagination')
+                next_url = pagination.get('next_url')
+            except KeyError:
+                raise StopIteration
+
+            resp = self._get_data_for_url(next_url)
+            
+        

@@ -12,9 +12,6 @@ class RateLimitException(Exception):
         super(RateLimitException, self).__init__()
         
 
-
-    
-
 class TwitterAPI():
 
     def __init__(self,  client_key,

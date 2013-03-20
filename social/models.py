@@ -292,7 +292,7 @@ class InstagramMessage(Message):
         if saved_message:
             tmp_message = saved_message.filter(instagram_search__search_term=search.search_term)
             if tmp_message:
-                raise IGMediaExistsError("Post already exists in DB")
+                raise IGMediaExistsError("Post already exists in DB: {}", str(tmp_message.id))
                 return saved_message[0]
             saved_message = saved_message[0]
             saved_message.instagram_search.add(search)
@@ -305,7 +305,8 @@ class InstagramMessage(Message):
         ig_media.message_id = media.get('id','')
         ig_media.deeplink = media.get('link','')
         ig_media.message_type = 'post'
-        ig_media.message = json.dumps(media.get('caption',{}).get('text',''))
+        if media.get('caption',{}):
+            ig_media.message = media.get('caption',{}).get('text','')
         ig_media.avatar = media.get('user',{}).get('profile_picture','')
         ig_media.blob = json.dumps(media)
         ig_media.user_id = media.get('user',{}).get('id','0')

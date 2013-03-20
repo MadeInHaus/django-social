@@ -15,8 +15,8 @@ log = get_task_logger(__name__)
 
 
 class InstagramUpdater():
-    def __init__(self, api):
-        self.api = api
+    def __init__(self):
+        self.api = InstagramAPI(app_id=settings.SOCIAL_INSTAGRAM_CLIENT_ID)
 
 
     def update(self):
@@ -26,37 +26,29 @@ class InstagramUpdater():
         terms = InstagramSearch.objects.all()
 
         for term in terms:
-            max_id = InstagramMessage.objects.filter(instagram_search__search_term=term.search_term)
-            max_id = max_id[0] if len(max_id) else 0;
-            print(max_id)
-            threads.append(gevent.spawn(self._step, term))
+            threads.append(gevent.spawn(self._update_term, term))
         gevent.joinall(threads)
 
-    def _step(self, term, max_id=0):
+    def _update_term(self, term):
         try:
             log.warning('[instagram] term %s', term.search_term)
-            log.warning('[instagram] max_id %s', max_id)
-            response = self.api.tag_recent_media(term.search_term,max_id)
-        except:
-            log.error('crap')
+            messages = self.api.tag_recent_media(term.search_term)
+        except Exception as e:
+            log.error('[instagram] unkown error')
+            log.error(e)
             return
-        max_id = response.get('pagination',{}).get('next_max_tag_id',0)
-        medias = response.get('data',{})
-        if(len(medias) == 0):
-            log.warning('[instagram] no media for term %s with max_id %s',term.search_term, max_id)
-        
-        for media in medias:
+        message_duplicates = 0
+        for message in messages:
             try:
-                ig_media = InstagramMessage.create_from_json(media,term)
-            except IGMediaExistsError:
-                log.warning('[instagram] item already exists')
-                return
+                ig_media = InstagramMessage.create_from_json(message,term)
+                message_duplicates = 0
+            except IGMediaExistsError as e:
+                message_duplicates += 1
+                if message_duplicates > 5:
+                    log.warning('[instagram] you hit 5 duplicates in a row, kicking out')
+                    return
             except Exception as e:
-                log.error('[instagram ERROR] something went really wrong while saving')
+                log.error('[instagrame] larger problem...')
                 log.error(e)
-                return
-
-        # step through next page(s)
-        self._step(term, max_id)
         
 
