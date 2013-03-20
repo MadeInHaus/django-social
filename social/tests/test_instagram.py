@@ -17,7 +17,7 @@ class InstagramTest(TestCase):
 
     def test_instagram_api_tag_recent_media(self):
         api = InstagramAPI( app_id=settings.SOCIAL_INSTAGRAM_CLIENT_ID)
-        COUNT = 10000
+        COUNT = 10
         messages = api.tag_recent_media('cake', count=COUNT)
         term = InstagramSearch.objects.all()[0]
 

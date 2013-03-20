@@ -292,7 +292,7 @@ class InstagramMessage(Message):
         if saved_message:
             tmp_message = saved_message.filter(instagram_search__search_term=search.search_term)
             if tmp_message:
-                raise IGMediaExistsError("Post already exists in DB: {}", str(tmp_message.id))
+                raise IGMediaExistsError("Post already exists in DB: {}", str(tmp_message[0].id))
                 return saved_message[0]
             saved_message = saved_message[0]
             saved_message.instagram_search.add(search)

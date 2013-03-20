@@ -40,7 +40,7 @@ class InstagramUpdater():
         message_duplicates = 0
         for message in messages:
             try:
-                ig_media = InstagramMessage.create_from_json(message,term)
+                InstagramMessage.create_from_json(message,term)
                 message_duplicates = 0
             except IGMediaExistsError as e:
                 message_duplicates += 1
@@ -50,5 +50,4 @@ class InstagramUpdater():
             except Exception as e:
                 log.error('[instagrame] larger problem...')
                 log.error(e)
-        
-
+                
