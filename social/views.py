@@ -20,12 +20,7 @@ def begin_auth(request):
         callback_url = request.build_absolute_uri(reverse('social.views.thanks'))
     )
 
-    try:
-        auth_props = twitter.get_authentication_tokens()
-    except:
-        log.error(traceback.format_exc())
-        log.error(traceback.format_stack())
-    
+    auth_props = twitter.get_authentication_tokens()
     request.session['auth_props'] = auth_props
     
     return HttpResponseRedirect(auth_props['auth_url'])

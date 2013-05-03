@@ -10,7 +10,7 @@ class FacebookAPI(object):
 
     def _get_data_for_url(self,url):
         data = requests.get(url)
-        return data.json
+        return data.json()
 
     def _get_access_token(self):
         url =   'https://graph.facebook.com/oauth/access_token?\
@@ -25,7 +25,6 @@ class FacebookAPI(object):
         url = "https://graph.facebook.com/{0}/feed?access_token={1}&filter=2&since={2}"\
                                         .format(account.fb_id, self._access_token, account.last_poll_time)
         data = self._get_data_for_url(url)
-        
         while 1:
             messages = data.get('data', [])
 
