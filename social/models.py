@@ -42,8 +42,8 @@ class Message(models.Model):
     blob = models.TextField(max_length=10000)
     avatar = models.CharField(max_length=300,null=True,blank=True)
     status = models.IntegerField(choices=STATUS_LIST)
-    user_id = models.CharField(max_length=300, blank=True)
-    user_name = models.CharField(max_length=300, blank=True)
+    user_id = models.CharField(max_length=300, blank=True, null=True)
+    user_name = models.CharField(max_length=300, blank=True, null=True)
     reply_to = models.ForeignKey('Message', related_name='reply',null=True,blank=True)
     reply_id = models.CharField(max_length=300,null=True,blank=True)
     

@@ -13,6 +13,7 @@ local_settings.py
 MANIFEST
 .idea
 .vagrant
+.vagrant.*
 celerybeat.pid
 *.sw[op]
 collected-static/
