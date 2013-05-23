@@ -1,16 +1,16 @@
-from tastypie.resources import ModelResource
+from tastypie.resources import ModelResource, Resource
 from tastypie.serializers import Serializer
-
-from social.models import Message, TwitterMessage, FacebookMessage, RSSMessage
+from tastypie import fields
+from social.models import Message, TwitterMessage, FacebookMessage, RSSMessage, InstagramMessage
 
 class MessageResource(ModelResource):
-    
     class Meta:
         include_resource_uri = False
         queryset = Message.objects.all()
         resource_name = 'message'
         serializer = Serializer(["json"])
         ordering = ['date',]
+        
 
 
 class TwitterResource(ModelResource):
@@ -37,5 +37,13 @@ class RSSResource(ModelResource):
         include_resource_uri = False
         queryset = RSSMessage.objects.all()
         resource_name = 'rss'
+        serializer = Serializer(["json"])
+        ordering = ['date',]
+
+class InstagramResource(ModelResource):
+    class Meta:
+        include_resource_uri = False
+        queryset = InstagramMessage.objects.all()
+        resource_name = 'instagram'
         serializer = Serializer(["json"])
         ordering = ['date',]
