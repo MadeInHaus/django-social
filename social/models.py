@@ -1,4 +1,3 @@
-from . import settings
 import json
 import time
 import logging
@@ -78,7 +77,7 @@ class TwitterMessage(Message):
     def save(self, *args, **kwargs):
         self.network = 'twitter'
         if not self.status:
-            self.status = 1 if settings.SOCIAL_TWITTER_AUTO_APPROVE else 0
+            self.status = 1 if TwitterSetting.objects.get().auto_approve else 0
         super(TwitterMessage, self).save(*args, **kwargs)
 
     # create tweet and make sure it's unique based on id_str and search term
@@ -151,7 +150,7 @@ class TwitterAccount(models.Model):
     oauth_token = models.CharField(max_length=255, blank=True)
     oauth_secret = models.CharField(max_length=255, blank=True)
     poll_count = models.IntegerField(default=0,editable=False)
-    parse_timeline_tweets = models.BooleanField(default=settings.SOCIAL_TWITTER_FOLLOW_ACCOUNTS)
+    parse_timeline_tweets = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.screen_name
@@ -198,7 +197,7 @@ class FacebookMessage(Message):
     def save(self, *args, **kwargs):
         self.network = 'facebook'
         if not self.status:
-            self.status = 1 if settings.SOCIAL_FACEBOOK_AUTO_APPROVE else 0
+            self.status = 1 if FacebookSetting.objects.get().auto_approve else 0
         super(FacebookMessage, self).save(*args, **kwargs)
 
 
@@ -256,7 +255,7 @@ class RSSMessage(Message):
     def save(self, *args, **kwargs):
         self.network = 'rss'
         if not self.status:
-            self.status = 1 if settings.SOCIAL_RSS_AUTO_APPROVE else 0
+            self.status = 1 if RSSSetting.objects.get().auto_approve else 0
         super(RSSMessage, self).save(*args, **kwargs)
 
     @property
@@ -335,7 +334,7 @@ class InstagramMessage(Message):
     def save(self, *args, **kwargs):
         self.network = 'instagram'
         if not self.status:
-            self.status = 1 if settings.SOCIAL_INSTAGRAM_AUTO_APPROVE else 0
+            self.status = 1 if InstagramSetting.objects.get().auto_approve else 0
         super(InstagramMessage, self).save(*args, **kwargs)
 
 class TweetExistsError(Exception):
@@ -343,6 +342,28 @@ class TweetExistsError(Exception):
 
 class IGMediaExistsError(Exception):
     pass
+
+class TwitterSetting(models.Model):
+    consumer_key = models.CharField(max_length=255, blank=False)
+    consumer_secret = models.CharField(max_length=255, blank=False)
+    interval = models.IntegerField(blank=False)
+    auto_approve = models.BooleanField(default=True)
+
+class FacebookSetting(models.Model):
+    app_id = models.CharField(max_length=255, blank=False)
+    app_secret = models.CharField(max_length=255, blank=False)
+    interval = models.IntegerField(blank=False)
+    auto_approve = models.BooleanField(default=True)
+
+class InstagramSetting(models.Model):
+    client_id = models.CharField(max_length=255, blank=False)
+    client_secret = models.CharField(max_length=255, blank=False)
+    interval = models.IntegerField(blank=False)
+    auto_approve = models.BooleanField(default=True)
+
+class RSSSetting(models.Model):
+    interval = models.IntegerField(blank=False)
+    auto_approve = models.BooleanField(default=True)
 
 @receiver(post_save, sender=TwitterAccount)
 def search_nearby_schools(sender, instance, created, raw, **kwargs):
