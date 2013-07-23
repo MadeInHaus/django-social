@@ -8,7 +8,7 @@ class MessageResource(ModelResource):
         include_resource_uri = False
         queryset = Message.objects.all()
         resource_name = 'message'
-        serializer = Serializer(["json"])
+        serializer = Serializer(["json", "jsonp"])
         ordering = ['date',]
         
 
@@ -19,7 +19,7 @@ class TwitterResource(ModelResource):
         include_resource_uri = False
         queryset = TwitterMessage.objects.all()
         resource_name = 'twitter'
-        serializer = Serializer(["json"])
+        serializer = Serializer(["json", "jsonp"])
         ordering = ['date',]
 
 class FacebookResource(ModelResource):
@@ -28,7 +28,7 @@ class FacebookResource(ModelResource):
         include_resource_uri = False
         queryset = FacebookMessage.objects.all()
         resource_name = 'facebook'
-        serializer = Serializer(["json"])
+        serializer = Serializer(["json", "jsonp"])
         ordering = ['date',]
 
 class RSSResource(ModelResource):
@@ -37,7 +37,7 @@ class RSSResource(ModelResource):
         include_resource_uri = False
         queryset = RSSMessage.objects.all()
         resource_name = 'rss'
-        serializer = Serializer(["json"])
+        serializer = Serializer(["json", "jsonp"])
         ordering = ['date',]
 
 class InstagramResource(ModelResource):
@@ -45,5 +45,5 @@ class InstagramResource(ModelResource):
         include_resource_uri = False
         queryset = InstagramMessage.objects.all()
         resource_name = 'instagram'
-        serializer = Serializer(["json"])
+        serializer = Serializer(["json", "jsonp"])
         ordering = ['date',]
