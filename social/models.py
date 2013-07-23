@@ -345,6 +345,10 @@ class InstagramMessage(Message):
     def get_images(self):
         return json.loads(self.images)
 
+    @property
+    def get_comments(self):
+        return json.loads(self.comments)
+
     def get_image_low(self):
         return json.loads(self.images).get('low_resolution').get('url')
 
