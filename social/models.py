@@ -45,7 +45,7 @@ class Message(models.Model):
     user_name = models.CharField(max_length=300, blank=True, null=True)
     reply_to = models.ForeignKey('Message', related_name='reply',null=True,blank=True)
     reply_id = models.CharField(max_length=300,null=True,blank=True)
-    
+
     def __unicode__(self):
         return str(self.pk)
 
@@ -95,7 +95,7 @@ class TwitterMessage(Message):
             saved_message.save()
             return saved_message
         elif saved_message:
-            
+
             mid = str(saved_message[0].message_id)
             log.debug('[twitter create debug] duplicate ids attempted to be added: {}'.format(mid))
             raise TweetExistsError
@@ -204,7 +204,7 @@ class FacebookMessage(Message):
     @staticmethod
     def create_from_json(account,json):
         fb_message = FacebookMessage()
-        
+
         # already created, need to update?
         saved_message = FacebookMessage.objects.filter(message_id=json['id'])
         if saved_message:
@@ -212,7 +212,7 @@ class FacebookMessage(Message):
             return saved_message[0]
 
 
-        # create a status 
+        # create a status
         if json.get('type', False) == 'status' :
             fb_message.facebook_account = account
             fb_message.message_type = 'post'
@@ -230,7 +230,7 @@ class FacebookMessage(Message):
             fb_message.blob = json
             fb_message.save()
         return fb_message
-        
+
 
 class FacebookAccount(models.Model):
     fb_id = models.CharField(max_length=300,
@@ -242,7 +242,7 @@ class FacebookAccount(models.Model):
 class RSSAccount(models.Model):
     feed_name = models.CharField(max_length=300, blank=True)
     feed_url = models.URLField()
-    
+
     def __unicode__(self):
         return self.feed_name if self.feed_name else self.feed_url
 
@@ -265,7 +265,7 @@ class RSSMessage(Message):
     @links.setter
     def links(self, links):
         self._links = json.dumps(links)
-    
+
     @property
     def images(self):
         return json.loads(self._images) if self._images else []
@@ -273,7 +273,7 @@ class RSSMessage(Message):
     @images.setter
     def images(self, images):
         self._images = json.dumps(images)
-    
+
 class InstagramSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='dont prefix with #')
     def __unicode__(self):
@@ -316,7 +316,7 @@ class InstagramMessage(Message):
             ig_media.save()
         return ig_media
 
-    
+
     def get_image_low(self):
         return json.loads(self.images).get('low_resolution').get('url')
 
