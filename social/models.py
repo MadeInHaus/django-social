@@ -68,6 +68,9 @@ class Message(models.Model):
     reply_to = models.ForeignKey('Message', related_name='reply',null=True,blank=True)
     reply_id = models.CharField(max_length=300,null=True,blank=True)
 
+    def get_blob(self):
+        return json.loads(self.blob)
+
     def __unicode__(self):
         return str(self.pk)
 
@@ -338,6 +341,9 @@ class InstagramMessage(Message):
             ig_media.save()
         return ig_media
 
+    @property
+    def get_images(self):
+        return json.loads(self.images)
 
     def get_image_low(self):
         return json.loads(self.images).get('low_resolution').get('url')

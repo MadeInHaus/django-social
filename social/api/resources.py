@@ -4,46 +4,31 @@ from tastypie import fields
 from social.models import Message, TwitterMessage, FacebookMessage, RSSMessage, InstagramMessage
 
 class MessageResource(ModelResource):
+    blob = fields.DictField('get_blob',default=None)
     class Meta:
         include_resource_uri = False
         queryset = Message.objects.all()
         resource_name = 'message'
         serializer = Serializer(["json", "jsonp"])
         ordering = ['date',]
-        
 
-
-class TwitterResource(ModelResource):
-    
+class TwitterResource(MessageResource):
     class Meta:
-        include_resource_uri = False
         queryset = TwitterMessage.objects.all()
         resource_name = 'twitter'
-        serializer = Serializer(["json", "jsonp"])
-        ordering = ['date',]
 
-class FacebookResource(ModelResource):
-    
+class FacebookResource(MessageResource):
     class Meta:
-        include_resource_uri = False
         queryset = FacebookMessage.objects.all()
         resource_name = 'facebook'
-        serializer = Serializer(["json", "jsonp"])
-        ordering = ['date',]
 
-class RSSResource(ModelResource):
-    
+class RSSResource(MessageResource):
     class Meta:
-        include_resource_uri = False
         queryset = RSSMessage.objects.all()
         resource_name = 'rss'
-        serializer = Serializer(["json", "jsonp"])
-        ordering = ['date',]
 
-class InstagramResource(ModelResource):
+class InstagramResource(MessageResource):
+    images = fields.DictField('get_images',default=None)
     class Meta:
-        include_resource_uri = False
         queryset = InstagramMessage.objects.all()
         resource_name = 'instagram'
-        serializer = Serializer(["json", "jsonp"])
-        ordering = ['date',]
