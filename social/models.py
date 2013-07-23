@@ -346,23 +346,23 @@ class IGMediaExistsError(Exception):
 class TwitterSetting(models.Model):
     consumer_key = models.CharField(max_length=255, blank=False)
     consumer_secret = models.CharField(max_length=255, blank=False)
-    interval = models.IntegerField(blank=False)
+    interval = models.IntegerField(blank=False, default=15)
     auto_approve = models.BooleanField(default=True)
 
 class FacebookSetting(models.Model):
     app_id = models.CharField(max_length=255, blank=False)
     app_secret = models.CharField(max_length=255, blank=False)
-    interval = models.IntegerField(blank=False)
+    interval = models.IntegerField(blank=False, default=15)
     auto_approve = models.BooleanField(default=True)
 
 class InstagramSetting(models.Model):
     client_id = models.CharField(max_length=255, blank=False)
     client_secret = models.CharField(max_length=255, blank=False)
-    interval = models.IntegerField(blank=False)
+    interval = models.IntegerField(blank=False, default=15)
     auto_approve = models.BooleanField(default=True)
 
 class RSSSetting(models.Model):
-    interval = models.IntegerField(blank=False)
+    interval = models.IntegerField(blank=False, default=15)
     auto_approve = models.BooleanField(default=True)
 
 @receiver(post_save, sender=TwitterAccount)
