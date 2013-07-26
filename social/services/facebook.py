@@ -25,7 +25,7 @@ class FacebookAPI(object):
     def get_feed_for_account(self, account):
         if self._access_token:
             url = "https://graph.facebook.com/{0}/feed?access_token={1}&filter=2&since={2}"\
-                                            .format(account.fb_id, self._access_token, account.last_poll_time)
+                      .format(account.fb_id, self._access_token, account.last_poll_time)
             while url:
                 data = self._get_data_for_url(url)
                 messages = data.get('data', [])
