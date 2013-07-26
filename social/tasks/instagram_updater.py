@@ -31,23 +31,23 @@ class InstagramUpdater():
 
     def _update_term(self, term):
         try:
-            log.warning('[instagram] term %s', term.search_term)
+            log.info('[instagram] term %s', term.search_term)
             messages = self.api.tag_recent_media(term.search_term)
         except Exception as e:
-            log.error('[instagram] unkown error')
+            log.error('[instagram] error')
             log.error(e)
             return
+
         message_duplicates = 0
         for message in messages:
             try:
-                InstagramMessage.create_from_json(message,term)
+                InstagramMessage.create_from_json(message, term)
                 message_duplicates = 0
             except IGMediaExistsError as e:
                 message_duplicates += 1
-                if message_duplicates > 5:
+                if message_duplicates >= 5:
                     log.warning('[instagram] you hit 5 duplicates in a row, kicking out')
                     return
             except Exception as e:
-                log.error('[instagrame] larger problem...')
+                log.info('[instagram] larger problem...')
                 log.error(e)
-                
