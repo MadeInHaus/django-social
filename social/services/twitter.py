@@ -10,16 +10,15 @@ class RateLimitException(Exception):
     def __init__(self, max_id=None):
         self.max_id = max_id
         super(RateLimitException, self).__init__()
-        
+
 
 class TwitterAPI():
-
-    def __init__(self,  client_key,
-                        client_secret,
-                        resource_owner_key=None,
-                        resource_owner_secret=None,
-                        verifier=None,
-                        callback_url=None):
+    def __init__(self, client_key,
+                       client_secret,
+                       resource_owner_key=None,
+                       resource_owner_secret=None,
+                       verifier=None,
+                       callback_url=None):
         self.client_key = client_key
         self.client_secret = client_secret
         self.resource_owner_key = resource_owner_key
@@ -28,14 +27,20 @@ class TwitterAPI():
         self.callback_url = callback_url
 
     def get_authentication_tokens(self):
+        first_elem_or_empty_str = lambda dict_, key: key in dict_ and dict_[key][0] or ''
         oauth = OAuth1(self.client_key, client_secret=self.client_secret)
         req = requests.post(url=REQUEST_TOKEN_URL, auth=oauth)
         credentials = parse_qs(req.content)
-        obj = { 'resource_owner_key':credentials.get('oauth_token')[0],
-                'resource_owner_secret':credentials.get('oauth_token_secret')[0],
-                'auth_url':'https://api.twitter.com/oauth/authorize?oauth_token='\
-                +credentials.get('oauth_token')[0]+'&oauth_callback='+self.callback_url
-                }
+        obj = {
+            'resource_owner_key': first_elem_or_empty_str(credentials, 'oauth_token'),
+            'resource_owner_secret': first_elem_or_empty_str(credentials, 'oauth_token_secret'),
+            'auth_url': ''.join([
+                            'https://api.twitter.com/oauth/authorize?oauth_token=',
+                            first_elem_or_empty_str(credentials, 'oauth_token'),
+                            '&oauth_callback=',
+                            self.callback_url,
+            ]),
+        }
 
         return obj
 

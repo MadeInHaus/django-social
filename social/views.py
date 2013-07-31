@@ -22,15 +22,15 @@ def begin_auth(request):
 
     auth_props = twitter.get_authentication_tokens()
     request.session['auth_props'] = auth_props
-    
+
     return HttpResponseRedirect(auth_props['auth_url'])
 
-def thanks(request,  redirect_url='/admin/social/twitteraccount/'):
+def thanks(request, redirect_url='/admin/social/twitteraccount/'):
     try:
         request.session['auth_props']['resource_owner_key']
     except:
         log.error('wrong domain, your auth_props are not stored in session')
-        raise Exception()
+        raise Exception('wrong domain, your auth_props are not stored in session')
     twitter = TwitterAPI(
         client_key = SOCIAL_TWITTER_CONSUMER_KEY,
         client_secret = SOCIAL_TWITTER_CONSUMER_SECRET,
@@ -40,7 +40,7 @@ def thanks(request,  redirect_url='/admin/social/twitteraccount/'):
     )
     authorized_tokens = twitter.get_authorized_tokens()
     log.info("authorized_tokens: {}".format(authorized_tokens))
-    
+
 
     try:
         account = TwitterAccount.objects.get(screen_name=authorized_tokens['screen_name'])
@@ -48,8 +48,8 @@ def thanks(request,  redirect_url='/admin/social/twitteraccount/'):
     except TwitterAccount.DoesNotExist:
         account_info = twitter.show_user(screen_name=authorized_tokens['screen_name'])
         TwitterAccount.create_from_obj(
-            account_info, 
-            oauth_token=authorized_tokens['oauth_token'], 
+            account_info,
+            oauth_token=authorized_tokens['oauth_token'],
             oauth_token_secret=authorized_tokens['oauth_token_secret'])
-        
+
     return HttpResponseRedirect(redirect_url)
