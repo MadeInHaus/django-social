@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 
 from .models import FacebookAccount, FacebookMessage, TwitterAccount, TwitterMessage,\
                     TwitterSearch, RSSAccount, RSSMessage, Message, InstagramSearch, InstagramMessage, \
-                    TwitterSetting, FacebookSetting, InstagramSetting, RSSSetting
+                    TwitterSetting, FacebookSetting, InstagramSetting, RSSSetting, APPROVED, PENDING, FAVORITED, REJECTED
 from .views import begin_auth
 
 from logging import getLogger
@@ -15,21 +15,28 @@ log = getLogger(__name__)
 
 def approve_message(modeladmin, request, queryset):
     for item in queryset:
-        item.status = 1
+        item.status = APPROVED
         item.save()
 approve_message.short_description = "Mark As Approved"
 
 def rejected_message(modeladmin, request, queryset):
     for item in queryset:
-        item.status = 2
+        item.status = REJECTED
         item.save()
 rejected_message.short_description = "Mark As Rejected"
 
 def favorite_message(modeladmin, request, queryset):
     for item in queryset:
-        item.status = 5
+        item.status = FAVORITED
         item.save()
 favorite_message.short_description = "Mark As Favorite"
+
+def pending_message(modeladmin, request, queryset):
+    for item in queryset:
+        item.status = PENDING
+        item.save()
+favorite_message.short_description = "Mark As Pending"
+
 
 def admin_url(model, url, object_id=None):
     """
@@ -98,7 +105,7 @@ class SingletonAdmin(admin.ModelAdmin):
         return self.handle_save(args[0], response)
 
 class MessageAdmin(admin.ModelAdmin):
-    actions = [approve_message, rejected_message, favorite_message]
+    actions = [approve_message, rejected_message, favorite_message, pending_message]
     list_display = ('id','message', 'status', 'network')
     list_filter = ('network', 'status')
 
