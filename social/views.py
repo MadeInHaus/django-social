@@ -8,15 +8,15 @@ from logging import getLogger
 from django.http import HttpResponseRedirect
 
 
-from .settings import SOCIAL_TWITTER_CONSUMER_KEY, SOCIAL_TWITTER_CONSUMER_SECRET
+from . import settings
 from .models import TwitterAccount
 
 log = getLogger('social.views')
 
 def begin_auth(request):
     twitter = TwitterAPI(
-        client_key = SOCIAL_TWITTER_CONSUMER_KEY,
-        client_secret = SOCIAL_TWITTER_CONSUMER_SECRET,
+        client_key = settings.SOCIAL_TWITTER_CONSUMER_KEY,
+        client_secret = settings.SOCIAL_TWITTER_CONSUMER_SECRET,
         callback_url = request.build_absolute_uri(reverse('social.views.thanks'))
     )
 
@@ -32,8 +32,8 @@ def thanks(request, redirect_url='/admin/social/twitteraccount/'):
         log.error('wrong domain, your auth_props are not stored in session')
         raise Exception('wrong domain, your auth_props are not stored in session')
     twitter = TwitterAPI(
-        client_key = SOCIAL_TWITTER_CONSUMER_KEY,
-        client_secret = SOCIAL_TWITTER_CONSUMER_SECRET,
+        client_key = settings.SOCIAL_TWITTER_CONSUMER_KEY,
+        client_secret = settings.SOCIAL_TWITTER_CONSUMER_SECRET,
         resource_owner_key = request.session['auth_props']['resource_owner_key'],
         resource_owner_secret = request.session['auth_props']['resource_owner_secret'],
         verifier=request.GET.get('oauth_verifier')

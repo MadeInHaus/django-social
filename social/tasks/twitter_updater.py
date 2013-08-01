@@ -10,7 +10,6 @@ import gevent
 
 from .. import settings
 from ..models import TwitterAccount, TwitterSearch, TwitterMessage, TweetExistsError
-from ..settings import SOCIAL_TWITTER_CONSUMER_KEY, SOCIAL_TWITTER_CONSUMER_SECRET
 from ..services.twitter import TwitterAPI, RateLimitException
 
 
@@ -22,8 +21,8 @@ class TwitterUpdater():
     def __init__(self):
         self.all_accounts = TwitterAccount.objects.all()
         self.accounts = self._accounts_generator()
-        
-    
+
+
     def _accounts_generator(self):
         accounts = cycle(self.all_accounts)
         while True:
@@ -44,13 +43,13 @@ class TwitterUpdater():
 
         self._update_account_timelines()
         self._update_search_terms()
-        
+
     def _update_search_terms(self):
         threads = []
         for term in TwitterSearch.objects.all():
             threads.append(gevent.spawn(self._update_search_term, term))
         gevent.joinall(threads)
-        
+
     def _update_account_timelines(self):
         threads = []
         for account in self.all_accounts:
@@ -59,9 +58,9 @@ class TwitterUpdater():
         gevent.joinall(threads)
 
     def _api_from_account(self,account):
-        twapi = TwitterAPI( 
-            client_key = SOCIAL_TWITTER_CONSUMER_KEY, 
-            client_secret = SOCIAL_TWITTER_CONSUMER_SECRET,
+        twapi = TwitterAPI(
+            client_key = settings.SOCIAL_TWITTER_CONSUMER_KEY,
+            client_secret = settings.SOCIAL_TWITTER_CONSUMER_SECRET,
             resource_owner_key = account.oauth_token,
             resource_owner_secret = account.oauth_secret)
         return twapi
@@ -69,9 +68,9 @@ class TwitterUpdater():
     def _refresh_api_with_new_account(self, api, account):
         pass
 
-    
+
     def _update_account_timeline(self,account):
-        
+
         twapi = self._api_from_account(account)
         tweets = twapi.get_user_timeline(account.screen_name, max_count=0)
         log.warning('[twitter account] ping account: %s', account.screen_name)
@@ -83,7 +82,7 @@ class TwitterUpdater():
                     return
         except RateLimitException:
             log.warning('[twitter] rate limit exceeded')
-            
+
         except Exception as e:
             log.warning('[twitter] big problem: %s', e)
 
@@ -101,7 +100,7 @@ class TwitterUpdater():
                     if tweet_duplicate > 5:
                         log.warning('[twitter] you hit 5 duplicates in a row, kicking out')
                         return
-                    
+
         except RateLimitException as e:
             account.valid = false
             print('*******************')
