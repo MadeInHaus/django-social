@@ -99,6 +99,8 @@ class SingletonAdmin(admin.ModelAdmin):
 
 class MessageAdmin(admin.ModelAdmin):
     actions = [approve_message, rejected_message, favorite_message]
+    list_display = ('id','message', 'status', 'network')
+    list_filter = ('network', 'status')
 
 class TwitterAccountAdmin(admin.ModelAdmin):
     list_display = ( 'screen_name',)
@@ -111,14 +113,12 @@ class TwitterAccountAdmin(admin.ModelAdmin):
 
 class TwitterMessageAdmin(MessageAdmin):
     list_display = ('id','message', 'status')
-    list_filter = ('twitter_search__search_term', 'twitter_account__screen_name')
+    list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status')
 
-class MessageAdmin(MessageAdmin):
-    list_display = ('id','message', 'status', 'network')
-    list_filter = ('network', )
 
 class InstagramMessageAdmin(MessageAdmin):
     list_display = ('id','admin_image_low','message', 'status')
+    list_filter = ('status', )
 
 
 admin.site.register(TwitterSetting, SingletonAdmin)
@@ -139,7 +139,7 @@ admin.site.register(Message, MessageAdmin)
 
 class RSSMessageAdmin(admin.ModelAdmin):
     list_display = ('id','message')
-    list_filter = ('rss_account__feed_name', )
+    list_filter = ('rss_account__feed_name', 'status')
 
 admin.site.register(RSSAccount)
 admin.site.register(RSSMessage, RSSMessageAdmin)
