@@ -35,7 +35,7 @@ def pending_message(modeladmin, request, queryset):
     for item in queryset:
         item.status = PENDING
         item.save()
-favorite_message.short_description = "Mark As Pending"
+pending_message.short_description = "Mark As Pending"
 
 
 def admin_url(model, url, object_id=None):
