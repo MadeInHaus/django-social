@@ -23,10 +23,10 @@ NETWORK =       (
                     ('instagram', 'Instagram'),
                 )
 
-PENDING = 0
-APPROVED = 1
-REJECTED = 2
-FAVORITED = 5
+PENDING = 10
+APPROVED = 11
+REJECTED = 12
+FAVORITED = 15
 
 STATUS_LIST =   (
                     (PENDING, 'pending'),
