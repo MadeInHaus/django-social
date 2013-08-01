@@ -1,13 +1,9 @@
 import time
-from .. import settings
-import requests
 from ..models import FacebookAccount, FacebookMessage
 from celery.utils.log import get_task_logger
-from urlparse import urlparse, parse_qs
 
 
 log = get_task_logger('facebook')
-
 
 class FacebookUpdater(object):
     def __init__(self, api):

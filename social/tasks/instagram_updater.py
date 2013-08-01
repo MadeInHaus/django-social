@@ -1,7 +1,4 @@
-
-import time
 import gevent
-from urlparse import urlparse, parse_qs
 from .. import settings
 from ..models import InstagramSearch, InstagramMessage, IGMediaExistsError
 from ..services.instagram import InstagramAPI
@@ -10,14 +7,9 @@ from celery.utils.log import get_task_logger
 log = get_task_logger(__name__)
 
 
-
-
-
-
 class InstagramUpdater():
     def __init__(self):
         self.api = InstagramAPI(app_id=settings.SOCIAL_INSTAGRAM_CLIENT_ID)
-
 
     def update(self):
         import gevent.monkey

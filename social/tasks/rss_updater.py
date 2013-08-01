@@ -1,19 +1,19 @@
-import json
-from django.utils.datetime_safe import datetime
-from time import mktime
 import sys
 import time
-import requests
+import json
+
 import feedparser
 
+from time import mktime
+
+from django.utils.datetime_safe import datetime
 from django.utils.timezone import utc
-from .. import settings
+from logging import getLogger
+from bs4 import BeautifulSoup
 
 from ..models import RSSMessage, RSSAccount
 
 
-from logging import getLogger
-from bs4 import BeautifulSoup
 log = getLogger(__name__)
 
 class JSONEncoder(json.JSONEncoder):
@@ -33,17 +33,17 @@ class RSSUpdater():
     def update(self):
         for account in RSSAccount.objects.all():
             log.warning(u'[RSS updater account: {}]'.format(account))
-            
+
             try:
                 d = feedparser.parse(account.feed_url)
             except:
                 log.error('[RSS updater failed to parse: {}]'.format(account))
                 log.error('[RSS updater error: {} {} {}'.format(sys.exc_info()))
                 continue
- 
+
             for entry in d.entries:
                 old_entry = RSSMessage.objects.filter(message_id=entry.id)
-                
+
                 if old_entry:
                     continue
                 new_entry = RSSMessage()
@@ -52,7 +52,7 @@ class RSSUpdater():
                 new_entry.message = self.message(entry)
                 new_entry.date = self.date(entry)
                 new_entry.message_id = entry.id
-                new_entry.deeplink = self.link(entry) 
+                new_entry.deeplink = self.link(entry)
                 new_entry.blob = self.blob(entry)
                 new_entry.avatar = self.avatar(entry)
                 new_entry.user_id = self.user_id(entry)
@@ -78,30 +78,30 @@ class RSSUpdater():
     def title(self, entry):
         if 'title' in entry:
             return entry.title
-        
+
         return None
 
     def message(self, entry):
         if 'summary' in entry:
             return entry.summary
-        
+
         return None
 
     def avatar(self, entry):
         if 'posterous_userimage' in entry:
             return entry.posterous_userimage
-        
+
         return None
-    
+
     def user_id(self, entry):
         return entry.get('posterous_profileurl') or entry.get('posterous_author')
-    
+
     def user_name(self, entry):
         return entry.get('posterous_displayname')
-    
+
     def blob(self, entry):
         return json.dumps(entry, cls=JSONEncoder)
-    
+
     def parse_links(self, message):
         try:
             soup = BeautifulSoup(message)
@@ -110,9 +110,9 @@ class RSSUpdater():
         except:
             log.error("error parsing links: %s %s %s", *sys.exc_info())
             links = []
-            
+
         return links
-    
+
     def parse_images(self, message):
         try:
             soup = BeautifulSoup(message)
@@ -121,6 +121,5 @@ class RSSUpdater():
         except:
             log.error("error parsing images: %s %s %s", *sys.exc_info())
             images = []
-            
+
         return images
-    

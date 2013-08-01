@@ -1,6 +1,4 @@
 import requests
-import json
-import requests_oauthlib
 
 
 MEDIA_ACCEPT_PARAMETERS = ["count", "max_id"]

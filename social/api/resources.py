@@ -1,4 +1,4 @@
-from tastypie.resources import ModelResource, Resource
+from tastypie.resources import ModelResource
 from tastypie.serializers import Serializer
 from tastypie import fields
 from social.models import Message, TwitterMessage, FacebookMessage, RSSMessage, InstagramMessage

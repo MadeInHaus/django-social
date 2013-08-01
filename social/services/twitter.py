@@ -1,8 +1,7 @@
+import urllib
 import requests
 from requests_oauthlib import OAuth1
-import json
 from urlparse import parse_qs
-import urllib
 
 REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token'
 
@@ -63,11 +62,11 @@ class TwitterAPI():
 
         self.resource_owner_key = credentials.get('oauth_token')[0]
         self.resource_owner_secret = credentials.get('oauth_token_secret')[0]
-        
+
         return authorized_tokens
 
     def _get_obj_for_request(self,url, max_id=None):
-        oauth = OAuth1(    
+        oauth = OAuth1(
             self.client_key,
             client_secret=self.client_secret,
             resource_owner_key=self.resource_owner_key,
@@ -77,7 +76,7 @@ class TwitterAPI():
 
         if response.reason == 'Too Many Requests':
             raise RateLimitException(max_id=max_id)
-        response = json.loads(response.content)
+        response = response.json()
         return response
 
 
@@ -85,7 +84,7 @@ class TwitterAPI():
         url = 'https://api.twitter.com/1.1/users/show.json?screen_name={}'.format(screen_name)
         try:
             account_info = self._get_obj_for_request(url)
-        except RateLimitException: 
+        except RateLimitException:
             raise
         return account_info
 
@@ -103,10 +102,10 @@ class TwitterAPI():
                 if(max_count != 0 and total_sent > max_count):
                     raise StopIteration
                 yield tweet
-            
+
             page_url = url + '&max_id=' + tweet['id_str']
             tweets = self._get_obj_for_request(page_url)
-            
+
 
     def search(self, search_term, max_count=100, max_id=None):
         search_term = urllib.quote(search_term)
@@ -123,10 +122,8 @@ class TwitterAPI():
                     raise StopIteration
                 yield tweet
             max_id = str(tweet['id'] - 1)
-            
+
             page_url = url + '&max_id=' + max_id
             response = self._get_obj_for_request(page_url, max_id=max_id)
             tweets = response.get('statuses', [])
-            #twitter responds back including the item 'max_id' have to pop it out
-            
-
+            # twitter responds back including the item 'max_id' have to pop it out

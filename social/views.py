@@ -1,6 +1,3 @@
-import sys
-import traceback
-
 from .services.twitter import TwitterAPI
 from django.core.urlresolvers import reverse
 

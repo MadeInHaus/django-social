@@ -1,12 +1,7 @@
-import json
-from datetime import datetime
-import time
-import Queue
-import requests
 import logging
-from itertools import cycle
-from urlparse import urlparse, parse_qs
 import gevent
+
+from itertools import cycle
 
 from .. import settings
 from ..models import TwitterAccount, TwitterSearch, TwitterMessage, TweetExistsError
@@ -16,12 +11,10 @@ from ..services.twitter import TwitterAPI, RateLimitException
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
-
 class TwitterUpdater():
     def __init__(self):
         self.all_accounts = TwitterAccount.objects.all()
         self.accounts = self._accounts_generator()
-
 
     def _accounts_generator(self):
         accounts = cycle(self.all_accounts)

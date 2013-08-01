@@ -102,7 +102,7 @@ class MessageAdmin(admin.ModelAdmin):
 
 class TwitterAccountAdmin(admin.ModelAdmin):
     list_display = ( 'screen_name',)
-    
+
     def add_view(self, request, form_url='', extra_context=None):
         log.debug("request: %s", request)
         log.debug("form_url: %s", form_url)

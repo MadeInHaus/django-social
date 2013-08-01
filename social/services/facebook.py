@@ -1,5 +1,4 @@
 import requests
-import json
 
 class FacebookAPI(object):
     def __init__(self, app_id, app_secret):

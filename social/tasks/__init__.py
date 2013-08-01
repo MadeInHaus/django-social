@@ -1,14 +1,12 @@
 from .. import settings
 from ..services.facebook import FacebookAPI
-from datetime import timedelta, datetime
+from datetime import timedelta
 from celery.utils.log import get_task_logger
-from celery import task
 from celery.task import periodic_task
 from .facebook_updater import FacebookUpdater
 from .twitter_updater import TwitterUpdater
 from .rss_updater import RSSUpdater
 from .instagram_updater import InstagramUpdater
-
 
 
 @periodic_task(run_every=timedelta(seconds=settings.SOCIAL_TWITTER_INTERVAL))
@@ -37,7 +35,7 @@ def rss_update():
     rss = RSSUpdater()
     rss.update()
     log.info('[RSS] End')
-    
+
 @periodic_task(run_every=timedelta(seconds=settings.SOCIAL_INSTAGRAM_INTERVAL))
 def instagram_update():
     log = get_task_logger('instagram')
