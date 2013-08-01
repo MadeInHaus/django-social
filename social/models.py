@@ -23,11 +23,16 @@ NETWORK =       (
                     ('instagram', 'Instagram'),
                 )
 
+PENDING = 0
+APPROVED = 1
+REJECTED = 2
+FAVORITED = 5
+
 STATUS_LIST =   (
-                    (0, 'pending'),
-                    (1, 'approved'),
-                    (2, 'rejected'),
-                    (5, 'favorited'),
+                    (PENDING, 'pending'),
+                    (APPROVED, 'approved'),
+                    (REJECTED, 'rejected'),
+                    (FAVORITED, 'favorited'),
                 )
 
 
@@ -101,8 +106,8 @@ class TwitterMessage(Message):
 
     def save(self, *args, **kwargs):
         self.network = 'twitter'
-        if not self.status:
-            self.status = 1 if TwitterSetting.objects.get().auto_approve else 0
+        if self.status is None:
+            self.status = APPROVED if TwitterSetting.objects.get().auto_approve else PENDING
         super(TwitterMessage, self).save(*args, **kwargs)
 
     # create tweet and make sure it's unique based on id_str and search term
@@ -221,8 +226,8 @@ class FacebookMessage(Message):
         return self.message
     def save(self, *args, **kwargs):
         self.network = 'facebook'
-        if not self.status:
-            self.status = 1 if FacebookSetting.objects.get().auto_approve else 0
+        if self.status is None:
+            self.status = APPROVED if FacebookSetting.objects.get().auto_approve else PENDING
         super(FacebookMessage, self).save(*args, **kwargs)
 
 
@@ -279,8 +284,9 @@ class RSSMessage(Message):
 
     def save(self, *args, **kwargs):
         self.network = 'rss'
-        if not self.status:
-            self.status = 1 if RSSSetting.objects.get().auto_approve else 0
+        if self.status is None:
+            self.status = APPROVED if RSSSetting.objects.get().auto_approve else PENDING
+
         super(RSSMessage, self).save(*args, **kwargs)
 
     @property
@@ -364,8 +370,9 @@ class InstagramMessage(Message):
 
     def save(self, *args, **kwargs):
         self.network = 'instagram'
-        if not self.status:
-            self.status = 1 if InstagramSetting.objects.get().auto_approve else 0
+        if self.status is None:
+            self.status = APPROVED if InstagramSetting.objects.get().auto_approve else PENDING
+
         super(InstagramMessage, self).save(*args, **kwargs)
 
 class TweetExistsError(Exception):
