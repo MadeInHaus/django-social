@@ -1,14 +1,16 @@
-from .services.twitter import TwitterAPI
-from django.core.urlresolvers import reverse
+import requests
 
 from logging import getLogger
-from django.http import HttpResponseRedirect
 
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 from . import settings
-from .models import TwitterAccount
+from .models import TwitterAccount, InstagramAccount
+from .services.twitter import TwitterAPI
 
 log = getLogger('social.views')
+
 
 def begin_auth(request):
     twitter = TwitterAPI(
@@ -50,3 +52,30 @@ def thanks(request, redirect_url='/admin/social/twitteraccount/'):
             oauth_token_secret=authorized_tokens['oauth_token_secret'])
 
     return HttpResponseRedirect(redirect_url)
+
+def instauth(request):
+    data = {
+        'client_id': settings.SOCIAL_INSTAGRAM_CLIENT_ID,
+        'client_secret': settings.SOCIAL_INSTAGRAM_CLIENT_SECRET,
+        'grant_type': 'authorization_code',
+        'redirect_uri': settings.SOCIAL_INSTAGRAM_REDIRECT_URI,
+        'code': request.GET.get('code'),
+    }
+
+    res = requests.post('https://api.instagram.com/oauth/access_token',
+                        data=data)
+
+    if res.ok:
+        response = res.json()
+        user = response['user']
+        print response
+        print user
+        InstagramAccount.objects.create(
+            instagram_id = user['id'],
+            username = user['username'],
+            name = user['full_name'],
+            profile_picture = user['profile_picture'],
+            access_token = response['access_token'],
+        )
+
+    return HttpResponseRedirect(reverse('admin:social_instagramaccount_changelist'))

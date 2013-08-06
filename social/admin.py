@@ -1,11 +1,17 @@
+from urllib import urlencode
+
 from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 
-from .models import FacebookAccount, FacebookMessage, TwitterAccount, TwitterMessage,\
-                    TwitterSearch, RSSAccount, RSSMessage, Message, InstagramSearch, InstagramMessage, \
-                    TwitterSetting, FacebookSetting, InstagramSetting, RSSSetting, APPROVED, PENDING, FAVORITED, REJECTED
+from .settings import SOCIAL_INSTAGRAM_CLIENT_ID, SOCIAL_INSTAGRAM_REDIRECT_URI
+from .models import FacebookAccount, FacebookMessage, \
+                    TwitterAccount, TwitterMessage, TwitterSearch, \
+                    RSSAccount, RSSMessage, Message, \
+                    InstagramAccount, InstagramSearch, InstagramMessage, \
+                    TwitterSetting, FacebookSetting, InstagramSetting, RSSSetting, \
+                    APPROVED, PENDING, FAVORITED, REJECTED
 from .views import begin_auth
 
 from logging import getLogger
@@ -122,6 +128,24 @@ class TwitterMessageAdmin(MessageAdmin):
     list_display = ('id','message', 'status')
     list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status')
 
+class InstagramAccountAdmin(MessageAdmin):
+    list_display = ('id', 'admin_image', 'username', 'name')
+    list_filter = ('username', 'name')
+    search_fields = ('username', 'name')
+
+    def add_view(self, *args, **kwargs):
+        if SOCIAL_INSTAGRAM_CLIENT_ID and SOCIAL_INSTAGRAM_REDIRECT_URI:
+            params = urlencode({
+                'client_id': SOCIAL_INSTAGRAM_CLIENT_ID,
+                'redirect_uri': SOCIAL_INSTAGRAM_REDIRECT_URI,
+                'response_type': 'code',
+            })
+            url = '?'.join(['https://api.instagram.com/oauth/authorize/', params])
+            log.info('Login via Instagram API')
+            log.info(url)
+            return HttpResponseRedirect(url)
+        else:
+            return HttpResponseRedirect(reverse('admin:social_instagramsetting_add'))
 
 class InstagramMessageAdmin(MessageAdmin):
     list_display = ('id','admin_image_low','message', 'status')
@@ -138,6 +162,7 @@ admin.site.register(FacebookMessage, MessageAdmin)
 admin.site.register(TwitterAccount, TwitterAccountAdmin)
 admin.site.register(TwitterMessage, TwitterMessageAdmin)
 admin.site.register(TwitterSearch)
+admin.site.register(InstagramAccount, InstagramAccountAdmin)
 admin.site.register(InstagramSearch)
 admin.site.register(InstagramMessage, InstagramMessageAdmin)
 admin.site.register(Message, MessageAdmin)

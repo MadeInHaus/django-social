@@ -42,21 +42,34 @@ class TwitterSetting(models.Model):
     interval = models.IntegerField(blank=False, default=15)
     auto_approve = models.BooleanField(default=True)
 
+    def __unicode__(self):
+        return self.consumer_key
+
 class FacebookSetting(models.Model):
     app_id = models.CharField(max_length=255, blank=False)
     app_secret = models.CharField(max_length=255, blank=False)
     interval = models.IntegerField(blank=False, default=15)
     auto_approve = models.BooleanField(default=True)
 
+    def __unicode__(self):
+        return self.app_id
+
 class InstagramSetting(models.Model):
     client_id = models.CharField(max_length=255, blank=False)
     client_secret = models.CharField(max_length=255, blank=False)
+    redirect_uri = models.URLField()
     interval = models.IntegerField(blank=False, default=15)
     auto_approve = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.client_id
 
 class RSSSetting(models.Model):
     interval = models.IntegerField(blank=False, default=15)
     auto_approve = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return 'Interval {}s'.format(self.interval)
 
 class Message(models.Model):
     message_type = models.CharField(max_length=100, choices=MESSAGE_TYPE)
@@ -77,7 +90,7 @@ class Message(models.Model):
         return json.loads(self.blob)
 
     def __unicode__(self):
-        return str(self.pk)
+        return '-'.join([network, str(self.pk)])
 
 
 class TwitterMessage(Message):
@@ -217,19 +230,21 @@ class TwitterAccount(models.Model):
 class TwitterSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')
     search_until = models.IntegerField(default=int(time.time()))
+
     def __unicode__(self):
         return self.search_term
 
 class FacebookMessage(Message):
     facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
+
     def __unicode__(self):
         return self.message
+
     def save(self, *args, **kwargs):
         self.network = 'facebook'
         if self.status is None:
             self.status = APPROVED if FacebookSetting.objects.get().auto_approve else PENDING
         super(FacebookMessage, self).save(*args, **kwargs)
-
 
     @staticmethod
     def create_from_json(account,json):
@@ -282,6 +297,9 @@ class RSSMessage(Message):
     _links = models.TextField(max_length=1000, blank=True)
     _images = models.TextField(max_length=1000, blank=True)
 
+    def __unicode__(self):
+        return self.title
+
     def save(self, *args, **kwargs):
         self.network = 'rss'
         if self.status is None:
@@ -307,14 +325,29 @@ class RSSMessage(Message):
 
 class InstagramSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='dont prefix with #')
+
     def __unicode__(self):
         return self.search_term
+
+class InstagramAccount(models.Model):
+    instagram_id = models.BigIntegerField()
+    username = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    profile_picture = models.URLField()
+    access_token = models.CharField(max_length=255)
+    scrap_profile = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.username
+
+    def admin_image(self):
+        return '<img src="{}">'.format(self.profile_picture)
+    admin_image.allow_tags = True
 
 class InstagramMessage(Message):
     instagram_search = models.ManyToManyField('InstagramSearch',null=True,blank=True)
     comments = models.TextField(max_length=10000)
     images = models.TextField(max_length=10000)
-
 
     @staticmethod
     def create_from_json(media,search=None):
@@ -382,6 +415,6 @@ class IGMediaExistsError(Exception):
     pass
 
 @receiver(post_save, sender=TwitterAccount)
-def search_nearby_schools(sender, instance, created, raw, **kwargs):
-    if created == True:
+def reset_poll_count(sender, instance, created, raw, **kwargs):
+    if created:
         accounts = sender.objects.all().update(poll_count=0)

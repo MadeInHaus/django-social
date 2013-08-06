@@ -48,3 +48,4 @@ SOCIAL_TWITTER_CONSUMER_SECRET = twitter.consumer_secret
 
 SOCIAL_INSTAGRAM_CLIENT_ID = instagram.client_id
 SOCIAL_INSTAGRAM_CLIENT_SECRET = instagram.client_secret
+SOCIAL_INSTAGRAM_REDIRECT_URI = instagram.redirect_uri
