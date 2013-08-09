@@ -345,38 +345,37 @@ class InstagramAccount(models.Model):
     admin_image.allow_tags = True
 
 class InstagramMessage(Message):
-    instagram_search = models.ManyToManyField('InstagramSearch',null=True,blank=True)
+    instagram_search = models.ManyToManyField('InstagramSearch', null=True, blank=True)
     comments = models.TextField(max_length=10000)
     images = models.TextField(max_length=10000)
 
     @staticmethod
-    def create_from_json(media,search=None):
-        saved_message = InstagramMessage.objects.filter(message_id=media.get('id','none'))
-        if saved_message:
-            tmp_message = saved_message.filter(instagram_search__search_term=search.search_term)
-            if tmp_message:
-                raise IGMediaExistsError("Post already exists in DB: {}", str(tmp_message[0].id))
-            saved_message = saved_message[0]
-            saved_message.instagram_search.add(search)
-            saved_message.save()
-            return
-        ig_media = InstagramMessage()
-        ig_media.date = datetime.utcfromtimestamp(float(media.get('created_time',0))).replace(tzinfo=utc)
-        ig_media.comments = json.dumps(media.get('comments',{}).get('data',[]))
-        ig_media.images = json.dumps(media.get('images',{}))
-        ig_media.message_id = media.get('id','')
-        ig_media.deeplink = media.get('link','')
-        ig_media.message_type = 'post'
-        if media.get('caption',{}):
-            ig_media.message = media.get('caption', {}).get('text', '').encode('utf-8')
-        ig_media.avatar = media.get('user',{}).get('profile_picture','')
-        ig_media.blob = json.dumps(media)
-        ig_media.user_id = media.get('user',{}).get('id','0')
-        ig_media.user_name = media.get('user',{}).get('username','')
-        ig_media.save()
-        if search:
-            ig_media.instagram_search.add(search)
+    def create_from_json(media, search=None):
+        try:
+            ig_media = InstagramMessage.objects.get(message_id=media.get('id'))
+            if search:
+                if ig_media.instagram_search.filter(pk=search.pk).exists():
+                    raise IGMediaExistsError("Post already exists in DB: {}".format(ig_media.id))
+                else:
+                    ig_media.instagram_search.add(search)
+        except InstagramMessage.DoesNotExist:
+            ig_media = InstagramMessage()
+            ig_media.date = datetime.utcfromtimestamp(float(media.get('created_time', 0))).replace(tzinfo=utc)
+            ig_media.comments = json.dumps(media.get('comments', {}).get('data', []))
+            ig_media.images = json.dumps(media.get('images', {}))
+            ig_media.message_id = media.get('id', '')
+            ig_media.deeplink = media.get('link', '')
+            ig_media.message_type = 'post'
+            if media.get('caption', {}):
+                ig_media.message = media.get('caption', {}).get('text', '').encode('utf-8')
+            ig_media.avatar = media.get('user', {}).get('profile_picture', '')
+            ig_media.blob = json.dumps(media)
+            ig_media.user_id = media.get('user', {}).get('id', '0')
+            ig_media.user_name = media.get('user', {}).get('username', '')
             ig_media.save()
+            if search:
+                ig_media.instagram_search.add(search)
+
         return ig_media
 
     @property
