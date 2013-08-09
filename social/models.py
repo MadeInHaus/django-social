@@ -90,7 +90,7 @@ class Message(models.Model):
         return json.loads(self.blob)
 
     def __unicode__(self):
-        return '-'.join([network, str(self.pk)])
+        return '-'.join([self.network, str(self.pk)])
 
 
 class TwitterMessage(Message):
