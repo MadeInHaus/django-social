@@ -9,7 +9,7 @@ from .rss_updater import RSSUpdater
 from .instagram_updater import InstagramUpdater
 
 
-@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_TWITTER_INTERVAL))
+@periodic_task(run_every=timedelta(seconds=long(settings.SOCIAL_TWITTER_INTERVAL)))
 def twitter_update():
     log = get_task_logger('twitter')
     log.info('[Twitter] Start')
@@ -17,7 +17,7 @@ def twitter_update():
     tw.update()
     log.info('[Twitter] End')
 
-@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_FACEBOOK_INTERVAL))
+@periodic_task(run_every=timedelta(seconds=long(settings.SOCIAL_FACEBOOK_INTERVAL)))
 def facebook_update():
     log = get_task_logger('facebook')
     log.info('[Facebook] Start')
@@ -28,7 +28,7 @@ def facebook_update():
     fb.update()
     log.info('[Facebook] End')
 
-@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_RSS_INTERVAL))
+@periodic_task(run_every=timedelta(seconds=long(settings.SOCIAL_RSS_INTERVAL)))
 def rss_update():
     log = get_task_logger('rss')
     log.info('[RSS] Start')
@@ -36,7 +36,7 @@ def rss_update():
     rss.update()
     log.info('[RSS] End')
 
-@periodic_task(run_every=timedelta(seconds=settings.SOCIAL_INSTAGRAM_INTERVAL))
+@periodic_task(run_every=timedelta(seconds=long(settings.SOCIAL_INSTAGRAM_INTERVAL)))
 def instagram_update():
     log = get_task_logger('instagram')
     log.info('[Instagram] Start')
