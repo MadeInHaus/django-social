@@ -21,37 +21,20 @@ __all__ = (
     'SOCIAL_RSS_INTERVAL',
 )
 
-class LazyAttribute(object):
+class LazyAttribute:
     def __init__(self, model, attr):
         self._model = model
         self._attr  = attr
 
-    def __getattribute__(self, attr):
-        model = object.__getattribute__(self, '_model')
-        model_attr = object.__getattribute__(self, '_attr')
+    def _wrapped_attribute(self):
         try:
-            obj = model.objects.get()
+            obj = self._model.objects.get()
         except model.DoesNotExist:
-            obj = model()
-        return getattr(getattr(obj, model_attr), attr)
+            obj = self._model()
+        return getattr(obj, self._attr)
 
-    def __str__(self):
-        return self.__str__()
-
-    def __unicode__(self):
-        return self.__unicode__()
-
-    def __repr__(self):
-        return self.__repr__()
-
-    def __bool__(self):
-        return self.__bool__()
-
-    def __cmp__(self, other):
-        return self.__cmp__(other)
-
-    def __eq__(self, other):
-        return self.__eq__(other)
+    def __getattr__(self, name):
+        return getattr(self._wrapped_attribute(), name)
 
 SOCIAL_TWITTER_AUTO_APPROVE    = LazyAttribute(TwitterSetting, 'auto_approve')
 SOCIAL_TWITTER_INTERVAL        = LazyAttribute(TwitterSetting, 'interval')
