@@ -29,7 +29,7 @@ class LazyAttribute:
     def _wrapped_attribute(self):
         try:
             obj = self._model.objects.get()
-        except model.DoesNotExist:
+        except self._model.DoesNotExist:
             obj = self._model()
         return getattr(obj, self._attr)
 
