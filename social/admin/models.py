@@ -1,20 +1,16 @@
 from urllib import urlencode
+from logging import getLogger
 
 from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 
-from .settings import SOCIAL_INSTAGRAM_CLIENT_ID, SOCIAL_INSTAGRAM_REDIRECT_URI
-from .models import FacebookAccount, FacebookMessage, \
-                    TwitterAccount, TwitterMessage, TwitterSearch, \
-                    RSSAccount, RSSMessage, Message, \
-                    InstagramAccount, InstagramSearch, InstagramMessage, \
-                    TwitterSetting, FacebookSetting, InstagramSetting, RSSSetting, \
-                    APPROVED, PENDING, FAVORITED, REJECTED
-from .views import begin_auth
+from ..settings import SOCIAL_INSTAGRAM_CLIENT_ID, SOCIAL_INSTAGRAM_REDIRECT_URI
+from ..models import TwitterSetting, FacebookSetting, InstagramSetting, RSSSetting, \
+                     APPROVED, PENDING, FAVORITED, REJECTED
+from ..views import begin_auth
 
-from logging import getLogger
 
 log = getLogger(__name__)
 
@@ -110,13 +106,31 @@ class SingletonAdmin(admin.ModelAdmin):
         response = super(SingletonAdmin, self).change_view(*args, **kwargs)
         return self.handle_save(args[0], response)
 
+class HideableAdmin(admin.ModelAdmin):
+    def get_model_perms(self, request):
+        if self.pref_model.objects.count():
+            return super(HideableAdmin, self).get_model_perms(request)
+        else:
+            return {
+                'add': False,
+                'change': False,
+                'delete': False,
+            }
+
 class MessageAdmin(admin.ModelAdmin):
     actions = [approve_message, rejected_message, favorite_message, pending_message]
     list_display = ('id','message', 'status', 'network')
     list_filter = ('network', 'status')
 
-class TwitterAccountAdmin(admin.ModelAdmin):
-    list_display = ( 'screen_name',)
+class FacebookAccountAdmin(HideableAdmin):
+    pref_model = FacebookSetting
+
+class FacebookMessageAdmin(MessageAdmin, HideableAdmin):
+    pref_model = FacebookSetting
+
+class TwitterAccountAdmin(HideableAdmin):
+    list_display = ('screen_name',)
+    pref_model = TwitterSetting
 
     def add_view(self, request, form_url='', extra_context=None):
         log.debug("request: %s", request)
@@ -124,11 +138,16 @@ class TwitterAccountAdmin(admin.ModelAdmin):
         log.debug("extra_context: %s", extra_context)
         return begin_auth(request)
 
-class TwitterMessageAdmin(MessageAdmin):
+class TwitterMessageAdmin(MessageAdmin, HideableAdmin):
+    pref_model = TwitterSetting
     list_display = ('id','message', 'status')
     list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status')
 
-class InstagramAccountAdmin(MessageAdmin):
+class TwitterSearchAdmin(HideableAdmin):
+    pref_model = TwitterSetting
+
+class InstagramAccountAdmin(HideableAdmin):
+    pref_model = InstagramSetting
     list_display = ('id', 'admin_image', 'username', 'name')
     list_filter = ('username', 'name')
     search_fields = ('username', 'name')
@@ -147,31 +166,18 @@ class InstagramAccountAdmin(MessageAdmin):
         else:
             return HttpResponseRedirect(reverse('admin:social_instagramsetting_add'))
 
-class InstagramMessageAdmin(MessageAdmin):
+class InstagramSearchAdmin(HideableAdmin):
+    pref_model = InstagramSetting
+
+class InstagramMessageAdmin(MessageAdmin, HideableAdmin):
+    pref_model = InstagramSetting
     list_display = ('id','admin_image_low','message', 'status')
-    list_filter = ('status', )
+    list_filter = ('status',)
 
+class RSSAccountAdmin(HideableAdmin):
+    pref_model = RSSSetting
 
-admin.site.register(TwitterSetting, SingletonAdmin)
-admin.site.register(FacebookSetting, SingletonAdmin)
-admin.site.register(InstagramSetting, SingletonAdmin)
-admin.site.register(RSSSetting, SingletonAdmin)
-
-admin.site.register(FacebookAccount)
-admin.site.register(FacebookMessage, MessageAdmin)
-admin.site.register(TwitterAccount, TwitterAccountAdmin)
-admin.site.register(TwitterMessage, TwitterMessageAdmin)
-admin.site.register(TwitterSearch)
-admin.site.register(InstagramAccount, InstagramAccountAdmin)
-admin.site.register(InstagramSearch)
-admin.site.register(InstagramMessage, InstagramMessageAdmin)
-admin.site.register(Message, MessageAdmin)
-
-
-
-class RSSMessageAdmin(admin.ModelAdmin):
+class RSSMessageAdmin(HideableAdmin):
+    pref_model = RSSSetting
     list_display = ('id','message')
     list_filter = ('rss_account__feed_name', 'status')
-
-admin.site.register(RSSAccount)
-admin.site.register(RSSMessage, RSSMessageAdmin)
