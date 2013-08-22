@@ -26,10 +26,6 @@ class JSONEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 class RSSUpdater():
-    def __init__(self):
-        pass
-
-
     def update(self):
         for account in RSSAccount.objects.all():
             log.warning(u'[RSS updater account: {}]'.format(account))

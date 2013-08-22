@@ -1,3 +1,4 @@
+import operator
 from .models import TwitterSetting, FacebookSetting, InstagramSetting, RSSSetting
 
 __all__ = (
@@ -21,11 +22,18 @@ __all__ = (
     'SOCIAL_RSS_INTERVAL',
 )
 
-class LazyAttribute:
+
+def new_method_proxy(func):
+    def inner(self, *args):
+        return func(self._wrapped_attribute, *args)
+    return inner
+
+class LazyAttribute(object):
     def __init__(self, model, attr):
         self._model = model
         self._attr  = attr
 
+    @property
     def _wrapped_attribute(self):
         try:
             obj = self._model.objects.get()
@@ -33,8 +41,21 @@ class LazyAttribute:
             obj = self._model()
         return getattr(obj, self._attr)
 
-    def __getattr__(self, name):
-        return getattr(self._wrapped_attribute(), name)
+    __getattr__ = new_method_proxy(getattr)
+    __str__ = new_method_proxy(str)
+    __unicode__ = new_method_proxy(unicode)
+    __repr__ = new_method_proxy(repr)
+    __len__ = new_method_proxy(len)
+    __iter__ = new_method_proxy(iter)
+    __bool__ = new_method_proxy(bool)
+    __nonzero__ = __bool__
+    __cmp__ = new_method_proxy(cmp)
+    __eq__ = new_method_proxy(operator.eq)
+    __class__ = property(new_method_proxy(operator.attrgetter('__class__')))
+    __hash__ = new_method_proxy(hash)
+    __dir__ = new_method_proxy(dir)
+    __reduce__ = new_method_proxy(reduce)
+    __members__ = property(lambda self: self.__dir__())
 
 SOCIAL_TWITTER_AUTO_APPROVE    = LazyAttribute(TwitterSetting, 'auto_approve')
 SOCIAL_TWITTER_INTERVAL        = LazyAttribute(TwitterSetting, 'interval')
