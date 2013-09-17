@@ -14,6 +14,15 @@ log = logging.getLogger(__name__)
 MESSAGE_TYPE =  (
                     ('post', 'Post'),
                     ('reply', 'Reply'),
+                    
+                )
+
+MEDIA_TYPE =  (
+                    ('text', 'Text'),
+                    ('photo', 'Photo'),
+                    ('video', 'Video'),
+                    ('vine', 'Vine'),
+                    ('unknown', 'Unkown'),
                 )
 
 NETWORK =       (
@@ -73,6 +82,7 @@ class RSSSetting(models.Model):
 
 class Message(models.Model):
     message_type = models.CharField(max_length=100, choices=MESSAGE_TYPE)
+    media_type = models.CharField(max_length=20, choices=MEDIA_TYPE, default="unknown")
     network = models.CharField(max_length=100, choices=NETWORK)
     message = models.TextField(max_length=1000)
     date = models.DateTimeField()
