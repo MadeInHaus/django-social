@@ -111,7 +111,7 @@ INSTALLED_APPS = (
     'south',
     
     'utils',
-    
+    'social',    
 )
 
 # A tuple of IP addresses that see debug comments, when DEBUG is True

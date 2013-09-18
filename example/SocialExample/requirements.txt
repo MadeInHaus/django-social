@@ -40,3 +40,8 @@ boto==2.5.2
 django-storages==1.1.8
 
 coverage==3.6
+
+twython
+feedparser==5.1.3
+beautifulsoup4==4.1.3
+

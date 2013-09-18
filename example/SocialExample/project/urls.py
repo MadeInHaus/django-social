@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     (r'^grappelli/', include('grappelli.urls')),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
+    (r'^social/', include('social.urls')),
 
     # Homepage
     (r'^$', TemplateView.as_view(template_name='index.html')),
