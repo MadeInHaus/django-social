@@ -119,7 +119,7 @@ class HideableAdmin(admin.ModelAdmin):
 
 class MessageAdmin(admin.ModelAdmin):
     actions = [approve_message, rejected_message, favorite_message, pending_message]
-    list_display = ('id','message', 'status', 'network')
+    list_display = ('id','message', 'media_type', 'status', 'network')
     list_filter = ('network', 'status')
 
 class FacebookAccountAdmin(HideableAdmin):

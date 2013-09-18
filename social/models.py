@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 MESSAGE_TYPE =  (
                     ('post', 'Post'),
                     ('reply', 'Reply'),
-                    
+
                 )
 
 MEDIA_TYPE =  (
@@ -159,6 +159,21 @@ class TwitterMessage(Message):
         message.source = obj.get('source','')
         message.retweeted = obj.get('retweeted','False')
         message._entities = obj.get('entities','')
+        meta = obj.get('entities',{});
+        urls = meta.get('urls',[]);
+
+        for url in urls:
+            if url.get('expanded_url',None) == None:
+                u = url.get('url','')
+            else:
+                u = url.get('expanded_url','')
+
+            if 'youtu.be' in u or 'youtube.com' in u or 'vine.co' in u:
+                message.media_type = 'video'
+
+            if 'pic.twitter.com' in u:
+                message.media_type = 'photo'
+
         message.in_reply_to_screen_name = obj.get('in_reply_to_screen_name','')
         message.in_reply_to_user_id = obj.get('in_reply_to_user_id','')
         message.retweet_count = obj.get('retweet_count',0)
@@ -383,6 +398,9 @@ class InstagramMessage(Message):
             ig_media.message_id = media.get('id', '')
             ig_media.deeplink = media.get('link', '')
             ig_media.message_type = 'post'
+            ig_media.media_type = media.get('type')
+            if ig_media.media_type == 'image':
+                ig_media.media_type = 'photo'
             if media.get('caption', {}):
                 ig_media.message = media.get('caption', {}).get('text', '').encode('utf-8')
             ig_media.avatar = media.get('user', {}).get('profile_picture', '')
