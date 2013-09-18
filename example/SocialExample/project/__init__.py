@@ -1,1 +1,0 @@
-# This folder contains all the code required to run the web application

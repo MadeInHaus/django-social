@@ -1,3 +1,0 @@
-class app::configuration-actions {
-
-}
