@@ -1,0 +1,41 @@
+//
+// Scaffolding
+// ---------------------------
+
+// Border-box everything
+// --------------------------
+// (http://paulirish.com/2012/box-sizing-border-box-ftw/)
+// Use with caution if app needs to support oldIE (6,7,8)
+// * {
+//  @include box-sizing(border-box); 
+// }
+
+// Body reset
+// -------------------------
+
+body {
+    margin: 0;
+    font-family: $baseFontFamily;
+    font-size: $baseFontSize;
+    line-height: $baseLineHeight;
+    color: $textColor;
+    background-color: $bodyBackground;
+}
+
+
+// Responsive media embed
+// -------------------------
+
+.embed-container {
+    position: relative;
+    height: 0;
+    padding-bottom: 56.25%; // 16:9 aspect ratio (adjust accordingly)
+    overflow: hidden;
+    iframe, object, embed, video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}

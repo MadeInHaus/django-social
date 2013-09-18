@@ -1,0 +1,21 @@
+{% load require %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Django Social Example</title>
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+        {% require_module 'main' %}
+    </head>
+    <body>
+        <h1>Welcome to Django Social Example</h1>
+        <p>
+            Success!!!
+        </p>
+        <p>
+        	<a href="/admin/">Admin</a> is here.
+        </p>
+        <p>
+        	This default index.html template is located in the project/templates/index.html
+        </p>
+    </body>
+</html>

@@ -1,0 +1,39 @@
+//
+// Variables
+// ---------------------------
+
+// Globals
+// -------------------------
+$baseUrl: env_or_default("STATIC_URL", "/static/");
+
+// Colors
+// -------------------------
+$white:                     #fff !default;
+$black:                     #000 !default;
+
+// Scaffolding
+// -------------------------
+$bodyBackground:            $white !default;
+$textColor:                 $black !default;
+$hrBorder:                  $black !default;
+
+// Links
+// -------------------------
+$linkColor:                 #08c !default;
+$linkColorHover:            darken($linkColor, 15%) !default;
+
+// Typography
+// -------------------------
+$baseFontSize:              12px !default;
+$baseFontFamily:            "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$baseLineHeight:            1.2 !default;
+
+$headingsFontFamily:        inherit !default; // empty to use BS default, $baseFontFamily
+$headingsFontWeight:        bold !default;    // instead of browser default, bold
+$headingsColor:             inherit !default; // empty to use BS default, $textColor
+
+// Buttons
+// -------------------------
+$btnBackground:             $white !default;
+$btnBackgroundHighlight:    darken($white, 10%) !default;
+$btnBorder:                 #bbb !default;

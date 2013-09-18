@@ -1,0 +1,50 @@
+//
+// Sprite Sheet
+// ---------------------------
+
+// variables
+// $sharedUrl: $baseUrl + "";
+
+// local mixins
+// @include sprite({url}, {x}, {y}, {width}, {height});
+// @include sprite('url', 0, 0, 10, 10);
+@mixin sprite($url, $x, $y, $w, $h){
+    background: url($url) no-repeat ($x + 0px) ($y + 0px);
+    width: $w + 0px;
+    height: $h + 0px;
+}
+
+// example mixin extension
+// extends original mixin specific to shared sprite
+// @mixin shared-sprite($x, $y, $w, $h){
+// 	@include sprite($sharedUrl, $x, $y, $w, $h);
+// }
+
+// PROTIP use @extend to add these styles to your element
+// example:
+/*
+    .element{
+        @extend %btn-dot;
+    }
+
+    // outputs
+    // .element{
+        background: url($baseUrl+'img/shared/sprites.png') no-repeat 0 0;
+    }
+    // .element {
+        background-position: -213px -1px;
+        width: 12px;
+        height: 12px;
+    }
+
+ */
+
+// examples
+
+// % = "placeholder selector"
+// placeholder selectors do not generate a .class if they are not used
+// see example above for usage
+
+// %menu-icon-home  { @include shared-sprite(-260, 0, 104, 36); }
+// %menu-icon-about { @include shared-sprite(-260, 0, 104, 36); }
+// %menu-icon-work  { @include shared-sprite(-260, 0, 104, 36); }

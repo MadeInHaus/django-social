@@ -1,0 +1,44 @@
+
+// Compass
+@import "compass";
+
+// Sprites a la Compass
+$ui-spacing: 5px;
+$ui-sprite-dimensions: true;
+@import "sprites/ui/*.png";
+@include all-ui-sprites;
+
+
+// Core variables and mixins
+@import "variables"; // Set colors, typography, etc
+@import "mixins"; // Mixins outside of what Compass offers
+
+
+// CSS Reset
+@import "reset"; // normalize all browsers
+
+
+// Page Structure
+@import "scaffolding"; // low-level architecture
+@import "layouts"; // mid-level architecture
+
+
+// Base CSS
+@import "fonts"; // @font-face embeds
+@import "type"; // Base typography
+
+
+// UI Components
+// Filename structure: _c-[component-name].scss
+@import "c-buttons";
+
+
+// Pages
+// Filename structure: _page-[page-name].scss
+@import "page-home";
+
+
+// Utilities
+@import "animations"; // CSS3 Keyframe animations
+@import "utilities"; // Must be last to override
+

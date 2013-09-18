@@ -1,0 +1,37 @@
+//
+// Buttons
+// ---------------------------
+
+// Base styles
+// --------------------------------------------------
+
+button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+// Core
+.btn {
+    display: inline-block;
+    @include ie7-inline-block();
+
+    // Hover state
+    &:hover {
+    }
+
+    // Focus state for keyboard and accessibility
+    &:focus {
+        @include tab-focus();
+    }
+
+    // Active state
+    &.active,
+    &:active {
+    }
+
+    // Disabled state
+    &.disabled,
+    &[disabled] {
+    }
+}
