@@ -294,6 +294,13 @@ class FacebookAccount(models.Model):
     def __unicode__(self):
         return self.fb_id
 
+class FacebookSearch(models.Model):
+    search_term = models.CharField(max_length=160, blank=True, help_text='don\'t prefix with #')
+
+    def __unicode__(self):
+        return self.search_term
+
+
 class RSSAccount(models.Model):
     feed_name = models.CharField(max_length=300, blank=True)
     feed_url = models.URLField()
@@ -334,7 +341,7 @@ class RSSMessage(Message):
         self._images = json.dumps(images)
 
 class InstagramSearch(models.Model):
-    search_term = models.CharField(max_length=160, blank=True, help_text='dont prefix with #')
+    search_term = models.CharField(max_length=160, blank=True, help_text='don\'t prefix with #')
 
     def __unicode__(self):
         return self.search_term

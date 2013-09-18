@@ -33,3 +33,17 @@ class FacebookAPI(object):
                     yield item
 
                 url = data.get('paging', {}).get('next')
+
+    def get_search_for_account(self, query):
+        if self._access_token:
+            url = "https://graph.facebook.com/search?access_token={0}&q={1}&type=post"\
+                      .format(self._access_token, query)
+            while url:
+                data = self._get_data_for_url(url)
+                print data
+#                 messages = data.get('data', [])
+# 
+#                 for item in messages:
+#                     yield item
+# 
+#                 url = data.get('paging', {}).get('next')
