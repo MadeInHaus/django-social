@@ -22,6 +22,7 @@ MEDIA_TYPE =  (
                     ('photo', 'Photo'),
                     ('video', 'Video'),
                     ('vine', 'Vine'),
+                    ('link', 'Link'),
                     ('unknown', 'Unkown'),
                 )
 
@@ -59,9 +60,17 @@ class FacebookSetting(models.Model):
     app_secret = models.CharField(max_length=255, blank=False)
     interval = models.IntegerField(blank=False, default=15)
     auto_approve = models.BooleanField(default=True)
+    filter_text =  models.BooleanField(default=False)
+    filter_link =  models.BooleanField(default=False)
+    filter_photo =  models.BooleanField(default=False)
+    filter_video =  models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.app_id
+
+    def filter_list(self):
+        types = ['text', 'link', 'photo', 'video']
+        return [t for t in types if getattr(self, 'filter_{}'.format(t))]
 
 class InstagramSetting(models.Model):
     client_id = models.CharField(max_length=255, blank=False)
@@ -274,6 +283,11 @@ class FacebookMessage(Message):
     @staticmethod
     def create_from_json(json_obj, account=None):
         fb_message = FacebookMessage()
+        try:
+            fb_setting = FacebookSetting.objects.all()[0] 
+        except:
+            fb_setting = FacebookSetting()
+            fb_setting.save()
 
         # already created, need to update?
         saved_message = FacebookMessage.objects.filter(message_id=json_obj['id'])
@@ -281,14 +295,10 @@ class FacebookMessage(Message):
             #raise Exception("Post already exists in DB")
             return saved_message[0]
 
-
-        # create a status
-        if json_obj.get('type', False) == 'status' :
+        if json_obj.get('type', False) not in fb_setting.filter_list():
             fb_message.facebook_account = account
             fb_message.message_type = 'post'
             fb_message.message = json_obj.get('message','')
-            # NEED TO DECIDE IF THIS IS BEST LOGIC!
-            #if fb_message.message == '': return
             fb_message.avatar = 'https://graph.facebook.com/{0}/picture'.format(json_obj['from']['id'])
             fb_message.user_id = json_obj['from']['id']
             fb_message.user_name = json_obj['from']['name']
@@ -298,7 +308,10 @@ class FacebookMessage(Message):
             temparr = json_obj['id'].split('_')
             fb_message.deeplink = 'https://www.facebook.com/{0}/posts/{1}'.format(temparr[0],temparr[1])
             fb_message.blob = json.dumps(json_obj)
-            fb_message.media_type = "text"
+            if 'type' in json_obj and json_obj['type'] != 'status':
+                fb_message.media_type = json_obj['type']
+            else:
+                fb_message.media_type = "text"
             fb_message.save()
         return fb_message
 
