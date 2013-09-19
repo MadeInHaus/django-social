@@ -311,6 +311,7 @@ class FacebookAccount(models.Model):
 
 class FacebookSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='don\'t prefix with #')
+    last_poll_time = models.IntegerField(default=int(time.time()))
 
     def __unicode__(self):
         return self.search_term

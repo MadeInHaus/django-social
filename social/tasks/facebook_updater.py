@@ -20,6 +20,9 @@ class FacebookUpdater(object):
             account.save()
 
         for query in FacebookSearch.objects.all():
-            messages = self.fbapi.get_search(query.search_term)
+            messages = self.fbapi.get_search(query)
             for message in messages:
                 FacebookMessage.create_from_json(message)
+
+            query.last_poll_time = int(time.time())
+            query.save()

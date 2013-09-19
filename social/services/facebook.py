@@ -39,8 +39,8 @@ class FacebookAPI(object):
 
     def get_search(self, query):
         if self._access_token:
-            url = "https://graph.facebook.com/search?access_token={0}&q={1}&type=post&since=1379507922"\
-                      .format(self._access_token, query)
+            url = "https://graph.facebook.com/search?access_token={0}&q={1}&type=post&since={2}"\
+                      .format(self._access_token, query.search_term, query.last_poll_time)
             while url:
                 print url
                 data = self._get_data_for_url(url)
