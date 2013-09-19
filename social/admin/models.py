@@ -128,6 +128,9 @@ class FacebookAccountAdmin(HideableAdmin):
 class FacebookMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = FacebookSetting
 
+class FacebookSearchAdmin(HideableAdmin):
+    pref_model = FacebookSetting
+
 class TwitterAccountAdmin(HideableAdmin):
     list_display = ('screen_name',)
     pref_model = TwitterSetting

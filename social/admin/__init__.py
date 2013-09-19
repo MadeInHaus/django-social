@@ -1,12 +1,12 @@
 from django.contrib import admin
 
-from ..models import (FacebookAccount, FacebookMessage,
+from ..models import (FacebookAccount, FacebookMessage, FacebookSearch,
                       TwitterAccount, TwitterMessage, TwitterSearch,
                       RSSAccount, RSSMessage, Message,
                       InstagramAccount, InstagramSearch, InstagramMessage,
                       TwitterSetting, FacebookSetting, InstagramSetting,
                       RSSSetting)
-from .models import (SingletonAdmin, MessageAdmin, FacebookAccountAdmin,
+from .models import (SingletonAdmin, MessageAdmin, FacebookAccountAdmin, FacebookSearchAdmin,
                      FacebookMessageAdmin, TwitterAccountAdmin,
                      TwitterMessageAdmin, TwitterSearchAdmin,
                      InstagramAccountAdmin, InstagramSearchAdmin,
@@ -18,6 +18,7 @@ admin.site.register(Message, MessageAdmin)
 admin.site.register(FacebookSetting, SingletonAdmin)
 admin.site.register(FacebookAccount, FacebookAccountAdmin)
 admin.site.register(FacebookMessage, FacebookMessageAdmin)
+admin.site.register(FacebookSearch,  FacebookSearchAdmin)
 
 admin.site.register(TwitterSetting, SingletonAdmin)
 admin.site.register(TwitterAccount, TwitterAccountAdmin)

@@ -272,7 +272,7 @@ class FacebookMessage(Message):
         super(FacebookMessage, self).save(*args, **kwargs)
 
     @staticmethod
-    def create_from_json(account,json):
+    def create_from_json(json, account=None):
         fb_message = FacebookMessage()
 
         # already created, need to update?

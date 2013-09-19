@@ -1,5 +1,8 @@
 import requests
 
+import logging
+log = logging.getLogger(__name__)
+
 class FacebookAPI(object):
     def __init__(self, app_id, app_secret):
         self._app_id = app_id
@@ -34,17 +37,16 @@ class FacebookAPI(object):
 
                 url = data.get('paging', {}).get('next')
 
-    def get_search_for_account(self, query):
+    def get_search(self, query):
         if self._access_token:
-            url = "https://graph.facebook.com/search?access_token={0}&q={1}&type=post"\
+            url = "https://graph.facebook.com/search?access_token={0}&q={1}&type=post&since=1379507922"\
                       .format(self._access_token, query)
             while url:
+                print url
                 data = self._get_data_for_url(url)
-                print data
-#                 messages = data.get('data', [])
-# 
-#                 for item in messages:
-#                     yield item
-# 
-#                 url = data.get('paging', {}).get('next')
+                messages = data.get('data', [])
 
+                for item in messages:
+                    yield item
+
+                url = data.get('paging', {}).get('previous')

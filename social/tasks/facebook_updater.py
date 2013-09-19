@@ -1,5 +1,5 @@
 import time
-from ..models import FacebookAccount, FacebookMessage
+from ..models import FacebookAccount, FacebookMessage, FacebookSearch
 from celery.utils.log import get_task_logger
 
 
@@ -14,7 +14,12 @@ class FacebookUpdater(object):
         for account in facebookAccounts:
             messages = self.fbapi.get_feed_for_account(account)
             for message in messages:
-                FacebookMessage.create_from_json(account, message)
+                FacebookMessage.create_from_json(message, account)
 
             account.last_poll_time = int(time.time())
             account.save()
+
+        for query in FacebookSearch.objects.all():
+            messages = self.fbapi.get_search(query.search_term)
+            for message in messages:
+                FacebookMessage.create_from_json(message)
