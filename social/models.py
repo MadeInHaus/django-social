@@ -288,7 +288,7 @@ class FacebookMessage(Message):
             fb_message.message_type = 'post'
             fb_message.message = json_obj.get('message','')
             # NEED TO DECIDE IF THIS IS BEST LOGIC!
-            if fb_message.message == '': return
+            #if fb_message.message == '': return
             fb_message.avatar = 'https://graph.facebook.com/{0}/picture'.format(json_obj['from']['id'])
             fb_message.user_id = json_obj['from']['id']
             fb_message.user_name = json_obj['from']['name']
@@ -298,6 +298,7 @@ class FacebookMessage(Message):
             temparr = json_obj['id'].split('_')
             fb_message.deeplink = 'https://www.facebook.com/{0}/posts/{1}'.format(temparr[0],temparr[1])
             fb_message.blob = json.dumps(json_obj)
+            fb_message.media_type = "text"
             fb_message.save()
         return fb_message
 
