@@ -272,32 +272,32 @@ class FacebookMessage(Message):
         super(FacebookMessage, self).save(*args, **kwargs)
 
     @staticmethod
-    def create_from_json(json, account=None):
+    def create_from_json(json_obj, account=None):
         fb_message = FacebookMessage()
 
         # already created, need to update?
-        saved_message = FacebookMessage.objects.filter(message_id=json['id'])
+        saved_message = FacebookMessage.objects.filter(message_id=json_obj['id'])
         if saved_message:
             #raise Exception("Post already exists in DB")
             return saved_message[0]
 
 
         # create a status
-        if json.get('type', False) == 'status' :
+        if json_obj.get('type', False) == 'status' :
             fb_message.facebook_account = account
             fb_message.message_type = 'post'
-            fb_message.message = json.get('message','')
+            fb_message.message = json_obj.get('message','')
             # NEED TO DECIDE IF THIS IS BEST LOGIC!
             if fb_message.message == '': return
-            fb_message.avatar = 'https://graph.facebook.com/{0}/picture'.format(json['from']['id'])
-            fb_message.user_id = json['from']['id']
-            fb_message.user_name = json['from']['name']
-            time_struct = time.strptime(json['created_time'], '%Y-%m-%dT%H:%M:%S+0000')
+            fb_message.avatar = 'https://graph.facebook.com/{0}/picture'.format(json_obj['from']['id'])
+            fb_message.user_id = json_obj['from']['id']
+            fb_message.user_name = json_obj['from']['name']
+            time_struct = time.strptime(json_obj['created_time'], '%Y-%m-%dT%H:%M:%S+0000')
             fb_message.date = datetime.utcfromtimestamp(mktime(time_struct)).replace(tzinfo=utc)
-            fb_message.message_id = json['id']
-            temparr = json['id'].split('_')
+            fb_message.message_id = json_obj['id']
+            temparr = json_obj['id'].split('_')
             fb_message.deeplink = 'https://www.facebook.com/{0}/posts/{1}'.format(temparr[0],temparr[1])
-            fb_message.blob = json
+            fb_message.blob = json.dumps(json_obj)
             fb_message.save()
         return fb_message
 
