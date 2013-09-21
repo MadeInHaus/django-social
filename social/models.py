@@ -284,7 +284,7 @@ class FacebookMessage(Message):
     def create_from_json(json_obj, account=None):
         fb_message = FacebookMessage()
         try:
-            fb_setting = FacebookSetting.objects.all()[0] 
+            fb_setting = FacebookSetting.objects.all()[0]
         except:
             fb_setting = FacebookSetting()
             fb_setting.save()
@@ -295,7 +295,12 @@ class FacebookMessage(Message):
             #raise Exception("Post already exists in DB")
             return saved_message[0]
 
-        if json_obj.get('type', False) not in fb_setting.filter_list():
+        if 'type' in json_obj and json_obj['type'] != 'status':
+            message_type = json_obj['type']
+        else:
+            message_type = "text"
+
+        if message_type not in fb_setting.filter_list():
             fb_message.facebook_account = account
             fb_message.message_type = 'post'
             fb_message.message = json_obj.get('message','')
@@ -308,10 +313,7 @@ class FacebookMessage(Message):
             temparr = json_obj['id'].split('_')
             fb_message.deeplink = 'https://www.facebook.com/{0}/posts/{1}'.format(temparr[0],temparr[1])
             fb_message.blob = json.dumps(json_obj)
-            if 'type' in json_obj and json_obj['type'] != 'status':
-                fb_message.media_type = json_obj['type']
-            else:
-                fb_message.media_type = "text"
+            fb_message.media_type = message_type
             fb_message.save()
         return fb_message
 
