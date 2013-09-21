@@ -23,7 +23,7 @@ class InstagramUpdater():
     def _update_accounts(self):
         threads = []
 
-        for account in self._accounts:
+        for account in self._accounts.filter(scrap_profile=True):
             threads.append(gevent.spawn(self._update_account, account))
         gevent.joinall(threads)
 
