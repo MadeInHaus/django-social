@@ -7,6 +7,7 @@ from django.db import models
 from django.utils.timezone import utc
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from urlparse import urlparse, parse_qsl, parse_qs
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -110,6 +111,39 @@ class Message(models.Model):
 
     def __unicode__(self):
         return '-'.join([self.network, str(self.pk)])
+
+    def admin_facebook_media_preview(self):
+        msg = self.get_blob()
+        
+        if self.media_type == "video":
+            link = msg.get('link') or msg.get('source') or None
+            if link:
+                params = parse_qs(urlparse(link).query)
+                print params
+                vid = params.get('v',[''])[0]
+                if 'youtube' in link:
+                    return '<iframe src="//www.youtube.com/embed/{}" width="200px" height="200px" frameborder="0" allowfullscreen></iframe>'.format(vid)
+                elif 'facebook' in link:
+                    return '<iframe src="https://www.facebook.com/video/embed?video_id={}" width="100%" height="100%" frameborder="0"></iframe>'.format(vid)
+            else:
+                print "XXXX message has no link: {}".format(msg)
+        return 'facebook'
+
+    def admin_twitter_media_preview(self):
+        return ''
+
+    def admin_media_preview(self):
+        admin_media_preview_func = "admin_{}_media_preview".format(self.network)
+        if not hasattr(self, admin_media_preview_func):
+            return "unknown media type"
+        
+        return getattr(self, admin_media_preview_func)()
+        
+        print self.blob
+        if self.blob:
+            return u'<img height=200 width=200 src="%s" />' % json.loads(self.blob).get('low_resolution', {}).get('url', '')
+    admin_media_preview.short_description = 'Media Preview'
+    admin_media_preview.allow_tags = True
 
 
 class TwitterMessage(Message):
