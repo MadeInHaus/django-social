@@ -112,22 +112,44 @@ class Message(models.Model):
     def __unicode__(self):
         return '-'.join([self.network, str(self.pk)])
 
+    def parse_facebook_picture(self, msg, width="200px", height="200px"):
+        """ returns facebook picture embed link """
+        # instagram videos and other types of facebook vids could also be parsed here
+        picture = msg.get('picture', None)
+        if picture is not None and 'safe_image.php' in picture:
+            picture = parse_qs(urlparse(picture).query).get('url', [None,])[0]
+        picture = picture.replace('_s', '_b').replace('_t', '_b')
+
+        if not picture:
+            return "no media found"
+        return '<img src="{}" width="{}" height="{}">'.format(picture, width, height)
+
+        return picture
+
+    def parse_facebook_video(self, msg, width="200px", height="200px"):
+        """ returns html for embedding video, returns a picture if video not embeddable """
+        link = msg.get('link') or msg.get('source') or None
+        if link:
+            params = parse_qs(urlparse(link).query)
+            print params
+            vid = params.get('v',[''])[0]
+            if 'youtube' in link:
+                return '<iframe src="//www.youtube.com/embed/{}" width="{}" height="{}" frameborder="0" allowfullscreen></iframe>'.format(vid, width, height)
+            elif 'facebook' in link:
+                return '<iframe src="https://www.facebook.com/video/embed?video_id={}" width="{}" height="{}" frameborder="0"></iframe>'.format(vid, width, height)
+            else:
+                return self.parse_facebook_picture(msg)
+
+
     def admin_facebook_media_preview(self):
         msg = self.get_blob()
         
         if self.media_type == "video":
-            link = msg.get('link') or msg.get('source') or None
-            if link:
-                params = parse_qs(urlparse(link).query)
-                print params
-                vid = params.get('v',[''])[0]
-                if 'youtube' in link:
-                    return '<iframe src="//www.youtube.com/embed/{}" width="200px" height="200px" frameborder="0" allowfullscreen></iframe>'.format(vid)
-                elif 'facebook' in link:
-                    return '<iframe src="https://www.facebook.com/video/embed?video_id={}" width="100%" height="100%" frameborder="0"></iframe>'.format(vid)
-            else:
-                print "XXXX message has no link: {}".format(msg)
-        return 'facebook'
+            return self.parse_facebook_video(msg)
+        elif self.media_type == "photo":
+            return self.parse_facebook_picture(msg)
+
+        return ''
 
     def admin_twitter_media_preview(self):
         return ''
