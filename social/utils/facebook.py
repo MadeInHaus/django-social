@@ -23,7 +23,6 @@ def parse_facebook_video_embed(msg, width="200px", height="200px"):
     link = msg.get('link') or msg.get('source') or None
     if link:
         params = parse_qs(urlparse(link).query)
-        print params
         vid = params.get('v',[''])[0]
         if 'youtube' in link:
             return '<iframe src="//www.youtube.com/embed/{}" width="{}" height="{}" frameborder="0" allowfullscreen></iframe>'.format(vid, width, height)

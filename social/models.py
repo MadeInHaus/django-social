@@ -231,8 +231,11 @@ class TwitterMessage(Message):
             else:
                 u = url.get('expanded_url','')
 
-            if 'youtu.be' in u or 'youtube.com' in u or 'vine.co' in u:
+            if 'youtu.be' in u or 'youtube.com' in u:
                 message.media_type = 'video'
+
+            if 'vine.co' in u:
+                message.media_type = 'vine'
 
             if 'pic.twitter.com' in u:
                 message.media_type = 'photo'
