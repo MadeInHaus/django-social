@@ -115,7 +115,7 @@ class Message(models.Model):
     def parse_facebook_picture(self, msg, width="200px", height="200px"):
         """ returns facebook picture embed link """
         # instagram videos and other types of facebook vids could also be parsed here
-        picture = msg.get('picture', None)
+        picture = msg.get('picture', '')
         if picture is not None and 'safe_image.php' in picture:
             picture = parse_qs(urlparse(picture).query).get('url', [None,])[0]
         picture = picture.replace('_s', '_b').replace('_t', '_b')
@@ -149,9 +149,31 @@ class Message(models.Model):
         elif self.media_type == "photo":
             return self.parse_facebook_picture(msg)
 
-        return ''
+        return 'unknown type'
 
     def admin_twitter_media_preview(self):
+        return ''
+
+    def parse_instagram_picture(self, msg, width="200px", height="200px"):
+        picture = msg['images']['standard_resolution']['url']
+        return '<img src="{}" width="{}" height="{}">'.format(picture, width, height)
+
+    def parse_instagram_video(self, msg, width="200px", height="200px"):
+        """ need to put in proper video embed here """
+        video = msg['videos']['standard_resolution']['url']
+        return '<video src="{}" width="{}" height="{}">'.format(video, width, height)
+
+    def admin_instagram_media_preview(self):
+        msg = self.get_blob()
+        
+        if self.media_type == "video":
+            return self.parse_instagram_video(msg)
+        elif self.media_type == "photo":
+            return self.parse_instagram_picture(msg)
+        
+        return 'unkown type'
+
+    def admin_rss_media_preview(self):
         return ''
 
     def admin_media_preview(self):

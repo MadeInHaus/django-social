@@ -175,8 +175,8 @@ class InstagramSearchAdmin(HideableAdmin):
 
 class InstagramMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = InstagramSetting
-    list_display = ('id','admin_image_low','message', 'status')
-    list_filter = ('status',)
+    list_display = ('id','admin_image_low','message', 'media_type', 'status')
+    list_filter = ('status', 'media_type')
 
 class RSSAccountAdmin(HideableAdmin):
     pref_model = RSSSetting

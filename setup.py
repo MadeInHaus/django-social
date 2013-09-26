@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='social',
-    version='0.1.8',
+    version='0.1.9',
     description='Django app for easily including a social content api.',
     author='MadeinHaus',
     author_email='cms-admin@madeinhaus.com',
