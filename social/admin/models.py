@@ -144,8 +144,8 @@ class TwitterAccountAdmin(HideableAdmin):
 
 class TwitterMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = TwitterSetting
-    list_display = ('id','message', 'status')
-    list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status')
+    list_display = ('id','message', 'status', 'admin_media_preview')
+    list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status', 'media_type')
 
 class TwitterSearchAdmin(HideableAdmin):
     pref_model = TwitterSetting
@@ -175,7 +175,7 @@ class InstagramSearchAdmin(HideableAdmin):
 
 class InstagramMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = InstagramSetting
-    list_display = ('id','admin_image_low','message', 'media_type', 'status')
+    list_display = ('id', 'admin_image_low','message', 'media_type', 'status')
     list_filter = ('status', 'media_type')
 
 class RSSAccountAdmin(HideableAdmin):
@@ -183,5 +183,5 @@ class RSSAccountAdmin(HideableAdmin):
 
 class RSSMessageAdmin(HideableAdmin):
     pref_model = RSSSetting
-    list_display = ('id','message')
-    list_filter = ('rss_account__feed_name', 'status')
+    list_display = ('id', 'message')
+    list_filter = ('rss_account__feed_name', 'status', 'media_type')

@@ -8,6 +8,10 @@ from django.utils.timezone import utc
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from urlparse import urlparse, parse_qsl, parse_qs
+from social.utils.facebook import parse_facebook_video_embed, parse_facebook_picture_embed
+from social.utils.twitter import parse_twitter_video_embed, parse_twitter_picture_embed
+from social.utils.instagram import parse_instagram_video_embed,\
+    parse_instagram_picture_embed
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -112,66 +116,38 @@ class Message(models.Model):
     def __unicode__(self):
         return '-'.join([self.network, str(self.pk)])
 
-    def parse_facebook_picture(self, msg, width="200px", height="200px"):
-        """ returns facebook picture embed link """
-        # instagram videos and other types of facebook vids could also be parsed here
-        picture = msg.get('picture', '')
-        if picture is not None and 'safe_image.php' in picture:
-            picture = parse_qs(urlparse(picture).query).get('url', [None,])[0]
-        picture = picture.replace('_s', '_b').replace('_t', '_b')
-
-        if not picture:
-            return "no media found"
-        return '<img src="{}" width="{}" height="{}">'.format(picture, width, height)
-
-        return picture
-
-    def parse_facebook_video(self, msg, width="200px", height="200px"):
-        """ returns html for embedding video, returns a picture if video not embeddable """
-        link = msg.get('link') or msg.get('source') or None
-        if link:
-            params = parse_qs(urlparse(link).query)
-            print params
-            vid = params.get('v',[''])[0]
-            if 'youtube' in link:
-                return '<iframe src="//www.youtube.com/embed/{}" width="{}" height="{}" frameborder="0" allowfullscreen></iframe>'.format(vid, width, height)
-            elif 'facebook' in link:
-                return '<iframe src="https://www.facebook.com/video/embed?video_id={}" width="{}" height="{}" frameborder="0"></iframe>'.format(vid, width, height)
-            else:
-                return self.parse_facebook_picture(msg)
-
 
     def admin_facebook_media_preview(self):
         msg = self.get_blob()
         
         if self.media_type == "video":
-            return self.parse_facebook_video(msg)
+            return parse_facebook_video_embed(msg)
         elif self.media_type == "photo":
-            return self.parse_facebook_picture(msg)
+            return parse_facebook_picture_embed(msg)
 
-        return 'unknown type'
-
-    def admin_twitter_media_preview(self):
         return ''
 
-    def parse_instagram_picture(self, msg, width="200px", height="200px"):
-        picture = msg['images']['standard_resolution']['url']
-        return '<img src="{}" width="{}" height="{}">'.format(picture, width, height)
 
-    def parse_instagram_video(self, msg, width="200px", height="200px"):
-        """ need to put in proper video embed here """
-        video = msg['videos']['standard_resolution']['url']
-        return '<video src="{}" width="{}" height="{}">'.format(video, width, height)
+    def admin_twitter_media_preview(self):
+        msg = self.get_blob()
+        
+        if self.media_type == "video":
+            return parse_twitter_video_embed(msg)
+        elif self.media_type == "photo":
+            return parse_twitter_picture_embed(msg)
+        
+        return ''
+
 
     def admin_instagram_media_preview(self):
         msg = self.get_blob()
         
         if self.media_type == "video":
-            return self.parse_instagram_video(msg)
+            return parse_instagram_video_embed(msg)
         elif self.media_type == "photo":
-            return self.parse_instagram_picture(msg)
+            return parse_instagram_picture_embed(msg)
         
-        return 'unkown type'
+        return ''
 
     def admin_rss_media_preview(self):
         return ''
@@ -394,6 +370,8 @@ class FacebookMessage(Message):
             fb_message.media_type = message_type
             fb_message.save()
         return fb_message
+
+
 
 
 class FacebookAccount(models.Model):
