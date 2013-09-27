@@ -21,8 +21,13 @@ def parse_twitter_video_embed(msg, width="200px", height="200px"):
     
     video = None
     for url in urls:
-        if 'youtu.be' in url or 'youtube.com' in url or 'vine.co' in url:
-            video = url
+        if url.get('expanded_url',None) == None:
+            u = url.get('url','')
+        else:
+            u = url.get('expanded_url','')
+
+        if 'youtu.be' in u or 'youtube.com' in u or 'vine.co' in u:
+            video = u
 
     if video:
         if 'vine.co' in video:
