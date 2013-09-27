@@ -131,7 +131,7 @@ class Message(models.Model):
     def admin_twitter_media_preview(self):
         msg = self.get_blob()
         
-        if self.media_type == "video":
+        if self.media_type in ["video", "vine"]:
             return parse_twitter_video_embed(msg)
         elif self.media_type == "photo":
             return parse_twitter_picture_embed(msg)
