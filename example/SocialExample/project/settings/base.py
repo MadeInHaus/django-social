@@ -106,7 +106,7 @@ INSTALLED_APPS = (
     'taggit',
 
     'require',
-    #'debug-toolbar',
+    'debug_toolbar',
     'gunicorn',
     'tastypie',
     'djcelery',
@@ -154,7 +154,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 
     # Debug
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     # Basic Auth
     #'utils.basic_auth_middleware.AuthMiddleware',
