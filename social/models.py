@@ -13,6 +13,8 @@ from social.utils.twitter import parse_twitter_video_embed, parse_twitter_pictur
 from social.utils.instagram import parse_instagram_video_embed,\
     parse_instagram_picture_embed
 
+from urlparse import parse_qs, urlparse
+
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
@@ -110,8 +112,44 @@ class Message(models.Model):
     reply_to = models.ForeignKey('Message', related_name='reply',null=True,blank=True)
     reply_id = models.CharField(max_length=300,null=True,blank=True)
 
+
+    def save(self, *args, **kwargs):
+        if hasattr(self, '_blob'):
+            #remove cached blob on save
+            delattr(self, '_blob')
+        super(Message, self).save(*args, **kwargs)
+
     def get_blob(self):
-        return json.loads(self.blob)
+        # caches the parsed blob for further use
+        # note this assumes blobs are readonly
+        if not hasattr(self, '_blob'):
+            self._blob = json.loads(self.blob)
+
+        return self._blob
+
+
+    @property
+    def image_link(self):
+        blob = self.get_blob()
+        if self.media_type == "video":
+            link = blob.get('link')
+            if link:
+                params = parse_qs(urlparse(link).query)
+                if 'youtube' in link:
+                    return 'http://img.youtube.com/vi/{}/hqdefault.jpg'.format(params.get('v',['',])[0])
+
+        if self.network == "facebook":
+            pic_link = blob.get('picture')
+            if pic_link and 'safe_image.php' in pic_link:
+                pic_link = parse_qs(urlparse(pic_link).query).get('url', [None,])[0]
+            if pic_link:
+                pic_link = pic_link.replace('_s', '_b').replace('_t', '_b')
+            return pic_link
+            
+        if self.network == "instagram":
+            return blob.get('images', {}).get('standard_resolution', {}).get('url', '')
+
+        return ''
 
     def __unicode__(self):
         return '-'.join([self.network, str(self.pk)])
@@ -149,8 +187,10 @@ class Message(models.Model):
         
         return ''
 
+
     def admin_rss_media_preview(self):
         return ''
+
 
     def admin_media_preview(self):
         admin_media_preview_func = "admin_{}_media_preview".format(self.network)
@@ -158,10 +198,7 @@ class Message(models.Model):
             return "unknown media type"
         
         return getattr(self, admin_media_preview_func)()
-        
-        print self.blob
-        if self.blob:
-            return u'<img height=200 width=200 src="%s" />' % json.loads(self.blob).get('low_resolution', {}).get('url', '')
+
     admin_media_preview.short_description = 'Media Preview'
     admin_media_preview.allow_tags = True
 
