@@ -103,6 +103,8 @@ INSTALLED_APPS = (
 
     'django_extensions',
 
+    'taggit',
+
     'require',
     #'debug-toolbar',
     'gunicorn',
