@@ -158,6 +158,7 @@ MIDDLEWARE_CLASSES = (
 
     # Basic Auth
     #'utils.basic_auth_middleware.AuthMiddleware',
+    'utils.profile_middleware.ProfileMiddleware',
 
 )
 

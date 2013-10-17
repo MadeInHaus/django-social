@@ -121,7 +121,7 @@ class MessageAdmin(admin.ModelAdmin):
     actions = [approve_message, rejected_message, favorite_message, pending_message]
     list_display = ('id','message', 'media_type', 'status', 'network', 'admin_media_preview')
     list_filter = ('network', 'media_type', 'status')
-    readonly_fields = ('admin_media_preview', )
+    readonly_fields = ('admin_media_preview', 'reply_to')
 
 class FacebookAccountAdmin(HideableAdmin):
     pref_model = FacebookSetting
@@ -146,7 +146,6 @@ class TwitterMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = TwitterSetting
     list_display = ('id','message', 'status', 'media_type', 'admin_media_preview')
     list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status', 'media_type')
-    readonly_fields = ('admin_media_preview', )
 
 class TwitterSearchAdmin(HideableAdmin):
     pref_model = TwitterSetting
@@ -178,7 +177,6 @@ class InstagramMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = InstagramSetting
     list_display = ('id', 'admin_image_low','message', 'media_type', 'status')
     list_filter = ('status', 'media_type')
-    readonly_fields = ('admin_media_preview', )
 
 class RSSAccountAdmin(HideableAdmin):
     pref_model = RSSSetting
@@ -187,4 +185,3 @@ class RSSMessageAdmin(HideableAdmin):
     pref_model = RSSSetting
     list_display = ('id', 'message')
     list_filter = ('rss_account__feed_name', 'status', 'media_type')
-    readonly_fields = ('admin_media_preview', )

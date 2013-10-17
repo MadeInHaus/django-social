@@ -111,10 +111,10 @@ class Message(models.Model):
     status = models.IntegerField(choices=STATUS_LIST,db_index=True)
     user_id = models.CharField(max_length=300, blank=True, null=True)
     user_name = models.CharField(max_length=300, blank=True, null=True)
-    reply_to = models.ForeignKey('Message', related_name='reply',null=True,blank=True)
+    reply_to = models.ForeignKey('Message', related_name='reply',null=True,blank=True,editable=False)
     reply_id = models.CharField(max_length=300,null=True,blank=True)
 
-    tags = TaggableManager()
+    #tags = TaggableManager()
 
     def save(self, *args, **kwargs):
         if hasattr(self, '_blob'):

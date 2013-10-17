@@ -95,7 +95,7 @@ class TwitterUpdater():
                         return
 
         except RateLimitException as e:
-            account.valid = false
+            account.valid = False
             print('*******************')
             print(e.max_id)
             self._update_search_term(term, e.max_id)
