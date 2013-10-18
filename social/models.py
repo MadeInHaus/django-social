@@ -16,6 +16,7 @@ from social.utils.instagram import parse_instagram_video_embed,\
 from urlparse import parse_qs, urlparse
 
 from taggit.managers import TaggableManager
+from .utils.editable_tags import editable_tags
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -114,7 +115,10 @@ class Message(models.Model):
     reply_to = models.ForeignKey('Message', related_name='reply',null=True,blank=True,editable=False)
     reply_id = models.CharField(max_length=300,null=True,blank=True)
 
-    #tags = TaggableManager()
+    _tags = TaggableManager()
+    
+    tags = editable_tags(_tags)
+    tags.admin_order_field = '_tags'
 
     def save(self, *args, **kwargs):
         if hasattr(self, '_blob'):

@@ -119,9 +119,14 @@ class HideableAdmin(admin.ModelAdmin):
 
 class MessageAdmin(admin.ModelAdmin):
     actions = [approve_message, rejected_message, favorite_message, pending_message]
-    list_display = ('id','message', 'media_type', 'status', 'network', 'admin_media_preview')
-    list_filter = ('network', 'media_type', 'status')
-    readonly_fields = ('admin_media_preview', 'reply_to')
+    list_display = ('id','message', 'media_type', 'status', 'network', 'tags', 'admin_media_preview')
+    list_filter = ('network', 'media_type', 'status', '_tags')
+    readonly_fields = ('admin_media_preview', 'reply_to', 'tags')
+    
+    class Media:
+        js = ("jquery.multiselect.js", "tag_multiselect.js", )
+        css = { 'all': ("jquery.multiselect.css", ) }
+        
 
 class FacebookAccountAdmin(HideableAdmin):
     pref_model = FacebookSetting
@@ -144,7 +149,7 @@ class TwitterAccountAdmin(HideableAdmin):
 
 class TwitterMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = TwitterSetting
-    list_display = ('id','message', 'status', 'media_type', 'admin_media_preview')
+    list_display = ('id','message', 'status', 'media_type', 'tags', 'admin_media_preview')
     list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status', 'media_type')
 
 class TwitterSearchAdmin(HideableAdmin):
@@ -175,7 +180,7 @@ class InstagramSearchAdmin(HideableAdmin):
 
 class InstagramMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = InstagramSetting
-    list_display = ('id', 'admin_image_low','message', 'media_type', 'status')
+    list_display = ('id', 'admin_image_low','message', 'media_type', 'tags', 'status')
     list_filter = ('status', 'media_type')
 
 class RSSAccountAdmin(HideableAdmin):
