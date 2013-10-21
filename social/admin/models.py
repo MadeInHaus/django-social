@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 
 from ..settings import SOCIAL_INSTAGRAM_CLIENT_ID, SOCIAL_INSTAGRAM_REDIRECT_URI
 from ..models import TwitterSetting, FacebookSetting, InstagramSetting, RSSSetting, \
-                     APPROVED, PENDING, FAVORITED, REJECTED
+                     APPROVED, PENDING, FAVORITED, REJECTED, LEGAL
 from ..views import begin_auth
 
 
@@ -38,6 +38,12 @@ def pending_message(modeladmin, request, queryset):
         item.status = PENDING
         item.save()
 pending_message.short_description = "Mark As Pending"
+
+def legal_message(modeladmin, request, queryset):
+    for item in queryset:
+        item.status = LEGAL
+        item.save()
+legal_message.short_description = "Mark As Legal"
 
 
 def admin_url(model, url, object_id=None):
@@ -118,13 +124,13 @@ class HideableAdmin(admin.ModelAdmin):
             }
 
 class MessageAdmin(admin.ModelAdmin):
-    actions = [approve_message, rejected_message, favorite_message, pending_message]
+    actions = [approve_message, rejected_message, favorite_message, pending_message, legal_message]
     list_display = ('id','message', 'media_type', 'status', 'network', 'tags', 'admin_media_preview')
     list_filter = ('network', 'media_type', 'status', '_tags')
     readonly_fields = ('admin_media_preview', 'reply_to', 'tags')
     
     class Media:
-        js = ("jquery.multiselect.js", "tag_multiselect.js", )
+        js = ("jquery.multiselect.js", "tag_multiselect.js", "json2.js", )
         css = { 'all': ("jquery.multiselect.css", ) }
         
 

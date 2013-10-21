@@ -24,6 +24,7 @@ class InstagramAPI(object):
 
         while url:
             response = self._get_data_for_url(url)
+            print response.json()
             content = response.json()
             if not response.ok:
                 raise RuntimeError(content['meta']['error_message'])

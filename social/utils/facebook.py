@@ -3,6 +3,7 @@ Created on Sep 26, 2013
 '''
 
 from urlparse import parse_qs, urlparse
+from django.utils.encoding import smart_text
 
 def parse_facebook_picture_embed(msg, width="200px", height="200px"):
     """ returns facebook picture embed link """
@@ -28,7 +29,7 @@ def parse_facebook_video_embed(msg, width="200px", height="200px"):
             return '<iframe src="//www.youtube.com/embed/{}" width="{}" height="{}" frameborder="0" allowfullscreen></iframe>'.format(vid, width, height)
         elif 'youtu.be' in link:
             if '/' in link:
-                vid = link.split('/')[-1]
+                vid = smart_text(link.split('/')[-1])
             return '<iframe src="//www.youtube.com/embed/{}" width="{}" height="{}" frameborder="0" allowfullscreen></iframe>'.format(vid, width, height)
         elif 'facebook' in link:
             return '<iframe src="https://www.facebook.com/video/embed?video_id={}" width="{}" height="{}" frameborder="0"></iframe>'.format(vid, width, height)

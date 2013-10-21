@@ -46,13 +46,16 @@ NETWORK =       (
 PENDING = 10
 APPROVED = 11
 REJECTED = 12
+LEGAL = 13
 FAVORITED = 15
+
 
 STATUS_LIST =   (
                     (PENDING, 'pending'),
                     (APPROVED, 'approved'),
                     (REJECTED, 'rejected'),
                     (FAVORITED, 'favorited'),
+                    (LEGAL, 'legal'),
                 )
 
 
