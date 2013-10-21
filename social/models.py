@@ -122,6 +122,7 @@ class Message(models.Model):
     
     tags = editable_tags(_tags)
     tags.admin_order_field = '_tags'
+    tags.short_description = "Moderation Tags"
 
     def save(self, *args, **kwargs):
         if hasattr(self, '_blob'):

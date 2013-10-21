@@ -48,6 +48,7 @@ class EditableTagsView(View):
         data = loads(request.body)
         tags = data.get('tags', None)
         if tags:
+            tags = [Tag.objects.get(slug=slug) for slug in tags]
             msg._tags.set(*tags)
         else:
             msg._tags.clear()

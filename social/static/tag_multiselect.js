@@ -13,19 +13,19 @@
             contentType: 'application/json; charset=utf-8',
             dataType: 'text',
             success: function(data) {
-           	 console.log("data: ", data);
             },
             error: function() {
-           	 
+            
             },
         });
 	};
 	
-	console.log("XXXX");
 	$(document).ready(function() {$(".tag-select").multiselect({
 	    selectedText: "# of # selected",
 	    selectedList: 40,
-	    close: updateTags
+	    close: updateTags,
+	    minWidth: 175,
+	    header: false
 	});});
 
 	
