@@ -119,10 +119,13 @@ class Message(models.Model):
     reply_id = models.CharField(max_length=300,null=True,blank=True)
 
     _tags = TaggableManager()
+    _tags.short_description = "Moderation Tags"
+    _tags.verbose_name = "Moderation Tags"
     
     tags = editable_tags(_tags)
     tags.admin_order_field = '_tags'
     tags.short_description = "Moderation Tags"
+    tags.verbose_name = "Moderation Tags"
 
     def save(self, *args, **kwargs):
         if hasattr(self, '_blob'):
