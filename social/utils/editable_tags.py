@@ -20,7 +20,7 @@ log = getLogger(__name__)
 
 def editable_tags(field):
     def _f(self):
-        tags = Tag.objects.all()
+        tags = Tag.objects.all().order_by('name')
         my_tags = getattr(self, field.name).all()
         
         s = """<div class="tag-select-wrapper"><select multiple id="select-{pk}" class="tag-select">""".format(**{'pk': self.pk})

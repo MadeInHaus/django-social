@@ -58,6 +58,7 @@ STATUS_LIST =   (
                     (LEGAL, 'legal'),
                 )
 
+STATUS_NAME_LOOKUP = {l[0]: l[1] for l in STATUS_LIST}
 
 class TwitterSetting(models.Model):
     consumer_key = models.CharField(max_length=255, blank=False)
