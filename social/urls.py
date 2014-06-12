@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns
+from django.conf.urls import patterns
 
 from social.views import thanks, instauth
 from django.conf.urls import url
