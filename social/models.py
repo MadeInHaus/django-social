@@ -60,6 +60,7 @@ STATUS_LIST =   (
 
 STATUS_NAME_LOOKUP = {l[0]: l[1] for l in STATUS_LIST}
 
+
 class TwitterSetting(models.Model):
     consumer_key = models.CharField(max_length=255, blank=False)
     consumer_secret = models.CharField(max_length=255, blank=False)
@@ -68,6 +69,7 @@ class TwitterSetting(models.Model):
 
     def __unicode__(self):
         return self.consumer_key
+
 
 class FacebookSetting(models.Model):
     app_id = models.CharField(max_length=255, blank=False)
@@ -86,6 +88,7 @@ class FacebookSetting(models.Model):
         types = ['text', 'link', 'photo', 'video']
         return [t for t in types if getattr(self, 'filter_{}'.format(t))]
 
+
 class InstagramSetting(models.Model):
     client_id = models.CharField(max_length=255, blank=False)
     client_secret = models.CharField(max_length=255, blank=False)
@@ -96,12 +99,14 @@ class InstagramSetting(models.Model):
     def __unicode__(self):
         return self.client_id
 
+
 class RSSSetting(models.Model):
     interval = models.IntegerField(blank=False, default=15)
     auto_approve = models.BooleanField(default=True)
 
     def __unicode__(self):
         return 'Interval {}s'.format(self.interval)
+
 
 class Message(models.Model):
     message_type = models.CharField(max_length=100, choices=MESSAGE_TYPE)
@@ -142,7 +147,6 @@ class Message(models.Model):
 
         return self._blob
 
-
     @property
     def image_link(self):
         blob = self.get_blob()
@@ -169,7 +173,6 @@ class Message(models.Model):
     def __unicode__(self):
         return '-'.join([self.network, str(self.pk)])
 
-
     def admin_facebook_media_preview(self):
         msg = self.get_blob()
         
@@ -179,7 +182,6 @@ class Message(models.Model):
             return parse_facebook_picture_embed(msg)
 
         return ''
-
 
     def admin_twitter_media_preview(self):
         msg = self.get_blob()
@@ -191,7 +193,6 @@ class Message(models.Model):
         
         return ''
 
-
     def admin_instagram_media_preview(self):
         msg = self.get_blob()
         
@@ -202,10 +203,8 @@ class Message(models.Model):
         
         return ''
 
-
     def admin_rss_media_preview(self):
         return ''
-
 
     def admin_media_preview(self):
         admin_media_preview_func = "admin_{}_media_preview".format(self.network)
@@ -263,7 +262,6 @@ class TwitterMessage(Message):
             saved_message.save()
             return saved_message
         elif saved_message:
-
             mid = str(saved_message[0].message_id)
             log.debug('[twitter create debug] duplicate ids attempted to be added: {}'.format(mid))
             raise TweetExistsError
@@ -370,12 +368,18 @@ class TwitterAccount(models.Model):
         account.save()
         return account
 
+
+class TwitterPublicAccount(models.Model):
+    username = models.CharField(max_length=255, help_text="Twitter account name")
+
+
 class TwitterSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')
     search_until = models.IntegerField(default=int(time.time()))
 
     def __unicode__(self):
         return self.search_term
+
 
 class FacebookMessage(Message):
     facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
@@ -427,14 +431,17 @@ class FacebookMessage(Message):
         return fb_message
 
 
-
-
 class FacebookAccount(models.Model):
     fb_id = models.CharField(max_length=300,
         help_text='11936081183 </br> Get Via: http://graph.facebook.com/nakedjuice')
     last_poll_time = models.IntegerField(default=int(time.time()))
     def __unicode__(self):
         return self.fb_id
+
+
+class FacebookPublicAccount(models.Model):
+    username = models.CharField(max_length=255, help_text="Facebook username http://www.facebook.com/[username]")
+
 
 class FacebookSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='don\'t prefix with #')
@@ -450,6 +457,7 @@ class RSSAccount(models.Model):
 
     def __unicode__(self):
         return self.feed_name if self.feed_name else self.feed_url
+
 
 class RSSMessage(Message):
     rss_account = models.ForeignKey('RSSAccount')
@@ -483,11 +491,13 @@ class RSSMessage(Message):
     def images(self, images):
         self._images = json.dumps(images)
 
+
 class InstagramSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='don\'t prefix with #')
 
     def __unicode__(self):
         return self.search_term
+
 
 class InstagramAccount(models.Model):
     instagram_id = models.BigIntegerField()
@@ -503,6 +513,10 @@ class InstagramAccount(models.Model):
     def admin_image(self):
         return '<img src="{}">'.format(self.profile_picture)
     admin_image.allow_tags = True
+
+
+class InstagramPublicAccount(models.Model):
+    username = models.CharField(max_length=255)
 
 class InstagramMessage(Message):
     instagram_search = models.ManyToManyField('InstagramSearch', null=True, blank=True)
@@ -570,11 +584,14 @@ class InstagramMessage(Message):
 
         super(InstagramMessage, self).save(*args, **kwargs)
 
+
 class TweetExistsError(Exception):
     pass
 
+
 class IGMediaExistsError(Exception):
     pass
+
 
 @receiver(post_save, sender=TwitterAccount)
 def reset_poll_count(sender, instance, created, raw, **kwargs):

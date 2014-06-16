@@ -153,6 +153,10 @@ class TwitterAccountAdmin(HideableAdmin):
         log.debug("extra_context: %s", extra_context)
         return begin_auth(request)
 
+
+class TwitterPublicAccountAdmin(HideableAdmin):
+    pref_model = TwitterSetting
+
 class TwitterMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = TwitterSetting
     list_display = ('id','message', 'status', 'media_type', 'tags', 'admin_media_preview')
@@ -181,8 +185,14 @@ class InstagramAccountAdmin(HideableAdmin):
         else:
             return HttpResponseRedirect(reverse('admin:social_instagramsetting_add'))
 
+
+class InstagramPublicAccountAdmin(HideableAdmin):
+    pref_model = InstagramSetting
+
+
 class InstagramSearchAdmin(HideableAdmin):
     pref_model = InstagramSetting
+
 
 class InstagramMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = InstagramSetting
