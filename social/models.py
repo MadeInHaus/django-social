@@ -18,7 +18,7 @@ from urlparse import parse_qs, urlparse
 from taggit.managers import TaggableManager
 from .utils.editable_tags import editable_tags
 from .services.facebook import get_id_from_username
-from .social.services.instagram import InstagramPublicAPI
+from .services.instagram import InstagramPublicAPI
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
