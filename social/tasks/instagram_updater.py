@@ -3,10 +3,8 @@ import gevent
 from celery.utils.log import get_task_logger
 
 from .. import settings
-from ..models import InstagramAccount, InstagramSearch, InstagramMessage, IGMediaExistsError
-from ..services.instagram import InstagramAPI, RateLimitException
-from project.apps.social.models import InstagramPublicAccount, InstagramSetting
-from project.apps.social.services.instagram import InstagramPublicAPI
+from ..models import InstagramAccount, InstagramSearch, InstagramMessage, IGMediaExistsError, InstagramPublicAccount, InstagramSetting
+from ..services.instagram import InstagramAPI, RateLimitException, InstagramPublicAPI
 
 log = get_task_logger(__name__)
 

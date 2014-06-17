@@ -1,7 +1,6 @@
 import time
-from ..models import FacebookAccount, FacebookMessage, FacebookSearch
+from ..models import FacebookAccount, FacebookMessage, FacebookSearch, FacebookPublicAccount
 from celery.utils.log import get_task_logger
-from project.apps.social.models import FacebookPublicAccount
 
 
 log = get_task_logger('facebook')

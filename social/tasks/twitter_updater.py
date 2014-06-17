@@ -4,9 +4,8 @@ import gevent
 from itertools import cycle
 
 from .. import settings
-from ..models import TwitterAccount, TwitterSearch, TwitterMessage, TweetExistsError
+from ..models import TwitterAccount, TwitterSearch, TwitterMessage, TweetExistsError, TwitterPublicAccount
 from ..services.twitter import TwitterAPI, RateLimitException
-from project.apps.social.models import TwitterPublicAccount
 
 
 logging.basicConfig(level=logging.DEBUG)
