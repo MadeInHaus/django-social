@@ -5,6 +5,8 @@ from celery.utils.log import get_task_logger
 from .. import settings
 from ..models import InstagramAccount, InstagramSearch, InstagramMessage, IGMediaExistsError
 from ..services.instagram import InstagramAPI, RateLimitException
+from project.apps.social.models import InstagramPublicAccount, InstagramSetting
+from project.apps.social.services.instagram import InstagramPublicAPI
 
 log = get_task_logger(__name__)
 
@@ -18,6 +20,7 @@ class InstagramUpdater():
         gevent.monkey.patch_ssl()
 
         self._update_accounts()
+        self._update_public_accounts()
         self._update_terms()
 
     def _update_accounts(self):
@@ -25,6 +28,13 @@ class InstagramUpdater():
 
         for account in self._accounts.filter(scrap_profile=True):
             threads.append(gevent.spawn(self._update_account, account))
+        gevent.joinall(threads)
+
+    def _update_public_accounts(self):
+        threads = []
+
+        for account in InstagramPublicAccount.objects.all():
+            threads.append(gevent.spawn(self._update_public_account, account))
         gevent.joinall(threads)
 
     def _update_terms(self):
@@ -46,6 +56,19 @@ class InstagramUpdater():
         except Exception as exc:
             log.error('[instagram] error scraping account "{}"'.format(account.username))
             log.error(exc)
+
+    def _update_public_account(self, account):
+        log.info('[instagram] updating public account "%s"'.format(account.username))
+
+        api = InstagramPublicAPI(InstagramSetting.objects.get())
+        try:
+            self._iterate_messages(api.scrape_public_account, arguments=[account,])
+        except RateLimitException:
+                log.error('[instagram] public account "{}" rate limited'.format(account.username))
+        except Exception as exc:
+            log.error('[instagram] error scraping public account "{}"'.format(account.username))
+            log.error(exc)
+
 
     def _iterate_messages(self, api_method, arguments=[], tag=None):
         message_duplicates = 0

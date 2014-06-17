@@ -3,6 +3,17 @@ import requests
 import logging
 log = logging.getLogger(__name__)
 
+def get_id_from_username(username):
+    url = 'http://graph.facebook.com/{}'.format(username)
+    r = requests.get(url)
+    return r.json()['id']
+
+def get_username_from_id(fb_id):
+    url = 'http://graph.facebook.com/{}'.format(fb_id)
+    r = requests.get(url)
+    return r.json()['username']
+
+
 class FacebookAPI(object):
     def __init__(self, app_id, app_secret):
         self._app_id = app_id
@@ -27,7 +38,7 @@ class FacebookAPI(object):
     def get_feed_for_account(self, account):
         if self._access_token:
             url = "https://graph.facebook.com/{0}/feed?access_token={1}&filter=2&since={2}"\
-                      .format(account.fb_id, self._access_token, account.last_poll_time)
+                      .format(account.get_id(), self._access_token, account.last_poll_time)
             while url:
                 data = self._get_data_for_url(url)
                 messages = data.get('data', [])

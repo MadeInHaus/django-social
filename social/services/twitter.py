@@ -65,7 +65,7 @@ class TwitterAPI():
 
         return authorized_tokens
 
-    def _get_obj_for_request(self,url, max_id=None):
+    def _get_obj_for_request(self, url, max_id=None):
         oauth = OAuth1(
             self.client_key,
             client_secret=self.client_secret,
@@ -80,7 +80,7 @@ class TwitterAPI():
         return response
 
 
-    def show_user(self,screen_name):
+    def show_user(self, screen_name):
         url = 'https://api.twitter.com/1.1/users/show.json?screen_name={}'.format(screen_name)
         try:
             account_info = self._get_obj_for_request(url)

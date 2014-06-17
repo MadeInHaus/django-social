@@ -17,6 +17,8 @@ from urlparse import parse_qs, urlparse
 
 from taggit.managers import TaggableManager
 from .utils.editable_tags import editable_tags
+from project.apps.social.services.facebook import get_id_from_username
+from project.apps.social.services.instagram import InstagramPublicAPI
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -231,6 +233,7 @@ class TwitterMessage(Message):
     favorited = models.BooleanField(default=False)
     twitter_search = models.ManyToManyField('TwitterSearch',null=True,blank=True)
     twitter_account = models.ForeignKey('TwitterAccount',null=True,blank=True)
+    twitter_public_account = models.ForeignKey('TwitterPublicAccount',null=True,blank=True)
     #created_at = models.DateTimeField()
 
     @property
@@ -250,6 +253,12 @@ class TwitterMessage(Message):
     # create tweet and make sure it's unique based on id_str and search term
     @staticmethod
     def create_from_json(obj,search=None,account=None):
+        if type(account) == TwitterPublicAccount:
+            public_account = account
+            account = None
+        else:
+            public_account = None
+
         saved_message = TwitterMessage.objects.filter(message_id=obj.get('id_str',0))
         if saved_message and search:
             tmp_message = saved_message.filter(twitter_search__search_term=search.search_term)
@@ -312,6 +321,8 @@ class TwitterMessage(Message):
             message.twitter_search.add(search)
         if account:
             message.twitter_account = account
+        if public_account:
+            message.twitter_public_account = public_account
         message.save()
         return message
 
@@ -370,7 +381,11 @@ class TwitterAccount(models.Model):
 
 
 class TwitterPublicAccount(models.Model):
-    username = models.CharField(max_length=255, help_text="Twitter account name")
+    screen_name = models.CharField(max_length=255, help_text="Twitter account name")
+    parse_timeline_tweets = True # alsways parse public accounts
+
+    def __unicode__(self):
+        return self.screen_name
 
 
 class TwitterSearch(models.Model):
@@ -383,6 +398,7 @@ class TwitterSearch(models.Model):
 
 class FacebookMessage(Message):
     facebook_account = models.ForeignKey('FacebookAccount',null=True, blank=True)
+    facebook_public_account = models.ForeignKey('FacebookPublicAccount',null=True, blank=True)
 
     def __unicode__(self):
         return self.message
@@ -413,8 +429,13 @@ class FacebookMessage(Message):
         else:
             message_type = "text"
 
+        if type(account) == FacebookPublicAccount:
+            public_account = account
+            account = None
+
         if message_type not in fb_setting.filter_list():
             fb_message.facebook_account = account
+            fb_message.facebook_public_account = public_account
             fb_message.message_type = 'post'
             fb_message.message = json_obj.get('message','')
             fb_message.avatar = 'https://graph.facebook.com/{0}/picture'.format(json_obj['from']['id'])
@@ -431,16 +452,37 @@ class FacebookMessage(Message):
         return fb_message
 
 
-class FacebookAccount(models.Model):
+class FacebookAccountAccessors():
+    def get_id(self):
+        if not self.fb_id:
+            try:
+                self.fb_id = get_id_from_username(self.username)
+                self.save()
+            except:
+                return None
+        return self.fb_id
+
+class FacebookAccount(models.Model, FacebookAccountAccessors):
     fb_id = models.CharField(max_length=300,
         help_text='11936081183 </br> Get Via: http://graph.facebook.com/nakedjuice')
     last_poll_time = models.IntegerField(default=int(time.time()))
+
     def __unicode__(self):
         return self.fb_id
 
 
-class FacebookPublicAccount(models.Model):
+class FacebookPublicAccount(models.Model, FacebookAccountAccessors):
     username = models.CharField(max_length=255, help_text="Facebook username http://www.facebook.com/[username]")
+    fb_id = models.CharField(max_length=300, null=True, blank=True,
+        help_text='if you do not know this leave blank and it will be looked up based on username')
+    last_poll_time = models.IntegerField(default=int(time.time()))
+
+    def save(self, *args, **kwargs):
+        print self.get_id()
+        return models.Model.save(self, *args, **kwargs)
+
+    def __unicode__(self):
+        return self.username
 
 
 class FacebookSearch(models.Model):
@@ -517,6 +559,17 @@ class InstagramAccount(models.Model):
 
 class InstagramPublicAccount(models.Model):
     username = models.CharField(max_length=255)
+    instagram_id = models.BigIntegerField(default=0, help_text="if not known, leave blank and it will be looked up")
+
+    def save(self, *args, **kwargs):
+        if not self.instagram_id:
+            instagram_setting = InstagramSetting.objects.get()
+            instagram_api = InstagramPublicAPI(instagram_setting)
+            self.instagram_id = instagram_api.get_id_from_username(self.username)
+        return models.Model.save(self, *args, **kwargs)
+
+    def __unicode__(self):
+        return self.username
 
 class InstagramMessage(Message):
     instagram_search = models.ManyToManyField('InstagramSearch', null=True, blank=True)
@@ -532,6 +585,7 @@ class InstagramMessage(Message):
                     raise IGMediaExistsError("Post already exists in DB: {}".format(ig_media.id))
                 else:
                     ig_media.instagram_search.add(search)
+            raise IGMediaExistsError("Post already exists in DB: {}".format(ig_media.id))
         except InstagramMessage.DoesNotExist:
             ig_media = InstagramMessage()
             ig_media.date = datetime.utcfromtimestamp(float(media.get('created_time', 0))).replace(tzinfo=utc)
@@ -552,6 +606,7 @@ class InstagramMessage(Message):
             ig_media.save()
             if search:
                 ig_media.instagram_search.add(search)
+                ig_media.save()
 
         return ig_media
 
