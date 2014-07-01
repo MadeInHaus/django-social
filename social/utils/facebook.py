@@ -23,7 +23,7 @@ def parse_facebook_normal_picture_url(msg):
     picture = msg.get('picture', '')
     if picture is not None and 'safe_image.php' in picture:
         picture = parse_qs(urlparse(picture).query).get('url', [None,])[0]
-    picture = picture.replace('_s', '_b', '_t').replace('_n', '_b', '_n')
+    picture = picture.replace('_s', '_n').replace('_b', '_n').replace('_t', '_n')
 
     return picture
 
