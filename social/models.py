@@ -8,7 +8,8 @@ from django.utils.timezone import utc
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from urlparse import urlparse, parse_qsl, parse_qs
-from social.utils.facebook import parse_facebook_video_embed, parse_facebook_picture_embed
+from social.utils.facebook import parse_facebook_video_embed, parse_facebook_picture_embed,\
+    parse_facebook_normal_picture_url
 from social.utils.twitter import parse_twitter_video_embed, parse_twitter_picture_embed
 from social.utils.instagram import parse_instagram_video_embed,\
     parse_instagram_picture_embed
@@ -446,6 +447,8 @@ class FacebookMessage(Message):
             fb_message.message_id = json_obj['id']
             temparr = json_obj['id'].split('_')
             fb_message.deeplink = 'https://www.facebook.com/{0}/posts/{1}'.format(temparr[0],temparr[1])
+            if 'picture' in json_obj:
+                json_obj['picture_normal'] = parse_facebook_normal_picture_url(json_obj)
             fb_message.blob = json.dumps(json_obj)
             fb_message.media_type = message_type
             fb_message.save()

@@ -17,7 +17,16 @@ def parse_facebook_picture_embed(msg, width="200px", height="200px"):
         return "no media found"
     return '<img src="{}" width="{}" height="{}">'.format(picture, width, height)
 
+
+def parse_facebook_normal_picture_url(msg):
+    """ returns facebook picture url for 'normal' size """
+    picture = msg.get('picture', '')
+    if picture is not None and 'safe_image.php' in picture:
+        picture = parse_qs(urlparse(picture).query).get('url', [None,])[0]
+    picture = picture.replace('_s', '_b', '_t').replace('_n', '_b', '_n')
+
     return picture
+
 
 def parse_facebook_video_embed(msg, width="200px", height="200px"):
     """ returns html for embedding video, returns a picture if video not embeddable """
