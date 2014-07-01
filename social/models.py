@@ -562,7 +562,8 @@ class InstagramAccount(models.Model):
 
 class InstagramPublicAccount(models.Model):
     username = models.CharField(max_length=255)
-    instagram_id = models.BigIntegerField(default=0, help_text="if not known, leave blank and it will be looked up")
+    instagram_id = models.BigIntegerField(default=0,
+                                          help_text="if not known, leave 0 and it will be looked up")
 
     def save(self, *args, **kwargs):
         if not self.instagram_id:

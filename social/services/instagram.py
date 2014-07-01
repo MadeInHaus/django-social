@@ -19,6 +19,9 @@ class InstagramPublicAPI(object):
             'client_id': self._client_id,
         })
 
+        if not response.ok:
+            print "Bad response, got this:\n{}".format(response.content)
+
         if not response.ok and response.json()['error_type'] == 'OAuthRateLimitException':
             raise RateLimitException()
         else:

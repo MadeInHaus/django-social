@@ -44,28 +44,26 @@ class InstagramUpdater():
         gevent.joinall(threads)
 
     def _update_account(self, account):
-        log.info('[instagram] updating account "%s"'.format(account.username))
+        log.info('[instagram] updating account "{}"'.format(account.username))
 
         api = InstagramAPI(account)
         try:
             self._iterate_messages(api.scrap_account)
         except RateLimitException:
                 log.error('[instagram] account "{}" rate limited'.format(account.username))
-        except Exception as exc:
-            log.error('[instagram] error scraping account "{}"'.format(account.username))
-            log.error(exc)
+        except Exception:
+            log.exception('[instagram] error scraping account "{}"'.format(account.username))
 
     def _update_public_account(self, account):
-        log.info('[instagram] updating public account "%s"'.format(account.username))
+        log.info('[instagram] updating public account "{}"'.format(account.username))
 
         api = InstagramPublicAPI(InstagramSetting.objects.get())
         try:
             self._iterate_messages(api.scrape_public_account, arguments=[account,])
         except RateLimitException:
                 log.error('[instagram] public account "{}" rate limited'.format(account.username))
-        except Exception as exc:
-            log.error('[instagram] error scraping public account "{}"'.format(account.username))
-            log.error(exc)
+        except Exception:
+            log.exception('[instagram] error scraping public account "{}"'.format(account.username))
 
 
     def _iterate_messages(self, api_method, arguments=[], tag=None):
