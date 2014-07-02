@@ -11,7 +11,7 @@ def parse_facebook_picture_embed(msg, width="200px", height="200px"):
     picture = msg.get('picture', '')
     if picture is not None and 'safe_image.php' in picture:
         picture = parse_qs(urlparse(picture).query).get('url', [None,])[0]
-    picture = picture.replace('_s', '_b').replace('_t', '_b')
+    picture = picture.replace('_s.', '_b.').replace('_t.', '_b.')
 
     if not picture:
         return "no media found"
@@ -23,7 +23,7 @@ def parse_facebook_normal_picture_url(msg):
     picture = msg.get('picture', '')
     if picture is not None and 'safe_image.php' in picture:
         picture = parse_qs(urlparse(picture).query).get('url', [None,])[0]
-    picture = picture.replace('_s', '_n').replace('_b', '_n').replace('_t', '_n')
+    picture = picture.replace('_s.', '_n.').replace('_b.', '_n.').replace('_t.', '_n.')
 
     return picture
 
