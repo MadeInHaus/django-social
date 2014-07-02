@@ -127,7 +127,7 @@ class Message(models.Model):
     reply_to = models.ForeignKey('Message', related_name='reply',null=True,blank=True,editable=False)
     reply_id = models.CharField(max_length=300,null=True,blank=True)
 
-    _tags = TaggableManager()
+    _tags = TaggableManager(blank=True)
     _tags.short_description = "Moderation Tags"
     _tags.verbose_name = "Moderation Tags"
     
