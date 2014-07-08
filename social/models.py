@@ -411,7 +411,7 @@ class FacebookMessage(Message):
         super(FacebookMessage, self).save(*args, **kwargs)
 
     @staticmethod
-    def create_from_json(json_obj, account=None):
+    def create_from_json(json_obj, account=None, fbapi=None):
         fb_message = FacebookMessage()
         try:
             fb_setting = FacebookSetting.objects.all()[0]
@@ -448,7 +448,12 @@ class FacebookMessage(Message):
             temparr = json_obj['id'].split('_')
             fb_message.deeplink = 'https://www.facebook.com/{0}/posts/{1}'.format(temparr[0],temparr[1])
             if 'picture' in json_obj:
-                json_obj['picture_normal'] = parse_facebook_normal_picture_url(json_obj)
+                if fbapi:
+                    json_obj['picture_data'] = fbapi.get_photo_data(json_obj) or {}
+                    json_obj['picture_normal'] = json_obj['picture_data']['source'] if 'source' in json_obj['picture_data'] else None
+                else:
+                    json_obj['picture_data'] = {}
+                    json_obj['picture_normal'] = parse_facebook_normal_picture_url(json_obj)
             fb_message.blob = json.dumps(json_obj)
             fb_message.media_type = message_type
             fb_message.save()

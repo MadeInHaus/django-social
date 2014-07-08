@@ -48,6 +48,13 @@ class FacebookAPI(object):
 
                 url = data.get('paging', {}).get('next')
 
+    def get_photo_data(self, msg):
+        if not 'object_id' in msg:
+            return None
+        url = "https://graph.facebook.com/{}?access_token={}"
+        data = self._get_data_for_url(url.format(msg['object_id'], self._access_token))
+        return data
+
     def get_search(self, query):
         if self._access_token:
             url = "https://graph.facebook.com/search?access_token={0}&q={1}&type=post&since={2}"\

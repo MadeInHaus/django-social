@@ -8,13 +8,14 @@ from django.utils.encoding import smart_text
 def parse_facebook_picture_embed(msg, width="200px", height="200px"):
     """ returns facebook picture embed link """
     # instagram videos and other types of facebook vids could also be parsed here
-    picture = msg.get('picture', '')
-    if picture is not None and 'safe_image.php' in picture:
-        picture = parse_qs(urlparse(picture).query).get('url', [None,])[0]
-    picture = picture.replace('_s.', '_b.').replace('_t.', '_b.')
+    picture = msg.get('picture_normal', '')
+    
+    if not picture:
+        picture = parse_facebook_normal_picture_url(msg)
 
     if not picture:
         return "no media found"
+
     return '<img src="{}" width="{}" height="{}">'.format(picture, width, height)
 
 
