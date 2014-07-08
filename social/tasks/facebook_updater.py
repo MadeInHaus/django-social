@@ -23,7 +23,7 @@ class FacebookUpdater(object):
         for account in facebookAccounts:
             messages = self.fbapi.get_feed_for_account(account)
             for message in messages:
-                FacebookMessage.create_from_json(message, account)
+                FacebookMessage.create_from_json(message, account, self.fbapi)
 
             account.last_poll_time = int(time.time())
             account.save()
