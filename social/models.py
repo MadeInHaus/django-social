@@ -450,10 +450,16 @@ class FacebookMessage(Message):
             if 'picture' in json_obj:
                 if fbapi:
                     json_obj['picture_data'] = fbapi.get_photo_data(json_obj) or {}
-                    json_obj['picture_normal'] = json_obj['picture_data']['source'] if 'source' in json_obj['picture_data'] else None
+                    json_obj['picture_normal'] = json_obj['picture_data']['source'] if 'source' in json_obj['picture_data'] else parse_facebook_normal_picture_url(json_obj)
                 else:
                     json_obj['picture_data'] = {}
                     json_obj['picture_normal'] = parse_facebook_normal_picture_url(json_obj)
+
+                # GOING TO ALWAYS SET STATUS PENDING WHEN WE GET AN ERROR ACCESSING THE PHOTO # TODO SOMETHING IS WRONG WITH THIS BUT WE DON'T KNOW WHAT
+                if 'error' in json_obj['picture_data']:
+                    fb_message.status = PENDING
+
+
             fb_message.blob = json.dumps(json_obj)
             fb_message.media_type = message_type
             fb_message.save()
