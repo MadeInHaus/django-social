@@ -125,7 +125,7 @@ class HideableAdmin(admin.ModelAdmin):
 
 class MessageAdmin(admin.ModelAdmin):
     actions = [approve_message, rejected_message, favorite_message, pending_message, legal_message]
-    list_display = ('id','message', 'media_type', 'status', 'network', 'tags', 'admin_media_preview')
+    list_display = ('id','message', 'media_type', 'status', 'network', 'date', 'tags', 'admin_media_preview')
     list_filter = ('network', 'media_type', 'status', 'date', '_tags')
     readonly_fields = ('admin_media_preview', 'reply_to', 'tags')
     ordering = ('-status', '-date')
