@@ -128,7 +128,8 @@ class MessageAdmin(admin.ModelAdmin):
     list_display = ('id', 'admin_media_preview', 'message', 'status', 'media_type', 'network', 'date', 'tags', )
     list_filter = ('network', 'media_type', 'status', 'date', '_tags')
     list_display_links = ('id', 'admin_media_preview' )
-    readonly_fields = ('admin_media_preview', 'reply_to', 'tags')
+    readonly_fields = ('admin_media_preview', 'reply_to',)
+    exclude = ('tags', )
     ordering = ('-status', '-date')
     
     class Media:
