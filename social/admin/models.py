@@ -125,7 +125,7 @@ class HideableAdmin(admin.ModelAdmin):
 
 class MessageAdmin(admin.ModelAdmin):
     actions = [approve_message, rejected_message, favorite_message, pending_message, legal_message]
-    list_display = ('id','message', 'admin_media_preview', 'media_type', 'status', 'network', 'date', 'tags', )
+    list_display = ('id', 'admin_media_preview', 'message', 'status', 'media_type', 'network', 'date', 'tags', )
     list_filter = ('network', 'media_type', 'status', 'date', '_tags')
     readonly_fields = ('admin_media_preview', 'reply_to', 'tags')
     ordering = ('-status', '-date')
@@ -162,7 +162,7 @@ class TwitterPublicAccountAdmin(HideableAdmin):
 
 class TwitterMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = TwitterSetting
-    list_display = ('id','message', 'admin_media_preview', 'status', 'media_type', 'date', )
+    list_display = ('id', 'admin_media_preview', 'message', 'status', 'media_type', 'date', )
     list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status', 'media_type', 'date')
 
 class TwitterSearchAdmin(HideableAdmin):
