@@ -128,6 +128,7 @@ class MessageAdmin(admin.ModelAdmin):
     list_display = ('id','message', 'media_type', 'status', 'network', 'tags', 'admin_media_preview')
     list_filter = ('network', 'media_type', 'status', 'date', '_tags')
     readonly_fields = ('admin_media_preview', 'reply_to', 'tags')
+    ordering = ('-status', '-date')
     
     class Media:
         js = ("jquery.multiselect.js", "tag_multiselect.js", "json2.js", )
