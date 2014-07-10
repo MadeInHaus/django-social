@@ -140,6 +140,8 @@ class FacebookAccountAdmin(HideableAdmin):
 
 class FacebookMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = FacebookSetting
+    list_display = [c for c in MessageAdmin.list_display if c != 'tags']
+    list_filter = [c for c in MessageAdmin.list_filter if c != '_tags']
 
 class FacebookSearchAdmin(HideableAdmin):
     pref_model = FacebookSetting
@@ -160,8 +162,8 @@ class TwitterPublicAccountAdmin(HideableAdmin):
 
 class TwitterMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = TwitterSetting
-    list_display = ('id','message', 'admin_media_preview', 'status', 'media_type', 'date', 'tags', )
-    list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status', 'media_type', 'date', '_tags')
+    list_display = ('id','message', 'admin_media_preview', 'status', 'media_type', 'date', )
+    list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status', 'media_type', 'date')
 
 class TwitterSearchAdmin(HideableAdmin):
     pref_model = TwitterSetting
@@ -197,8 +199,8 @@ class InstagramSearchAdmin(HideableAdmin):
 
 class InstagramMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = InstagramSetting
-    list_display = ('id', 'admin_image_low','message', 'status', 'media_type', 'date', 'tags', )
-    list_filter = ('status', 'media_type', 'date', '_tags')
+    list_display = ('id', 'admin_image_low','message', 'status', 'media_type', 'date', )
+    list_filter = ('status', 'media_type', 'date',)
 
 class RSSAccountAdmin(HideableAdmin):
     pref_model = RSSSetting
@@ -206,4 +208,4 @@ class RSSAccountAdmin(HideableAdmin):
 class RSSMessageAdmin(HideableAdmin):
     pref_model = RSSSetting
     list_display = ('id', 'message', 'date')
-    list_filter = ('rss_account__feed_name', 'status', 'media_type', 'date', '_tags')
+    list_filter = ('rss_account__feed_name', 'status', 'media_type', 'date',)
