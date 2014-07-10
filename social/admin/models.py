@@ -125,7 +125,7 @@ class HideableAdmin(admin.ModelAdmin):
 
 class MessageAdmin(admin.ModelAdmin):
     actions = [approve_message, rejected_message, favorite_message, pending_message, legal_message]
-    list_display = ('id','message', 'media_type', 'status', 'network', 'date', 'tags', 'admin_media_preview')
+    list_display = ('id','message', 'admin_media_preview', 'media_type', 'status', 'network', 'date', 'tags', )
     list_filter = ('network', 'media_type', 'status', 'date', '_tags')
     readonly_fields = ('admin_media_preview', 'reply_to', 'tags')
     ordering = ('-status', '-date')
@@ -160,8 +160,8 @@ class TwitterPublicAccountAdmin(HideableAdmin):
 
 class TwitterMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = TwitterSetting
-    list_display = ('id','message', 'status', 'media_type', 'date', 'tags', 'admin_media_preview')
-    list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status', 'media_type', 'date')
+    list_display = ('id','message', 'admin_media_preview', 'status', 'media_type', 'date', 'tags', )
+    list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status', 'media_type', 'date', '_tags')
 
 class TwitterSearchAdmin(HideableAdmin):
     pref_model = TwitterSetting
@@ -197,8 +197,8 @@ class InstagramSearchAdmin(HideableAdmin):
 
 class InstagramMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = InstagramSetting
-    list_display = ('id', 'admin_image_low','message', 'media_type', 'date', 'tags', 'status')
-    list_filter = ('status', 'media_type', 'date')
+    list_display = ('id', 'admin_image_low','message', 'status', 'media_type', 'date', 'tags', )
+    list_filter = ('status', 'media_type', 'date', '_tags')
 
 class RSSAccountAdmin(HideableAdmin):
     pref_model = RSSSetting
@@ -206,4 +206,4 @@ class RSSAccountAdmin(HideableAdmin):
 class RSSMessageAdmin(HideableAdmin):
     pref_model = RSSSetting
     list_display = ('id', 'message', 'date')
-    list_filter = ('rss_account__feed_name', 'status', 'media_type', 'date')
+    list_filter = ('rss_account__feed_name', 'status', 'media_type', 'date', '_tags')
