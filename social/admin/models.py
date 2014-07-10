@@ -126,7 +126,7 @@ class HideableAdmin(admin.ModelAdmin):
 class MessageAdmin(admin.ModelAdmin):
     actions = [approve_message, rejected_message, favorite_message, pending_message, legal_message]
     list_display = ('id','message', 'media_type', 'status', 'network', 'tags', 'admin_media_preview')
-    list_filter = ('network', 'media_type', 'status', '_tags')
+    list_filter = ('network', 'media_type', 'status', 'date', '_tags')
     readonly_fields = ('admin_media_preview', 'reply_to', 'tags')
     
     class Media:
@@ -159,8 +159,8 @@ class TwitterPublicAccountAdmin(HideableAdmin):
 
 class TwitterMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = TwitterSetting
-    list_display = ('id','message', 'status', 'media_type', 'tags', 'admin_media_preview')
-    list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status', 'media_type')
+    list_display = ('id','message', 'status', 'media_type', 'date', 'tags', 'admin_media_preview')
+    list_filter = ('twitter_search__search_term', 'twitter_account__screen_name', 'status', 'media_type', 'date')
 
 class TwitterSearchAdmin(HideableAdmin):
     pref_model = TwitterSetting
@@ -196,13 +196,13 @@ class InstagramSearchAdmin(HideableAdmin):
 
 class InstagramMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = InstagramSetting
-    list_display = ('id', 'admin_image_low','message', 'media_type', 'tags', 'status')
-    list_filter = ('status', 'media_type')
+    list_display = ('id', 'admin_image_low','message', 'media_type', 'date', 'tags', 'status')
+    list_filter = ('status', 'media_type', 'date')
 
 class RSSAccountAdmin(HideableAdmin):
     pref_model = RSSSetting
 
 class RSSMessageAdmin(HideableAdmin):
     pref_model = RSSSetting
-    list_display = ('id', 'message')
-    list_filter = ('rss_account__feed_name', 'status', 'media_type')
+    list_display = ('id', 'message', 'date')
+    list_filter = ('rss_account__feed_name', 'status', 'media_type', 'date')
