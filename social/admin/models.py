@@ -127,6 +127,7 @@ class MessageAdmin(admin.ModelAdmin):
     actions = [approve_message, rejected_message, favorite_message, pending_message, legal_message]
     list_display = ('id', 'admin_media_preview', 'message', 'status', 'media_type', 'network', 'date', 'tags', )
     list_filter = ('network', 'media_type', 'status', 'date', '_tags')
+    list_display_links = ('id', 'admin_media_preview' )
     readonly_fields = ('admin_media_preview', 'reply_to', 'tags')
     ordering = ('-status', '-date')
     
@@ -200,6 +201,7 @@ class InstagramSearchAdmin(HideableAdmin):
 class InstagramMessageAdmin(MessageAdmin, HideableAdmin):
     pref_model = InstagramSetting
     list_display = ('id', 'admin_image_low','message', 'status', 'media_type', 'date', )
+    list_display_links = ('id', 'admin_image_low' )
     list_filter = ('status', 'media_type', 'date',)
 
 class RSSAccountAdmin(HideableAdmin):
