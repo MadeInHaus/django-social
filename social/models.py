@@ -27,7 +27,6 @@ log = logging.getLogger(__name__)
 MESSAGE_TYPE =  (
                     ('post', 'Post'),
                     ('reply', 'Reply'),
-
                 )
 
 MEDIA_TYPE =  (

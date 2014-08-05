@@ -112,6 +112,11 @@ class SingletonAdmin(admin.ModelAdmin):
         response = super(SingletonAdmin, self).change_view(*args, **kwargs)
         return self.handle_save(args[0], response)
 
+    class Media:
+        js = [
+              settings.STATIC_URL+'social-singleton.js',
+        ]
+
 class HideableAdmin(admin.ModelAdmin):
     def get_model_perms(self, request):
         if self.pref_model.objects.count():
