@@ -1,6 +1,8 @@
 from urllib import urlencode
 from logging import getLogger
 
+from django.conf import settings
+
 from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
