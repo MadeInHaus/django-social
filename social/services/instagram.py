@@ -50,6 +50,10 @@ class InstagramPublicAPI(object):
         url = 'https://api.instagram.com/v1/users/{}/media/recent/'.format(account.instagram_id)
         return self._retrieve_photos(url, max_photos)
 
+    def search_tag(self, tag, max_photos=100):
+        url = 'https://api.instagram.com/v1/tags/{}/media/recent'.format(tag)
+        return self._retrieve_photos(url, max_photos)
+
 
 class InstagramAPI(object):
     def __init__(self, account):

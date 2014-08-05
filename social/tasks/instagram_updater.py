@@ -81,19 +81,17 @@ class InstagramUpdater():
                 # saved.
                 message_duplicates = 0
 
-    def _update_tag(self, tag):
-        log.info('[instagram] searching for tag "%s"'.format(tag.search_term))
 
-        for account in self._accounts:
-            api = InstagramAPI(account)
-            try:
-                self._iterate_messages(api.search_tag, [tag.search_term], tag)
-            except RateLimitException:
-                log.error('[instagram] account "{}" rate limited'.format(account.username))
-            except Exception as exc:
-                log.error('[instagram] error searching for "{}"'.format(tag.search_term))
-                log.error('[instagram] account "{}"'.format(account.username))
-                log.error(exc)
-                return
-            else:
-                return
+    def _update_tag(self, tag):
+        log.info('[instagram] searching for tag "{}"'.format(tag.search_term))
+        api = InstagramPublicAPI()
+        try:
+            self._iterate_messages(api.search_tag, [tag.search_term], tag)
+        except RateLimitException:
+            log.error('[instagram] rate limited during tag "{}"'.format(tag.search_term))
+        except Exception as exc:
+            log.error('[instagram] error searching for "{}"'.format(tag.search_term))
+            log.error(exc)
+            return
+        else:
+            return
