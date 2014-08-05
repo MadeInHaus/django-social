@@ -84,7 +84,7 @@ class InstagramUpdater():
 
     def _update_tag(self, tag):
         log.info('[instagram] searching for tag "{}"'.format(tag.search_term))
-        api = InstagramPublicAPI()
+        api = InstagramPublicAPI(InstagramSetting.objects.get())
         try:
             self._iterate_messages(api.search_tag, [tag.search_term], tag)
         except RateLimitException:
