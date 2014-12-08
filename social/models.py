@@ -63,6 +63,10 @@ STATUS_LIST =   (
 STATUS_NAME_LOOKUP = {l[0]: l[1] for l in STATUS_LIST}
 
 
+def current_time():
+    """returns the current time for use in default as a callable"""
+    return int(time.time())
+
 class TwitterSetting(models.Model):
     consumer_key = models.CharField(max_length=255, blank=False)
     consumer_secret = models.CharField(max_length=255, blank=False)
@@ -390,7 +394,7 @@ class TwitterPublicAccount(models.Model):
 
 class TwitterSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')
-    search_until = models.IntegerField(default=int(time.time()))
+    search_until = models.IntegerField(default=current_time)
 
     def __unicode__(self):
         return self.search_term
@@ -468,7 +472,7 @@ class FacebookMessage(Message):
 class FacebookAccount(models.Model):
     fb_id = models.CharField(max_length=300,
         help_text='11936081183 </br> Get Via: http://graph.facebook.com/nakedjuice')
-    last_poll_time = models.IntegerField(default=int(time.time()))
+    last_poll_time = models.IntegerField(default=current_time)
 
     def get_id(self):
         if not self.fb_id:
@@ -487,7 +491,7 @@ class FacebookPublicAccount(models.Model):
     username = models.CharField(max_length=255, help_text="Facebook username http://www.facebook.com/[username]")
     fb_id = models.CharField(max_length=300, null=True, blank=True,
         help_text='if you do not know this leave blank and it will be looked up based on username')
-    last_poll_time = models.IntegerField(default=int(time.time()))
+    last_poll_time = models.IntegerField(default=current_time)
 
     def save(self, *args, **kwargs):
         print self.get_id()
@@ -508,7 +512,7 @@ class FacebookPublicAccount(models.Model):
 
 class FacebookSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='don\'t prefix with #')
-    last_poll_time = models.IntegerField(default=int(time.time()))
+    last_poll_time = models.IntegerField(default=current_time)
 
     def __unicode__(self):
         return self.search_term
