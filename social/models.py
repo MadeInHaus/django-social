@@ -465,7 +465,11 @@ class FacebookMessage(Message):
         return fb_message
 
 
-class FacebookAccountAccessors():
+class FacebookAccount(models.Model):
+    fb_id = models.CharField(max_length=300,
+        help_text='11936081183 </br> Get Via: http://graph.facebook.com/nakedjuice')
+    last_poll_time = models.IntegerField(default=int(time.time()))
+
     def get_id(self):
         if not self.fb_id:
             try:
@@ -475,16 +479,11 @@ class FacebookAccountAccessors():
                 return None
         return self.fb_id
 
-class FacebookAccount(models.Model, FacebookAccountAccessors):
-    fb_id = models.CharField(max_length=300,
-        help_text='11936081183 </br> Get Via: http://graph.facebook.com/nakedjuice')
-    last_poll_time = models.IntegerField(default=int(time.time()))
-
     def __unicode__(self):
         return self.fb_id
 
 
-class FacebookPublicAccount(models.Model, FacebookAccountAccessors):
+class FacebookPublicAccount(models.Model):
     username = models.CharField(max_length=255, help_text="Facebook username http://www.facebook.com/[username]")
     fb_id = models.CharField(max_length=300, null=True, blank=True,
         help_text='if you do not know this leave blank and it will be looked up based on username')
@@ -493,6 +492,15 @@ class FacebookPublicAccount(models.Model, FacebookAccountAccessors):
     def save(self, *args, **kwargs):
         print self.get_id()
         return models.Model.save(self, *args, **kwargs)
+
+    def get_id(self):
+        if not self.fb_id:
+            try:
+                self.fb_id = get_id_from_username(self.username)
+                self.save()
+            except:
+                return None
+        return self.fb_id
 
     def __unicode__(self):
         return self.username
