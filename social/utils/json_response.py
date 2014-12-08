@@ -1,4 +1,4 @@
-from django.utils import simplejson
+import json
 from django.http import HttpResponseRedirect, HttpResponseServerError,\
     HttpResponse
     
@@ -14,7 +14,7 @@ def JSON_response(response_dict, success=None, error=None, browser_caching=False
     # Renders an HttpResponse with JSON body corresponding to response_dict
     response = None
     try:
-        response_str = simplejson.dumps(response_dict, default=encode)
+        response_str = json.dumps(response_dict, default=encode)
         if callback:
             if response_str[0] not in ['"', '[', '{'] \
                     or response_str[-1] not in ['"', ']', '}']:
