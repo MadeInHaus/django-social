@@ -8,6 +8,8 @@ from ..services.instagram import InstagramAPI, RateLimitException, InstagramPubl
 
 log = get_task_logger(__name__)
 
+MAX_DUPLICATES = 20
+
 
 class InstagramUpdater():
     def __init__(self):
@@ -73,8 +75,8 @@ class InstagramUpdater():
                 InstagramMessage.create_from_json(message, tag)
             except IGMediaExistsError:
                 message_duplicates += 1
-                if message_duplicates >= 5:
-                    log.warning('[instagram] you hit 5 duplicates in a row, kicking out')
+                if message_duplicates >= MAX_DUPLICATES:
+                    log.warning('[instagram] you hit {} duplicates in a row, kicking out'.format(MAX_DUPLICATES))
                     return
             else:
                 # Reboot dup count as the last message was successfully

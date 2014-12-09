@@ -7,6 +7,8 @@ from .. import settings
 from ..models import TwitterAccount, TwitterSearch, TwitterMessage, TweetExistsError, TwitterPublicAccount
 from ..services.twitter import TwitterAPI, RateLimitException
 
+MAX_DUPLICATES = 20
+
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -110,8 +112,8 @@ class TwitterUpdater():
                     dj_tweet = TwitterMessage.create_from_json(tweet)
                 except TweetExistsError:
                     tweet_duplicate += 1
-                    if tweet_duplicate > 5:
-                        log.warning('[twitter] you hit 5 duplicates in a row, kicking out')
+                    if tweet_duplicate > MAX_DUPLICATES:
+                        log.warning('[twitter] you hit {} duplicates in a row, kicking out'.format(MAX_DUPLICATES))
                         return
 
         except RateLimitException as e:
