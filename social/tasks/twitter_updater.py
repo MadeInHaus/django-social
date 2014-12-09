@@ -102,7 +102,11 @@ class TwitterUpdater():
 
 
     def _update_search_term(self, term, max_id=None):
-        account = self.accounts.next()
+        try:
+            account = self.accounts.next()
+        except StopIteration:
+            log.warning('Problem iterating accounts?  Proceeding with account=None')
+            account = None
         twapi = self._api_from_account(account)
         tweets = twapi.search(term.search_term, max_count=0)
         tweet_duplicate = 0
