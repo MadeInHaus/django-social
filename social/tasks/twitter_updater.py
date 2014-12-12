@@ -6,6 +6,7 @@ from itertools import cycle
 from .. import settings
 from ..models import TwitterAccount, TwitterSearch, TwitterMessage, TweetExistsError, TwitterPublicAccount
 from ..services.twitter import TwitterAPI, RateLimitException
+from social.models import TweetFiltered
 
 MAX_DUPLICATES = 20
 
@@ -102,23 +103,27 @@ class TwitterUpdater():
 
 
     def _update_search_term(self, term, max_id=None):
+        filter = ['photo', ] if term.filter_for_images else None
+
         try:
             account = self.accounts.next()
         except StopIteration:
             log.warning('Problem iterating accounts?  Proceeding with account=None')
             account = None
         twapi = self._api_from_account(account)
-        tweets = twapi.search(term.search_term, max_count=0)
+        tweets = twapi.search(term, max_count=0)
         tweet_duplicate = 0
         try:
             for tweet in tweets:
                 try:
-                    dj_tweet = TwitterMessage.create_from_json(tweet)
+                    _dj_tweet = TwitterMessage.create_from_json(tweet, media_type_filter=filter, search=term)
                 except TweetExistsError:
                     tweet_duplicate += 1
                     if tweet_duplicate > MAX_DUPLICATES:
                         log.warning('[twitter] you hit {} duplicates in a row, kicking out'.format(MAX_DUPLICATES))
                         return
+                except TweetFiltered:
+                    pass # ignore filtered tweets
 
         except RateLimitException as e:
             account.valid = False

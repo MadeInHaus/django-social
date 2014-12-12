@@ -10,7 +10,8 @@ from django.dispatch import receiver
 from urlparse import urlparse, parse_qsl, parse_qs
 from social.utils.facebook import parse_facebook_video_embed, parse_facebook_picture_embed,\
     parse_facebook_normal_picture_url
-from social.utils.twitter import parse_twitter_video_embed, parse_twitter_picture_embed
+from social.utils.twitter import parse_twitter_video_embed, parse_twitter_picture_embed,\
+    twitter_msg_has_an_image
 from social.utils.instagram import parse_instagram_video_embed,\
     parse_instagram_picture_embed
 
@@ -256,7 +257,7 @@ class TwitterMessage(Message):
 
     # create tweet and make sure it's unique based on id_str and search term
     @staticmethod
-    def create_from_json(obj,search=None,account=None):
+    def create_from_json(obj, search=None, account=None, media_type_filter=None):
         if type(account) == TwitterPublicAccount:
             public_account = account
             account = None
@@ -302,6 +303,12 @@ class TwitterMessage(Message):
 
             if 'pic.twitter.com' in u:
                 message.media_type = 'photo'
+
+        if twitter_msg_has_an_image(obj):
+            message.media_type = 'photo'
+
+        if media_type_filter and message.media_type not in media_type_filter:
+            raise TweetFiltered
 
         message.in_reply_to_screen_name = obj.get('in_reply_to_screen_name','')
         message.in_reply_to_user_id = obj.get('in_reply_to_user_id','')
@@ -386,7 +393,7 @@ class TwitterAccount(models.Model):
 
 class TwitterPublicAccount(models.Model):
     screen_name = models.CharField(max_length=255, help_text="Twitter account name")
-    parse_timeline_tweets = True # alsways parse public accounts
+    parse_timeline_tweets = True # always parse public accounts
 
     def __unicode__(self):
         return self.screen_name
@@ -395,9 +402,12 @@ class TwitterPublicAccount(models.Model):
 class TwitterSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')
     search_until = models.IntegerField(default=current_time)
+    filter_for_images = models.BooleanField(default=False)
+    account = models.CharField(default='', max_length=30,
+                               help_text="Account handle to search, leave blank to search all users")
 
     def __unicode__(self):
-        return self.search_term
+        return "{} @{}".format(self.search_term, self.account) if self.account else self.search_term
 
 
 class FacebookMessage(Message):
@@ -669,6 +679,8 @@ class InstagramMessage(Message):
 class TweetExistsError(Exception):
     pass
 
+class TweetFiltered(Exception):
+    pass
 
 class IGMediaExistsError(Exception):
     pass

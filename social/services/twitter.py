@@ -2,6 +2,7 @@ import urllib
 import requests
 from requests_oauthlib import OAuth1
 from urlparse import parse_qs
+from social.models import TwitterSearch
 
 REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token'
 
@@ -107,8 +108,17 @@ class TwitterAPI():
             tweets = self._get_obj_for_request(page_url)
 
 
-    def search(self, search_term, max_count=100, max_id=None):
+    def search(self, search_term, max_count=100, max_id=None, from_account=None, filter=None):
+        if isinstance(search_term, TwitterSearch):
+            twitter_search = search_term
+            search_term = twitter_search.search_term
+            from_account = from_account or twitter_search.account
+
+        if from_account:
+            search_term =  "{} from:{}".format(search_term, from_account)
+
         search_term = urllib.quote(search_term)
+
         url = 'https://api.twitter.com/1.1/search/tweets.json?count=100&result_type=mixed&q={}'.format(search_term)
         response = self._get_obj_for_request(url)
         tweets = response.get('statuses', [])
