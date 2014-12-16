@@ -226,14 +226,14 @@ class Message(models.Model):
 
 class TwitterMessage(Message):
     #text = models.CharField(max_length=140)
-    in_reply_to_status_id = models.BigIntegerField(null=True)
+    in_reply_to_status_id = models.BigIntegerField(null=True,blank=True)
     #removing this, using message_id
     #tweet_id = models.BigIntegerField()
     source = models.CharField(max_length=400)
     retweeted = models.BooleanField(default=False)
     _entities = models.TextField(null=True, blank=True)
-    in_reply_to_screen_name = models.CharField(max_length=400, null=True)
-    in_reply_to_user_id = models.BigIntegerField(null=True)
+    in_reply_to_screen_name = models.CharField(max_length=400, null=True, blank=True)
+    in_reply_to_user_id = models.BigIntegerField(null=True, blank=True)
     retweet_count = models.IntegerField(default=0)
     favorited = models.BooleanField(default=False)
     twitter_search = models.ManyToManyField('TwitterSearch',null=True,blank=True)
@@ -403,7 +403,7 @@ class TwitterSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='@dino or #dino')
     search_until = models.IntegerField(default=current_time)
     filter_for_images = models.BooleanField(default=False)
-    account = models.CharField(default='', max_length=30,
+    account = models.CharField(default='', max_length=30, blank=True,
                                help_text="Account handle to search, leave blank to search all users")
 
     def __unicode__(self):
