@@ -577,6 +577,8 @@ class InstagramSearch(models.Model):
                                           help_text="if not known, leave 0 and it will be looked up")
     last_id = models.CharField(max_length=42, null=True, blank=True,
                                help_text='greatest id seen so far for this search,  searches will search from this id forward')
+    filter_for_images = models.BooleanField(default=False)
+    filter_for_videos = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.username and not self.instagram_id:
@@ -585,6 +587,14 @@ class InstagramSearch(models.Model):
             self.instagram_id = instagram_api.get_id_from_username(self.username)
         return models.Model.save(self, *args, **kwargs)
 
+    def get_filter(self):
+        filter = []
+        if self.filter_for_images:
+            filter.append('photo')
+        if self.filter_for_videos:
+            filter.append('video')
+
+        return None if filter == [] else filter
 
     def __unicode__(self):
         if self.username:
@@ -629,7 +639,11 @@ class InstagramMessage(Message):
     images = models.TextField(max_length=10000)
 
     @staticmethod
-    def create_from_json(media, search=None, filter_users=None):
+    def create_from_json(media, search=None, filter_users=None, filter_media_type=None):
+        if search and search.username:
+            last_id = media.get('id', None)
+            search.last_id = last_id if not search.last_id or search.last_id < last_id else search.last_id
+
         if filter_users and (media.get('user',{}).get('username') not in filter_users):
             raise IGUserFiltered('This user is not in the filter list.')
         if (filter_users and search 
@@ -656,6 +670,8 @@ class InstagramMessage(Message):
             ig_media.media_type = media.get('type')
             if ig_media.media_type == 'image':
                 ig_media.media_type = 'photo'
+            if filter_media_type and ig_media.media_type not in filter_media_type:
+                raise IGMediaFiltered('Media type not in filter list')
             if media.get('caption', {}):
                 ig_media.message = media.get('caption', {}).get('text', '').encode('utf-8')
             ig_media.avatar = media.get('user', {}).get('profile_picture', '')
@@ -706,6 +722,9 @@ class TweetFiltered(Exception):
     pass
 
 class IGMediaExistsError(Exception):
+    pass
+
+class IGMediaFiltered(Exception):
     pass
 
 class IGUserFiltered(Exception):

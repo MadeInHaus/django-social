@@ -60,6 +60,9 @@ class InstagramPublicAPI(object):
         else:
             url = 'https://api.instagram.com/v1/tags/{}/media/recent'.format(tag.search_term)
 
+        if tag.last_id:
+            url = '{}?min_id={}'.format(url, tag.last_id)
+
         return _retrieve_photos(url, max_photos, client_id=self._client_id)
 
 
@@ -76,6 +79,9 @@ class InstagramAPI(object):
             url = 'https://api.instagram.com/v1/users/{}/media/recent/'.format(tag.instagram_id)
         else:
             url = 'https://api.instagram.com/v1/tags/{}/media/recent'.format(tag.search_term)
+
+        if tag.last_id:
+            url = '{}?min_id={}'.format(url, tag.last_id)
 
         return _retrieve_photos(url, max_photos, access_token=self._account.access_token)
 

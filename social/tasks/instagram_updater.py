@@ -5,12 +5,12 @@ from celery.utils.log import get_task_logger
 from .. import settings
 from ..models import InstagramAccount, InstagramSearch, InstagramMessage, \
     IGUserFiltered, IGMediaExistsError, InstagramPublicAccount, InstagramSetting, \
-    IGTermFiltered
+    IGTermFiltered, IGMediaFiltered
 from ..services.instagram import InstagramAPI, RateLimitException, InstagramPublicAPI
 
 log = get_task_logger(__name__)
 
-MAX_DUPLICATES = 20
+MAX_DUPLICATES = 50
 
 
 class InstagramUpdater():
@@ -72,37 +72,38 @@ class InstagramUpdater():
 
     def _iterate_messages(self, api_method, arguments=[], tag=None, filter_users=None):
         message_duplicates = 0
-        last_id = tag.last_id if tag else None
+        filter_media_list = tag.get_filter() if tag else None
+    
         for message in api_method(*arguments):
             try:
-                msg = InstagramMessage.create_from_json(message, tag, filter_users=filter_users)
-                last_id = msg.message_id if last_id is None or msg.message_id > last_id else last_id
+                msg = InstagramMessage.create_from_json(message, tag, filter_users=filter_users, filter_media_type=filter_media_list)
             except IGMediaExistsError:
                 message_duplicates += 1
                 if message_duplicates >= MAX_DUPLICATES:
                     log.warning('[instagram] you hit {} duplicates in a row, kicking out'.format(MAX_DUPLICATES))
-                    return last_id
+                    return
             except IGUserFiltered:
                 pass # ignore filtered users...
             except IGTermFiltered:
                 pass # ignore filtered search messages
+            except IGMediaFiltered:
+                pass # ignore filter media types
             else:
                 # Reboot dup count as the last message was successfully
                 # saved.
                 message_duplicates = 0
-        return last_id
+        return
 
     def _update_tag(self, tag):
         log.info('[instagram] searching for tag "{}"'.format(tag.search_term))
-
         filter_users = [tag.username] if tag.username else None
+        last_id = tag.last_id if tag and tag.username else None
 
         api = InstagramPublicAPI(InstagramSetting.objects.get())
 
         try:
-            last_id = self._iterate_messages(api.search_tag, [tag], tag, filter_users=filter_users)
-            if tag:
-                tag.last_id = last_id
+            self._iterate_messages(api.search_tag, [tag], tag, filter_users=filter_users)
+            if tag and tag.username and last_id != tag.last_id:
                 tag.save()
         except RateLimitException:
             log.error('[instagram] rate limited during tag "{}"'.format(tag.search_term))
