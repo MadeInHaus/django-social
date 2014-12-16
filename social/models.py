@@ -247,7 +247,7 @@ class TwitterMessage(Message):
 
     @entities.setter
     def entities(self, entities):
-        self._entities = json.dumps(entities)
+        self._entities = json.dumps(entities, sort_keys=True, indent=4)
 
     def save(self, *args, **kwargs):
         self.network = 'twitter'
@@ -325,7 +325,7 @@ class TwitterMessage(Message):
         message.date = datetime.utcfromtimestamp(mktime(time_struct)).replace(tzinfo=utc)
         message.message_id = obj.get('id_str',0)
         message.deeplink = 'https://twitter.com/{0}/status/{1}'.format(message.user_name, message.message_id)
-        message.blob = json.dumps(obj)
+        message.blob = json.dumps(obj, sort_keys=True, indent=4)
         message.avatar = obj.get('user',{}).get('profile_image_url_https','')
         message.save()
         if search:
@@ -473,7 +473,7 @@ class FacebookMessage(Message):
                     fb_message.status = PENDING
 
 
-            fb_message.blob = json.dumps(json_obj)
+            fb_message.blob = json.dumps(json_obj, sort_keys=True, indent=4)
             fb_message.media_type = message_type
             fb_message.save()
         return fb_message
@@ -558,7 +558,7 @@ class RSSMessage(Message):
 
     @links.setter
     def links(self, links):
-        self._links = json.dumps(links)
+        self._links = json.dumps(links, sort_keys=True, indent=4)
 
     @property
     def images(self):
@@ -566,13 +566,39 @@ class RSSMessage(Message):
 
     @images.setter
     def images(self, images):
-        self._images = json.dumps(images)
+        self._images = json.dumps(images, sort_keys=True, indent=4)
 
 
 class InstagramSearch(models.Model):
     search_term = models.CharField(max_length=160, blank=True, help_text='don\'t prefix with #')
+    username = models.CharField(max_length=255, null=True, blank=True,
+                                help_text="If set, only this account will be searched")
+    instagram_id = models.BigIntegerField(default=0,
+                                          help_text="if not known, leave 0 and it will be looked up")
+    last_id = models.CharField(max_length=42, null=True, blank=True,
+                               help_text='greatest id seen so far for this search,  searches will search from this id forward')
+    filter_for_images = models.BooleanField(default=False)
+    filter_for_videos = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.username and not self.instagram_id:
+            instagram_setting = InstagramSetting.objects.get()
+            instagram_api = InstagramPublicAPI(instagram_setting)
+            self.instagram_id = instagram_api.get_id_from_username(self.username)
+        return models.Model.save(self, *args, **kwargs)
+
+    def get_filter(self):
+        filter = []
+        if self.filter_for_images:
+            filter.append('photo')
+        if self.filter_for_videos:
+            filter.append('video')
+
+        return None if filter == [] else filter
 
     def __unicode__(self):
+        if self.username:
+            return "{} @{}".format(self.search_term, self.username)
         return self.search_term
 
 
@@ -582,7 +608,7 @@ class InstagramAccount(models.Model):
     name = models.CharField(max_length=255)
     profile_picture = models.URLField()
     access_token = models.CharField(max_length=255)
-    scrap_profile = models.BooleanField(default=False)
+    scrape_profile = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.username
@@ -613,7 +639,18 @@ class InstagramMessage(Message):
     images = models.TextField(max_length=10000)
 
     @staticmethod
-    def create_from_json(media, search=None):
+    def create_from_json(media, search=None, filter_users=None, filter_media_type=None):
+        if search and search.username:
+            last_id = media.get('id', None)
+            search.last_id = last_id if not search.last_id or search.last_id < last_id else search.last_id
+
+        if filter_users and (media.get('user',{}).get('username') not in filter_users):
+            raise IGUserFiltered('This user is not in the filter list.')
+        if (filter_users and search 
+            and (search.search_term not in media.get('caption',{}).get('text')
+                 or search.search_term not in media.get('tags', []))):
+            raise IGTermFiltered('This term not found in message')
+            
         try:
             ig_media = InstagramMessage.objects.get(message_id=media.get('id'))
             if search:
@@ -625,18 +662,20 @@ class InstagramMessage(Message):
         except InstagramMessage.DoesNotExist:
             ig_media = InstagramMessage()
             ig_media.date = datetime.utcfromtimestamp(float(media.get('created_time', 0))).replace(tzinfo=utc)
-            ig_media.comments = json.dumps(media.get('comments', {}).get('data', []))
-            ig_media.images = json.dumps(media.get('images', {}))
+            ig_media.comments = json.dumps(media.get('comments', {}).get('data', []), sort_keys=True, indent=4)
+            ig_media.images = json.dumps(media.get('images', {}), sort_keys=True, indent=4)
             ig_media.message_id = media.get('id', '')
             ig_media.deeplink = media.get('link', '')
             ig_media.message_type = 'post'
             ig_media.media_type = media.get('type')
             if ig_media.media_type == 'image':
                 ig_media.media_type = 'photo'
+            if filter_media_type and ig_media.media_type not in filter_media_type:
+                raise IGMediaFiltered('Media type not in filter list')
             if media.get('caption', {}):
                 ig_media.message = media.get('caption', {}).get('text', '').encode('utf-8')
             ig_media.avatar = media.get('user', {}).get('profile_picture', '')
-            ig_media.blob = json.dumps(media)
+            ig_media.blob = json.dumps(media, sort_keys=True, indent=4)
             ig_media.user_id = media.get('user', {}).get('id', '0')
             ig_media.user_name = media.get('user', {}).get('username', '')
             ig_media.save()
@@ -684,6 +723,16 @@ class TweetFiltered(Exception):
 
 class IGMediaExistsError(Exception):
     pass
+
+class IGMediaFiltered(Exception):
+    pass
+
+class IGUserFiltered(Exception):
+    pass
+
+class IGTermFiltered(Exception):
+    pass
+
 
 
 @receiver(post_save, sender=TwitterAccount)
