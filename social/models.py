@@ -21,6 +21,7 @@ from taggit.managers import TaggableManager
 from .utils.editable_tags import editable_tags
 from .services.facebook import get_id_from_username
 from .services.instagram import InstagramPublicAPI
+from utils.twitter import parse_twitter_picture
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -175,6 +176,9 @@ class Message(models.Model):
         if self.network == "instagram":
             return blob.get('images', {}).get('standard_resolution', {}).get('url', '')
 
+        if self.network == "twitter" and self.media_type == 'photo':
+            return self.twittermessage.get_image_standard()
+
         return ''
 
     def __unicode__(self):
@@ -248,6 +252,9 @@ class TwitterMessage(Message):
     @entities.setter
     def entities(self, entities):
         self._entities = json.dumps(entities, sort_keys=True, indent=4)
+
+    def get_image_standard(self):
+        return parse_twitter_picture(self.get_blob())
 
     def save(self, *args, **kwargs):
         self.network = 'twitter'

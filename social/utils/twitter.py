@@ -2,6 +2,7 @@
 Created on Sep 26, 2013
 '''
 
+
 def twitter_msg_has_an_image(tweet_msg):
     if 'entities' in tweet_msg and 'media' in tweet_msg['entities']:
         for media in tweet_msg['entities']['media']:
@@ -9,7 +10,8 @@ def twitter_msg_has_an_image(tweet_msg):
                 return True
     return False
 
-def parse_twitter_picture_embed(msg, width="200px", height="200px"):
+
+def parse_twitter_picture(msg):
     urls = msg.get('entities', {}).get('urls', [])
     
     picture = None
@@ -24,7 +26,13 @@ def parse_twitter_picture_embed(msg, width="200px", height="200px"):
     if not picture:
         return ''
 
+    return picture
+
+
+def parse_twitter_picture_embed(msg, width="200px", height="200px"):
+    picture = parse_twitter_picture(msg)
     return '<img src="{}" width="{}" height="{}">'.format(picture, width, height)
+
 
 def parse_twitter_video_embed(msg, width="200px", height="200px"):
     """ need to put in proper video embed here """
