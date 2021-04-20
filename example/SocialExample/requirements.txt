@@ -2,7 +2,7 @@ Django==1.5.1
 Fabric==1.5.2
 PyYAML==3.10
 South==0.8.1
-Werkzeug==0.9.1
+Werkzeug==0.15.3
 amqplib==1.0.2
 anyjson==0.3.3
 billiard==2.7.3.30
