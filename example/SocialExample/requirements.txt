@@ -1,4 +1,4 @@
-Django==1.5.1
+Django==2.2.24
 Fabric==1.5.2
 PyYAML==3.10
 South==0.8.1
