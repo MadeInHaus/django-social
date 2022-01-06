@@ -6,7 +6,7 @@ Werkzeug==0.9.1
 amqplib==1.0.2
 anyjson==0.3.3
 billiard==2.7.3.30
-celery==3.0.20
+celery==5.2.2
 dj-database-url==0.2.1
 django-celery==3.0.17
 django-debug-toolbar==0.9.4
