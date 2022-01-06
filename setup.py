@@ -9,7 +9,7 @@ setup(
     url='https://github.com/MadeInHaus/django-social',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=['twython', 'gevent==0.13.8', 'celery==3.0.12',
+    install_requires=['twython', 'gevent==0.13.8', 'celery==5.2.2',
                       'django-celery==3.0.11', 'feedparser==5.1.3',
                       'beautifulsoup4==4.1.3', 'requests==1.2.3', 'django-taggit==0.12.2',],
     zip_safe=False,
